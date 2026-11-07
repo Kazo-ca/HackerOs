@@ -117,6 +117,13 @@ public sealed record SetWindowRespondingCommand(WindowId WindowId, bool IsRespon
 /// <param name="IconAssetPath">The new image URL, or <see langword="null"/> for the generic window symbol.</param>
 public sealed record SetWindowIconCommand(WindowId WindowId, string? IconAssetPath) : WindowCommand;
 
+/// <summary>
+/// Replaces the frame of a window and, when <paramref name="Constraints"/> is given, its size
+/// constraints (ADR 0234 §4): what an app asks with <c>SetWindowStyleAsync</c> or
+/// <c>SetWindowOptionsAsync</c>. A maximized window that can no longer be maximized is restored.
+/// </summary>
+public sealed record SetWindowFrameCommand(WindowId WindowId, WindowFrame Frame, WindowConstraints? Constraints = null) : WindowCommand;
+
 /// <summary>Base contract for an immutable fact emitted after a window transition.</summary>
 public abstract record WindowEvent;
 
@@ -160,6 +167,9 @@ public sealed record WindowIconChangedEvent(WindowId WindowId, string? PreviousI
 
 /// <summary>Reports that a window started or stopped answering its inputs (ADR 0127 §2).</summary>
 public sealed record WindowRespondingChangedEvent(WindowId WindowId, bool IsResponding) : WindowEvent;
+
+/// <summary>Raised when a window's frame or size constraints changed (ADR 0234 §4).</summary>
+public sealed record WindowFrameChangedEvent(WindowId WindowId, WindowFrame PreviousFrame, WindowFrame Frame, WindowConstraints Constraints) : WindowEvent;
 
 /// <summary>Reports a work-area change and the resulting window snapshots.</summary>
 public sealed record WindowViewportChangedEvent(WindowBounds WorkArea, IReadOnlyList<WindowRuntimeState> Windows) : WindowEvent

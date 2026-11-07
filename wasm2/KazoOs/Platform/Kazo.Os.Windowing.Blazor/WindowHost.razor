@@ -149,6 +149,13 @@
         Window.IsFocused ? "is-focused" : "is-background",
         Window.VisualState == WindowVisualState.Maximized ? "is-maximized" : "is-normal",
         Window.IsResponding ? string.Empty : "is-not-responding",
+        Window.Frame.Style switch
+        {
+            // ADR 0234 §1: no title bar row for a None window, a lighter frame for a Tool window.
+            WindowFrameStyle.None => "is-frameless",
+            WindowFrameStyle.Tool => "is-tool",
+            _ => string.Empty,
+        },
         _opening ? "is-opening" : string.Empty,
         PeekState switch
         {

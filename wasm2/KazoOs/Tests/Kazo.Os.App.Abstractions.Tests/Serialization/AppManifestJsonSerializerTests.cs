@@ -68,6 +68,37 @@ public sealed class AppManifestJsonSerializerTests
     }
 
     [Fact]
+    public void Window_style_and_switches_are_written_only_when_they_differ_from_their_defaults()
+    {
+        // ADR 0234 §2: existing manifests stay byte-identical; every non-default value round-trips.
+        AppManifest manifest = CreateManifest() with { Window = new WindowOptions { DefaultWidth = 420 } };
+        WindowOptions custom = manifest.Window with
+        {
+            Style = WindowStyle.Tool,
+            ShowIcon = false,
+            MaximizeBox = false,
+            MinimizeBox = false,
+            ShowInTaskbar = false,
+            Modal = true,
+        };
+        string plain = AppManifestJsonSerializer.SerializeCanonical(manifest);
+        string styled = AppManifestJsonSerializer.SerializeCanonical(manifest with { Window = custom });
+
+        foreach (string key in new[] { "style", "showIcon", "maximizeBox", "minimizeBox", "showInTaskbar", "modal" })
+        {
+            Assert.DoesNotContain($"\"{key}\"", plain, StringComparison.Ordinal);
+            Assert.Contains($"\"{key}\"", styled, StringComparison.Ordinal);
+        }
+
+        Assert.Contains("\"style\":\"tool\"", styled, StringComparison.Ordinal);
+        Assert.Equal(custom, AppManifestJsonSerializer.DeserializeStrict(styled).Window);
+        Assert.Equal(manifest.Window, AppManifestJsonSerializer.DeserializeStrict(plain).Window);
+        Assert.Equal(
+            WindowStyle.None,
+            AppManifestJsonSerializer.DeserializeStrict(styled.Replace("\"tool\"", "\"none\"", StringComparison.Ordinal)).Window!.Style);
+    }
+
+    [Fact]
     public void ServiceStartup_round_trips_and_is_omitted_for_a_manifest_written_before_ADR_0097()
     {
         AppManifest manifest = CreateManifest() with

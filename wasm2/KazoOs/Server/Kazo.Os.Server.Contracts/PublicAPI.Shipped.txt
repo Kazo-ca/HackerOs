@@ -116,6 +116,7 @@ Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes
 Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext
 Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.HostingContractsJsonContext() -> void
 Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.HostingContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
+Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames
 Kazo.Os.Server.Contracts.Identity.CreateAccountRequest
 Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Identity.CreateAccountRequest!
 Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.CreateAccountRequest(string! Username, string! PasswordHash, string! Salt, string! DeviceName, string! DeviceFingerprint) -> void
@@ -249,6 +250,15 @@ Kazo.Os.Server.Contracts.Proxy.IProxyStreamChannel.Protocol.get -> Kazo.Os.Serve
 Kazo.Os.Server.Contracts.Proxy.IProxyStreamChannel.ReceiveAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
 Kazo.Os.Server.Contracts.Proxy.IProxyStreamChannel.Remote.get -> Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened!
 Kazo.Os.Server.Contracts.Proxy.IProxyStreamChannel.SendAsync(System.ReadOnlyMemory<byte> data, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts!
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.AppId.get -> string!
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.AppId.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.Deconstruct(out string! AppId, out System.Collections.Generic.IReadOnlyList<string!>! Ports) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts? other) -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.Ports.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.Ports.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.ProxyAppPorts(string! AppId, System.Collections.Generic.IReadOnlyList<string!>! Ports) -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext
 Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyContractsJsonContext() -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyContractsJsonContext(System.Text.Json.JsonSerializerOptions! options) -> void
@@ -339,6 +349,8 @@ Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AllowPrivateNetworks.get -> b
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AllowPrivateNetworks.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AllowedProtocols.get -> System.Collections.Generic.IReadOnlyList<string!>!
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AllowedProtocols.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AppPorts.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts!>?
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AppPorts.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AuditRetentionDays.get -> int
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.AuditRetentionDays.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.CurrentConcurrentRequests.get -> int
@@ -374,8 +386,12 @@ Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.QuotasEnabled.get -> bool
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.QuotasEnabled.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.StreamIdleTimeoutSeconds.get -> int
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.StreamIdleTimeoutSeconds.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.TcpBlockedPorts.get -> System.Collections.Generic.IReadOnlyList<int>?
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.TcpBlockedPorts.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.TcpPorts.get -> System.Collections.Generic.IReadOnlyList<int>?
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.TcpPorts.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.UdpBlockedPorts.get -> System.Collections.Generic.IReadOnlyList<int>?
+Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.UdpBlockedPorts.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.UdpPorts.get -> System.Collections.Generic.IReadOnlyList<int>?
 Kazo.Os.Server.Contracts.Proxy.ProxyPolicyResponse.UdpPorts.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyProtocol
@@ -401,6 +417,8 @@ Kazo.Os.Server.Contracts.Proxy.ProxyStreamException.ProxyStreamException(string!
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamException.ProxyStreamException(string! message, System.Exception! innerException) -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened!
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.CertificateSubject.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.CertificateSubject.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.Deconstruct(out string! RemoteAddress, out int RemotePort) -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.Equals(Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened? other) -> bool
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.ProxyStreamOpened(string! RemoteAddress, int RemotePort) -> void
@@ -408,6 +426,8 @@ Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.RemoteAddress.get -> string!
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.RemoteAddress.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.RemotePort.get -> int
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.RemotePort.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.TlsProtocol.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamOpened.TlsProtocol.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest!
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.AppId.get -> string!
@@ -419,6 +439,10 @@ Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.Host.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.Port.get -> int
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.Port.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.ProxyStreamRequest(string! Host, int Port, string! AppId) -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.TargetHost.get -> string?
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.TargetHost.init -> void
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.UseTls.get -> bool
+Kazo.Os.Server.Contracts.Proxy.ProxyStreamRequest.UseTls.init -> void
 Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes
 Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest
 Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest.<Clone>$() -> Kazo.Os.Server.Contracts.Proxy.ProxyTcpProbeRequest!
@@ -737,6 +761,12 @@ Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.VersioningCon
 const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.ApiPath = "/api/kazoos/host-info" -> string!
 const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.DiscoveryFile = "kazoos-host.json" -> string!
 const Kazo.Os.Server.Contracts.Hosting.HostInfoRoutes.ServerProduct = "Kazo OS Server" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.ConnectionStringName = "KazoOsDb" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.EnvironmentPrefix = "KAZOOS_" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacyConnectionStringName = "HackerOsDb" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacyEnvironmentPrefix = "HACKEROS_" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.LegacySection = "HackerOs" -> string!
+const Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.Section = "KazoOs" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BlockedAddress = "BLOCKED_ADDRESS" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BlockedPort = "BLOCKED_PORT" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.BodyMismatch = "BODY_MISMATCH" -> string!
@@ -751,6 +781,7 @@ const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.QuotaExceeded = "QUOTA_EXCEE
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.RelayDisabled = "RELAY_DISABLED" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.SimulatedDomainBlocked = "SIMULATED_DOMAIN_BLOCKED" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.Timeout = "TIMEOUT" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.TlsFailed = "TLS_FAILED" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyErrorCode.TooManyRedirects = "TOO_MANY_REDIRECTS" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyStreamCloseCodes.IdleTimeout = 4002 -> int
 const Kazo.Os.Server.Contracts.Proxy.ProxyStreamCloseCodes.Rejected = 4001 -> int
@@ -761,7 +792,9 @@ const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.HostParameter = "host" ->
 const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.MaxChunkBytes = 65536 -> int
 const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.MaxDatagramBytes = 65507 -> int
 const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.PortParameter = "port" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.TargetHostParameter = "targetHost" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.TcpPath = "api/proxy/tcp" -> string!
+const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.TlsParameter = "tls" -> string!
 const Kazo.Os.Server.Contracts.Proxy.ProxyStreamRoutes.UdpPath = "api/proxy/udp" -> string!
 const Kazo.Os.Server.Contracts.Sync.SyncDomain.AppCatalog = "app_catalog" -> string!
 const Kazo.Os.Server.Contracts.Sync.SyncDomain.FileAssociations = "file_associations" -> string!
@@ -825,6 +858,9 @@ override Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.ToString() -> s
 override Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.Equals(object? obj) -> bool
 override Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.GetHashCode() -> int
 override Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.ToString() -> string!
+override Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.Equals(object? obj) -> bool
+override Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.GetHashCode() -> int
+override Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.ToString() -> string!
 override Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.GetTypeInfo(System.Type! type) -> System.Text.Json.Serialization.Metadata.JsonTypeInfo?
 override Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.Equals(object? obj) -> bool
 override Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.GetHashCode() -> int
@@ -934,6 +970,7 @@ static Kazo.Os.Server.Contracts.Admin.ServerHealthResponse.operator ==(Kazo.Os.S
 static Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.operator !=(Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? left, Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? right) -> bool
 static Kazo.Os.Server.Contracts.Hosting.HostInfoResponse.operator ==(Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? left, Kazo.Os.Server.Contracts.Hosting.HostInfoResponse? right) -> bool
 static Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext.Default.get -> Kazo.Os.Server.Contracts.Hosting.HostingContractsJsonContext!
+static Kazo.Os.Server.Contracts.Hosting.KazoOsConfigurationNames.MapLegacySettings(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, string?>>! settings) -> System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string!, string?>>!
 static Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.operator !=(Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? left, Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? right) -> bool
 static Kazo.Os.Server.Contracts.Identity.CreateAccountRequest.operator ==(Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? left, Kazo.Os.Server.Contracts.Identity.CreateAccountRequest? right) -> bool
 static Kazo.Os.Server.Contracts.Identity.CreateAccountResponse.operator !=(Kazo.Os.Server.Contracts.Identity.CreateAccountResponse? left, Kazo.Os.Server.Contracts.Identity.CreateAccountResponse? right) -> bool
@@ -955,6 +992,8 @@ static Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.operator !=(Kazo.
 static Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest.operator ==(Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest? left, Kazo.Os.Server.Contracts.Identity.RegisterDeviceRequest? right) -> bool
 static Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.operator !=(Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse? left, Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse? right) -> bool
 static Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse.operator ==(Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse? left, Kazo.Os.Server.Contracts.Identity.RegisterDeviceResponse? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts? left, Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts? right) -> bool
+static Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts? left, Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts? right) -> bool
 static Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.Default.get -> Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext!
 static Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.operator !=(Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse? left, Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse? right) -> bool
 static Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse.operator ==(Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse? left, Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse? right) -> bool
@@ -1060,11 +1099,13 @@ static Kazo.Os.Server.Contracts.Versioning.VersioningContractsJsonContext.Defaul
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ByteArray.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<byte[]>
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.Guid.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Guid>
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.IReadOnlyListInt32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<int>>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.IReadOnlyListProxyAppPorts.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts>>
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.IReadOnlyListProxyHeader.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.Server.Contracts.Proxy.ProxyHeader>>
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.IReadOnlyListString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<string>>
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.Int32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int>
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.Int64.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<long>
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.NullableGuid.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Guid?>
+~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyAppPorts.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyAppPorts>
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyErrorResponse.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyErrorResponse>
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyHeader.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyHeader>
 ~Kazo.Os.Server.Contracts.Proxy.ProxyContractsJsonContext.ProxyHttpRequest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Server.Contracts.Proxy.ProxyHttpRequest>

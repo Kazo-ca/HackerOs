@@ -125,12 +125,22 @@ public sealed class FileDialogCoordinator : IFileDialogService, IDisposable
         OpenFileDialogRequest request,
         CancellationToken cancellationToken = default)
     {
+        // Checked before any await so a refused request throws at the call, never in the task.
         ArgumentNullException.ThrowIfNull(request);
         Validate(context, AppCapabilities.DialogFileOpen);
-        Guid id = Guid.NewGuid();
-        return Enqueue<OpenFileDialogResult>(
+        return EnqueueOpenFileAsync(context, request, cancellationToken);
+    }
+
+    private async ValueTask<OpenFileDialogResult> EnqueueOpenFileAsync(
+        IAppExecutionContext context,
+        OpenFileDialogRequest request,
+        CancellationToken cancellationToken)
+    {
+        VirtualPath start = await ResolveInitialDirectoryAsync(context, request.InitialDirectory, cancellationToken);
+        return await Enqueue<OpenFileDialogResult>(
             new OpenFileDialogPresentation(
-                id, context.Manifest.Id, context.InstanceId, context.ProcessId, context.UserId, context.FileSystem, request) { Context = context },
+                Guid.NewGuid(), context.Manifest.Id, context.InstanceId, context.ProcessId, context.UserId, context.FileSystem,
+                request with { InitialDirectory = start }) { Context = context },
             static () => new OpenFileDialogResult(FileDialogStatus.Cancelled, []),
             cancellationToken);
     }
@@ -141,12 +151,22 @@ public sealed class FileDialogCoordinator : IFileDialogService, IDisposable
         SaveFileDialogRequest request,
         CancellationToken cancellationToken = default)
     {
+        // Checked before any await so a refused request throws at the call, never in the task.
         ArgumentNullException.ThrowIfNull(request);
         Validate(context, AppCapabilities.DialogFileSave);
-        Guid id = Guid.NewGuid();
-        return Enqueue<SaveFileDialogResult>(
+        return EnqueueSaveFileAsync(context, request, cancellationToken);
+    }
+
+    private async ValueTask<SaveFileDialogResult> EnqueueSaveFileAsync(
+        IAppExecutionContext context,
+        SaveFileDialogRequest request,
+        CancellationToken cancellationToken)
+    {
+        VirtualPath start = await ResolveInitialDirectoryAsync(context, request.InitialDirectory, cancellationToken);
+        return await Enqueue<SaveFileDialogResult>(
             new SaveFileDialogPresentation(
-                id, context.Manifest.Id, context.InstanceId, context.ProcessId, context.UserId, context.FileSystem, request) { Context = context },
+                Guid.NewGuid(), context.Manifest.Id, context.InstanceId, context.ProcessId, context.UserId, context.FileSystem,
+                request with { InitialDirectory = start }) { Context = context },
             static () => new SaveFileDialogResult(FileDialogStatus.Cancelled, null),
             cancellationToken);
     }
@@ -157,12 +177,22 @@ public sealed class FileDialogCoordinator : IFileDialogService, IDisposable
         SelectFolderDialogRequest request,
         CancellationToken cancellationToken = default)
     {
+        // Checked before any await so a refused request throws at the call, never in the task.
         ArgumentNullException.ThrowIfNull(request);
         Validate(context, AppCapabilities.DialogFolderSelect);
-        Guid id = Guid.NewGuid();
-        return Enqueue<SelectFolderDialogResult>(
+        return EnqueueSelectFolderAsync(context, request, cancellationToken);
+    }
+
+    private async ValueTask<SelectFolderDialogResult> EnqueueSelectFolderAsync(
+        IAppExecutionContext context,
+        SelectFolderDialogRequest request,
+        CancellationToken cancellationToken)
+    {
+        VirtualPath start = await ResolveInitialDirectoryAsync(context, request.InitialDirectory, cancellationToken);
+        return await Enqueue<SelectFolderDialogResult>(
             new SelectFolderDialogPresentation(
-                id, context.Manifest.Id, context.InstanceId, context.ProcessId, context.UserId, context.FileSystem, request) { Context = context },
+                Guid.NewGuid(), context.Manifest.Id, context.InstanceId, context.ProcessId, context.UserId, context.FileSystem,
+                request with { InitialDirectory = start }) { Context = context },
             static () => new SelectFolderDialogResult(FileDialogStatus.Cancelled, null),
             cancellationToken);
     }
@@ -244,6 +274,63 @@ public sealed class FileDialogCoordinator : IFileDialogService, IDisposable
         }
 
         Changed?.Invoke();
+    }
+
+    /// <summary>
+    /// Chooses the folder a dialog opens on (issue #385): the app's folder when it can list it, else
+    /// the acting user's home (<see cref="IAppExecutionContext.HomeDirectory"/>, <c>/home/{login}</c>,
+    /// never <c>/home/{UserId}</c>), else <c>/</c>. A missing or unreadable start folder never reaches
+    /// the dialog, so it can no longer fail while it renders.
+    /// </summary>
+    internal static async ValueTask<VirtualPath> ResolveInitialDirectoryAsync(
+        IAppExecutionContext context,
+        VirtualPath? requested,
+        CancellationToken cancellationToken)
+    {
+        VirtualPath home = TryParse(context.HomeDirectory) ?? VirtualPath.Parse("/");
+        VirtualPath?[] candidates = [requested, home, VirtualPath.Parse("/")];
+        foreach (VirtualPath? candidate in candidates)
+        {
+            if (candidate is not VirtualPath path)
+            {
+                continue;
+            }
+
+            try
+            {
+                FileSystemResult<FileSystemDirectorySnapshot> listing = await context.FileSystem.EnumerateAsync(
+                    new FileSystemEnumerateRequest(path), cancellationToken).ConfigureAwait(false);
+                if (listing.Succeeded)
+                {
+                    return path;
+                }
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                // A gateway that throws counts as a folder the dialog cannot show: try the next one.
+            }
+        }
+
+        // Nothing is readable with the app's rights: the dialog still opens on the home folder and
+        // shows its own error there instead of failing.
+        return home;
+    }
+
+    private static VirtualPath? TryParse(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return null;
+        }
+
+        try
+        {
+            return VirtualPath.Parse(path);
+        }
+        catch (Exception exception) when (exception is FormatException or ArgumentException)
+        {
+            return null;
+        }
     }
 
     private ValueTask<TResult> Enqueue<TResult>(

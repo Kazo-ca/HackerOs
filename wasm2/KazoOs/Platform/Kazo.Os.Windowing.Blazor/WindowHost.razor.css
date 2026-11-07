@@ -48,6 +48,31 @@
     background: var(--kos-window-content-background, var(--kos-window-background, #0c1516));
 }
 
+/* ADR 0234 §1 and §5: a None window shows its client area only, on a transparent surface with no
+   border and no shadow (the chromeless first row stays empty). The surface and the client area let
+   the pointer through, so a click where the app draws nothing reaches the desktop or the window
+   below, like a Windows layered window; what the app draws takes the pointer back: the client
+   area's direct children, and any element marked data-kazo-window-hit. */
+.window-host.is-frameless {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    pointer-events: none;
+}
+
+.window-host.is-frameless .window-content {
+    overflow: hidden;
+    background: transparent;
+    pointer-events: none;
+}
+
+.window-host.is-frameless .window-content > ::deep *,
+.window-host.is-frameless .window-content ::deep [data-kazo-window-hit] {
+    pointer-events: auto;
+}
+
 @media (max-width: 40rem) {
     .window-host {
         min-width: 0;

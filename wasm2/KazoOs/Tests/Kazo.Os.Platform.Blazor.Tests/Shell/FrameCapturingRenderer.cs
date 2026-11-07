@@ -29,4 +29,7 @@ internal sealed class FrameCapturingRenderer(IServiceProvider services) : Render
             await RenderRootComponentAsync(componentId);
             return GetCurrentRenderTreeFrames(componentId);
         });
+
+    /// <summary>Returns the current frames of a child component, found through its parent's component frame.</summary>
+    public ArrayRange<RenderTreeFrame> FramesOf(int componentId) => GetCurrentRenderTreeFrames(componentId);
 }
