@@ -4,10 +4,10 @@
 
 ## Statut
 
-Proposée le 2026-11-07, en attente des réponses de Benoit aux questions 1 à 6
-(fil « Préparer la prochaine version de Kazo OS », voir « Questions posées à
-Benoit »). Chaque point de la décision suit la recommandation ; une réponse
-différente change le point concerné avant le code.
+Acceptée le 2026-11-07. Benoit a répondu aux questions 1 à 6 (fil « Préparer
+la prochaine version de Kazo OS », voir « Questions posées à Benoit ») : les
+recommandations, sauf la question 6 (réponse B) ; pour la question 4 (réponse
+A), la version ne sort pas sans les fenêtres `None` transparentes.
 
 - **Demandée par :** Benoit, 2026-11-07 (points 2 et 5 de sa réponse) : trois
   styles de fenêtre `Normal`, `Tool`, `None` et six options booléennes, comme
@@ -15,8 +15,7 @@ différente change le point concerné avant le code.
   `ShowInTaskbar` d'une `Form` WinForms.
 - **Règle aussi :** [#384](https://github.com/Kazo-ca/Os/issues/384) (une app
   réduit sa propre fenêtre) ; [#378](https://github.com/Kazo-ca/Os/issues/378)
-  (fenêtres sans cadre et transparentes) si la question 4 garde la
-  recommandation.
+  (fenêtres sans cadre et transparentes).
 - **Complète :** l'[ADR 0095](0095-window-events-sizes-and-keyboard.md) §2
   (tailles déclarées, `WindowOptions`) et
   l'[ADR 0117](0117-sdk-window-title-and-sdk-1-1.md) §2 (`IAppWindowGateway`,
@@ -73,11 +72,12 @@ Ajoutées à `WindowOptions`, avec les défauts donnés par Benoit :
 | `Resizable` | `true` | Existe déjà : poignées, agrandir, ancrage et commandes clavier de taille |
 | `MaximizeBox` | `true` | Bouton agrandir ; faux retire aussi le double-clic sur la barre et l'ancrage plein écran |
 | `MinimizeBox` | `true` | Bouton réduire ; faux retire aussi « Réduire » du menu de l'icône et la commande clavier |
-| `ShowInTaskbar` | `true` | Bouton dans la barre des tâches ; faux : la fenêtre reste dans Alt+Tab et le sélecteur (question 6) |
+| `ShowInTaskbar` | `true` | Bouton dans la barre des tâches ; faux : la fenêtre n'a plus de bouton réduire et ne peut pas être réduite par l'utilisateur (question 6) ; elle reste dans Alt+Tab et le sélecteur |
 | `Modal` | `false` | La fenêtre bloque sa propriétaire jusqu'à sa fermeture (§3) |
 
 Les combinaisons suivent WinForms : un style qui retire un bouton gagne sur le
-booléen. Le manifeste n'écrit un champ que s'il diffère de son défaut, pour que
+booléen, et `ShowInTaskbar = false` retire le bouton réduire comme
+`MinimizeBox = false`. Le manifeste n'écrit un champ que s'il diffère de son défaut, pour que
 les manifestes existants restent identiques octet pour octet (comme
 `rememberGeometry`, [ADR 0116](0116-window-geometry-restore.md)).
 
@@ -127,8 +127,8 @@ en WinForms.
   élément marqué `data-kazo-window-hit`).
 - Un clic sur une zone vide atteint ce qui est dessous (bureau ou autre
   fenêtre), comme une fenêtre en couches de Windows.
-- Ce point est un chantier séparé : s'il bloque, la version sort avec `None`
-  opaque et #378 reste ouverte.
+- Ce point est un chantier séparé, mais la version 3.1.0 ne sort pas sans lui
+  (réponse de Benoit à la question 4).
 
 ### 6. Dialogues de l'OS (question 5)
 
@@ -167,6 +167,8 @@ continuer à compiler sans changement.
 ## Questions posées à Benoit
 
 Posées le 2026-11-07 dans le fil, chacune avec sa recommandation (⭐).
+Réponses de Benoit le 2026-11-07 : 4 A (« on ne doit pas faire une release sans
+cette fonctionnalité »), 6 B, les autres selon la recommandation.
 
 1. Version : A ⭐ 3.1.0 ; B 3.0.1.
 2. Où régler style et booléens : A ⭐ manifeste et en cours d'exécution ;

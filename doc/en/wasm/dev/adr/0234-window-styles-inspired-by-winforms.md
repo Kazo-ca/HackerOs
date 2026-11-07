@@ -4,10 +4,10 @@
 
 ## Status
 
-Proposed on 2026-11-07, waiting for Benoit's answers to questions 1 to 6
-(thread "Préparer la prochaine version de Kazo OS", see "Questions asked to
-Benoit"). Each point of the decision follows the recommendation; a different
-answer changes that point before any code.
+Accepted on 2026-11-07. Benoit answered questions 1 to 6 (thread "Préparer la
+prochaine version de Kazo OS", see "Questions asked to Benoit"): the
+recommendations, except question 6 (answer B); for question 4 (answer A), the
+release does not ship without transparent `None` windows.
 
 - **Asked by:** Benoit, 2026-11-07 (points 2 and 5 of his answer): three window
   styles `Normal`, `Tool`, `None` and six boolean options, like
@@ -15,7 +15,7 @@ answer changes that point before any code.
   `ShowInTaskbar` of a WinForms `Form`.
 - **Also settles:** [#384](https://github.com/Kazo-ca/Os/issues/384) (an app
   minimizes its own window); [#378](https://github.com/Kazo-ca/Os/issues/378)
-  (frameless, transparent windows) if question 4 keeps the recommendation.
+  (frameless, transparent windows).
 - **Completes:** [ADR 0095](0095-window-events-sizes-and-keyboard.md) §2
   (declared sizes, `WindowOptions`) and
   [ADR 0117](0117-sdk-window-title-and-sdk-1-1.md) §2 (`IAppWindowGateway`,
@@ -71,11 +71,12 @@ Added to `WindowOptions`, with the defaults Benoit gave:
 | `Resizable` | `true` | Already exists: handles, maximize, snapping and keyboard size commands |
 | `MaximizeBox` | `true` | Maximize button; false also removes double-click on the bar and full-screen snapping |
 | `MinimizeBox` | `true` | Minimize button; false also removes "Minimize" from the icon menu and the keyboard command |
-| `ShowInTaskbar` | `true` | Taskbar button; false: the window stays in Alt+Tab and the switcher (question 6) |
+| `ShowInTaskbar` | `true` | Taskbar button; false: the window has no minimize button and the user cannot minimize it (question 6); it stays in Alt+Tab and the switcher |
 | `Modal` | `false` | The window blocks its owner until it closes (§3) |
 
 Combinations follow WinForms: a style that removes a button wins over the
-boolean. The manifest writes a field only when it differs from its default, so
+boolean, and `ShowInTaskbar = false` removes the minimize button as
+`MinimizeBox = false` does. The manifest writes a field only when it differs from its default, so
 existing manifests stay byte-identical (as `rememberGeometry`,
 [ADR 0116](0116-window-geometry-restore.md)).
 
@@ -123,8 +124,8 @@ window, as `WindowState` in WinForms.
   element marked `data-kazo-window-hit`).
 - A click on an empty area reaches what is below (desktop or another window),
   like a Windows layered window.
-- This point is a separate work item: if it gets stuck, the release ships with
-  an opaque `None` and #378 stays open.
+- This point is a separate work item, but version 3.1.0 does not ship without
+  it (Benoit's answer to question 4).
 
 ### 6. OS dialogs (question 5)
 
@@ -163,6 +164,8 @@ compiling unchanged.
 ## Questions asked to Benoit
 
 Asked on 2026-11-07 in the thread, each with its recommendation (⭐).
+Benoit's answers on 2026-11-07: 4 A ("we must not make a release without this
+feature"), 6 B, the others per the recommendation.
 
 1. Version: A ⭐ 3.1.0; B 3.0.1.
 2. Where style and booleans are set: A ⭐ manifest and at run time; B manifest
