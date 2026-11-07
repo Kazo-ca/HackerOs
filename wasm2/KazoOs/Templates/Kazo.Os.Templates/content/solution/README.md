@@ -82,6 +82,6 @@ The same `v*` tag also runs **Publish the Kazo OS packages**: it packs the app a
 users then install it with `kazopkg install <owner>/<repo>`, without the Kazo OS Store.
 
 These packages are not signed: apps are signed only in the Kazo OS Store repository
-(`Kazo-ca/Os-AppMarketPlace`), when it builds your app from the catalog (ADR 0233). Kazo OS checks
+(`Kazo-ca/Os-AppMarketPlace`), when it builds your app from the catalog (ADR 0219). Kazo OS checks
 them by their SHA-256 and asks an administrator before installing from an untrusted source. Users
 who want a signed package install your app from the Kazo OS Store.

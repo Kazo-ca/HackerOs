@@ -129,7 +129,7 @@ public static class GeneratorCodes
     /// </summary>
     public const string PackageFailed = "KOSAPP0060";
 
-    // KOSAPP0061 to KOSAPP0063 belonged to the authors' signing tool of ADR 0219, removed by ADR 0233
+    // KOSAPP0061 to KOSAPP0063 belonged to the authors' signing tool, removed by the 2026-11-07 amendment of ADR 0219
     // (packages are signed only in the marketplace repository); the numbers are not reused.
 
     /// <summary>

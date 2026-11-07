@@ -289,7 +289,7 @@ This section lists what is released in the `main` branch and online.
 - **Publishing an application on its `kazoos-packages` branch**: the
   template's `publish-packages.yml` workflow publishes the package, unsigned;
   applications are signed only in the Kazo OS Store repository.
-  ([ADR 0233](dev/adr/0233-sign-apps-only-in-the-marketplace.md),
+  ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
   [`app-repository.md`](framework/app-repository.md))
 - **Install an application from its GitHub repository** with the `kazopkg`
   command. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
