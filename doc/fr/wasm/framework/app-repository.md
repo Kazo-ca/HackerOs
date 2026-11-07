@@ -51,7 +51,7 @@ Deux façons, même résultat :
 | `.github/workflows/ci.yml` | CI : sous-module vérifié, build et tests en `Release` |
 | `.github/workflows/publish-to-kazoos-store.yml` | soumission au catalogue sur un tag `v*` |
 | `.github/workflows/tag-release.yml` | pose sur un commit de `main` le tag de la version du manifeste et lance les deux workflows ci-dessus (`workflow_dispatch`) |
-| `.github/workflows/publish-packages.yml` | paquet non signé poussé sur la branche `kazoos-packages` sur un tag `v*` ([ADR 0233](../dev/adr/0233-sign-apps-only-in-the-marketplace.md)) |
+| `.github/workflows/publish-packages.yml` | paquet non signé poussé sur la branche `kazoos-packages` sur un tag `v*` ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
 | `README.md`, `readme-fr.md` | ces étapes, pour le dépôt créé |
 
 ## La version de Kazo OS
@@ -169,12 +169,12 @@ gh secret set HACK_STORE_TOKEN --repo <propriétaire>/<dépôt>
 - **Sans le secret**, rien ne bloque : le dossier `apps/<appId>_<version>/`
   reste en artefact du workflow, et l'auteur ouvre la pull request lui-même.
 - Ce jeton ne signe rien : les apps sont signées seulement dans le dépôt du
-  marketplace ([ADR 0233](../dev/adr/0233-sign-apps-only-in-the-marketplace.md)).
+  marketplace ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)).
 
 ## Publier sur `kazoos-packages`
 
-[ADR 0219](../dev/adr/0219-app-authors-signing-tool.md) §3, sans signature
-depuis l'[ADR 0233](../dev/adr/0233-sign-apps-only-in-the-marketplace.md). Le
+[ADR 0219](../dev/adr/0219-app-authors-signing-tool.md) §4, sans signature
+depuis le 2026-11-07. Le
 même tag `v*` lance **Publish the Kazo OS packages** (`publish-packages.yml`,
 seul workflow avec `contents: write`) : il récupère la branche
 `kazoos-packages` (orpheline la première fois), y fait le paquet
@@ -204,4 +204,4 @@ fonctionner qu'avec un sous-module sur une release qui contient ce modèle
 - [x] Test des deux profils (`Kazo.Os.Templates.E2E.Tests`).
 - [ ] Dépôt template régénéré sur la release qui contient ce modèle.
 - [x] Workflow `publish-packages.yml` et signature des paquets (ADR 0219).
-- [x] Signature retirée des dépôts d'apps et du modèle (ADR 0233).
+- [x] Signature retirée des dépôts d'apps et du modèle (ADR 0219).

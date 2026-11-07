@@ -318,7 +318,7 @@ validation en deux étapes :
   l'app écrit le paquet et `index.json` dans `bin/kazoos-packages` (propriété
   `KazoOsPackageOutput`), à pousser sur la branche `kazoos-packages` ; le
   workflow `publish-packages.yml` du modèle `kazoos-solution` le fait sur un
-  tag `v*`, sans signature ([ADR 0233](adr/0233-sign-apps-only-in-the-marketplace.md)). Le
+  tag `v*`, sans signature ([ADR 0219](adr/0219-app-authors-signing-tool.md)). Le
   paquet contient toutes les ressources statiques du projet, déclarées ou non :
   le `wwwroot/`, le JavaScript collocalisé (`.razor.js`) et le bundle du CSS
   isolé (`<assemblage>.bundle.scp.css`) ; celles que l'app ne déclare pas sont
@@ -445,8 +445,8 @@ termine le Kazo OS Store.
   dans `[signing-keys]` (ou `KazoOsAppSigningKeys`), republier avec elle, puis
   remplacer la constante.
 - **Signature seulement dans le marketplace**
-  ([ADR 0233](adr/0233-sign-apps-only-in-the-marketplace.md), qui remplace
-  l'[ADR 0219](adr/0219-app-authors-signing-tool.md)) : seul le dépôt
+  ([ADR 0219](adr/0219-app-authors-signing-tool.md),
+  modifiée le 2026-11-07) : seul le dépôt
   `Kazo-ca/Os-AppMarketPlace` signe des paquets. `KazoOsPack` ne signe jamais
   (plus de `KazoOsKeyGen`, de `keygen`/`sign` dans le générateur, ni de
   `HACKEROS_APP_SIGNING_KEY`) ; un paquet d'une branche `kazoos-packages` porte

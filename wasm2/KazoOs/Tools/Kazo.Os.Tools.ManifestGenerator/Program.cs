@@ -13,7 +13,7 @@ namespace Kazo.Os.Tools.ManifestGenerator;
 /// host; writes its <c>BuiltInApplications.json</c>.</item>
 /// <item><c>pack</c>: run by the <c>KazoOsPack</c> MSBuild target of an app project; writes its
 /// <c>.kazoapp</c> package and adds it to <c>index.json</c> (ADR 0182 §1, §2), unsigned: packages are
-/// signed only in the marketplace repository (ADR 0233).</item>
+/// signed only in the marketplace repository (ADR 0219).</item>
 /// <item><c>validate &lt;file&gt;</c>: strict schema-v1 read and <c>AppManifestValidator</c> pass on
 /// one manifest file (absorbs the former <c>Kazo.Os.Tools.ManifestValidator</c>).</item>
 /// </list>
@@ -159,7 +159,7 @@ public static class Program
     /// With <c>--web-assets</c>, the package holds every static web resource of the project, not only
     /// the declared ones (ADR 0221 §1). The satellite assemblies of the declared assemblies, found in
     /// <c>--bin</c>, go to <c>lib/&lt;culture&gt;/</c> (ADR 0222 §1).
-    /// The version is never signed here: only the marketplace repository signs packages (ADR 0233); the
+    /// The version is never signed here: only the marketplace repository signs packages (ADR 0219); the
     /// signatures already in <c>index.json</c> are kept (ADR 0219 §2).
     /// </summary>
     private static int Pack(IReadOnlyDictionary<string, string> options)

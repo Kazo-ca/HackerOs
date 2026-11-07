@@ -99,8 +99,8 @@ public sealed class MsBuildIntegrationTests
     [Fact]
     public async Task KazoOsPack_never_signs_even_when_the_former_author_key_variable_is_set()
     {
-        // ADR 0233: packages are signed only in the marketplace repository; the variable of ADR 0219
-        // left in an app repository's workflow must change nothing.
+        // ADR 0219 §1: packages are signed only in the marketplace repository; the former author key
+        // variable left in an app repository's workflow must change nothing.
         string output = Directory.CreateTempSubdirectory("kazoos-pack-").FullName;
         try
         {
@@ -124,7 +124,7 @@ public sealed class MsBuildIntegrationTests
         }
     }
 
-    /// <summary>The author key variable of ADR 0219, superseded by ADR 0233.</summary>
+    /// <summary>The author key variable of ADR 0219 before its 2026-11-07 amendment.</summary>
     private const string FormerAuthorKeyVariable = "HACKEROS_APP_SIGNING_KEY";
 
     private static string FixtureDirectory(string name) =>

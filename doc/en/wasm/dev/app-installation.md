@@ -316,7 +316,7 @@ approval:
   writes the package and `index.json` to `bin/kazoos-packages` (property
   `KazoOsPackageOutput`), to push to the `kazoos-packages` branch; the
   `publish-packages.yml` workflow of the `kazoos-solution` template does it on
-  a `v*` tag, unsigned ([ADR 0233](adr/0233-sign-apps-only-in-the-marketplace.md)). The
+  a `v*` tag, unsigned ([ADR 0219](adr/0219-app-authors-signing-tool.md)). The
   package holds every static resource of the project, declared or not: the
   `wwwroot/`, the collocated JavaScript (`.razor.js`) and the scoped CSS bundle
   (`<assembly>.bundle.scp.css`); those the app does not declare are added, with
@@ -440,8 +440,8 @@ completes the Kazo OS Store.
   break: add the new one to `[signing-keys]` (or `KazoOsAppSigningKeys`),
   republish with it, then replace the constant.
 - **Signing only in the marketplace**
-  ([ADR 0233](adr/0233-sign-apps-only-in-the-marketplace.md), superseding
-  [ADR 0219](adr/0219-app-authors-signing-tool.md)): only the
+  ([ADR 0219](adr/0219-app-authors-signing-tool.md),
+  amended on 2026-11-07): only the
   `Kazo-ca/Os-AppMarketPlace` repository signs packages. `KazoOsPack` never
   signs (no more `KazoOsKeyGen`, generator `keygen`/`sign`, or
   `HACKEROS_APP_SIGNING_KEY`); a package of a `kazoos-packages` branch carries

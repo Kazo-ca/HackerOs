@@ -13,6 +13,6 @@
     "fr": "KazoOsPack ne signe plus les paquets : la cible KazoOsKeyGen, la propriété KazoOsSigningKeyFile, les commandes keygen et sign du générateur et la variable HACKEROS_APP_SIGNING_KEY disparaissent. Le modèle kazoos-solution publie toujours la branche kazoos-packages, sans signature ; le secret peut être supprimé des dépôts d'apps."
   },
   "links": [
-    "doc/en/wasm/dev/adr/0233-sign-apps-only-in-the-marketplace.md"
+    "doc/en/wasm/dev/adr/0219-app-authors-signing-tool.md"
   ]
 }

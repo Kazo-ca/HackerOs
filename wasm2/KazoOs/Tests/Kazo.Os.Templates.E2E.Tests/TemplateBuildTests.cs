@@ -51,7 +51,7 @@ public sealed class TemplateBuildTests(TemplateWorkspace workspace)
         Assert.Contains("\"project\": \"src/Contoso.Board/Contoso.Board.csproj\"", File.ReadAllText(Path.Combine(directory, "store", "store.json")), StringComparison.Ordinal);
         Assert.Contains("src/Contoso.Board", File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-to-kazoos-store.yml")), StringComparison.Ordinal);
         // ADR 0219 §3: the packages branch workflow is named for the app and private keys stay out of git;
-        // ADR 0233: it signs nothing, apps are signed only in the marketplace repository.
+        // ADR 0219: it signs nothing, apps are signed only in the marketplace repository.
         string packagesWorkflow = File.ReadAllText(Path.Combine(directory, ".github", "workflows", "publish-packages.yml"));
         Assert.Contains("src/Contoso.Board", packagesWorkflow, StringComparison.Ordinal);
         Assert.DoesNotContain("SIGNING_KEY", packagesWorkflow, StringComparison.Ordinal);

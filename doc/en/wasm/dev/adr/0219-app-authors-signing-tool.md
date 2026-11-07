@@ -1,145 +1,131 @@
 > [Version française](../../../../fr/wasm/dev/adr/0219-app-authors-signing-tool.md)
 
-# ADR 0219: package signing tool for app authors
+# ADR 0219: app repository packages, signed only in the marketplace
 
 ## Status
-
-**Superseded** by [ADR 0233](0233-sign-apps-only-in-the-marketplace.md)
-(2026-11-07): apps are signed only in the marketplace repository. Only §2 and
-the unsigned publishing of `kazoos-packages` (§3) still apply; the text below
-is kept for the record.
 
 Accepted on 2026-10-31, work item `todo/25-app-signing-tool` (`todo/base`
 series, `TODO` issue [#321](https://github.com/Kazo-ca/Os/issues/321)).
 Completes [ADR 0214](0214-hack-store-hot-add-signing-transactions.md) §2 for
 `github:` sources; changes nothing in the check the OS makes.
 
+**Amended on 2026-11-07** from Benoit's rule of 2026-11-06: "No signing of
+applications outside the marketplace repository." Benoit chose to amend this
+ADR rather than write a new one (see "Questions asked to Benoit"): the
+authors' signing tool described in the first version is removed; see
+"History".
+
 ## Context
 
-ADR 0214 §2 accepts a `signature` field (ECDSA P-256, SHA-256, IEEE P1363 as
-base64) for each version of an app repository's `index.json`, and public keys
-in `[signing-keys]` of `/etc/hackeros/app-sources.config`. The official catalog
-already signs its packages (`Kazo.Os.MarketPlace.Tool keygen` / `sign`,
-`HACK_STORE_SIGNING_KEY` secret). An author who publishes from their own
-repository (`github:<owner>/<repo>`, `hackeros-packages` branch) has no tool:
-
-- `HackerOsPack` (ADR 0182 §2) writes the package and `index.json`, unsigned;
-  worse, `AppPackageWriter.AddToIndex` rewrites the index **without** the
-  signatures already there.
-- The `hackeros-solution` template (ADR 0207) has a workflow that submits the
-  app to the catalog, but none pushes the `hackeros-packages` branch.
+- ADR 0214 §2 accepts a `signature` field (ECDSA P-256, SHA-256, IEEE P1363 in
+  base64) for each version of an app repository's `index.json`, and public
+  keys in `[signing-keys]` of `/etc/kazoos/app-sources.config`.
+- The Kazo OS Store builds and signs apps in `Kazo-ca/Os-AppMarketPlace`
+  (`Kazo.Os.MarketPlace.Tool keygen` / `sign`, `publish.yml` workflow,
+  `KAZO_STORE_SIGNING_KEY` secret): it is the only signature the OS requires by
+  default (`catalog:official`).
+- An author also publishes their app on the `kazoos-packages` branch of their
+  repository (`github:<owner>/<repo>`), for `kazopkg install <owner>/<repo>`
+  without the Store.
+- Benoit wants a single private key, kept in a single place: the marketplace
+  repository.
 
 ## Decision
 
-### 1. Tool: the HackerOS build tooling (Q1 A)
+### 1. No signing outside `Kazo-ca/Os-AppMarketPlace`
 
-The manifest generator (`Kazo.Os.Tools.ManifestGenerator`, shipped in the
-`Kazo.Os.App.Build` package and used by `HackerOsPack`) gets two commands, in
-the same format as the catalog's tool:
+Only the `publish.yml` workflow of the marketplace repository signs packages.
+No app repository, no template and no SDK tool signs. The `HACK_STORE_TOKEN`
+secret of app repositories, which opens the pull request to the catalog (fork
+and pull request), signs nothing and stays.
 
-- `keygen --private-key <file.pem>`: creates a P-256 pair, writes the PKCS#8
-  private key to a **new** file (mode `0600` outside Windows; an existing file
-  is never replaced) and prints the public key (base64 SubjectPublicKeyInfo)
-  and the `[signing-keys]` line to give to administrators.
-- `sign --package <file.hackapp> [--private-key <file.pem>]`: prints the
-  signature of a package (key read from `HACKEROS_APP_SIGNING_KEY` without
-  `--private-key`).
+### 2. The SDK has no signing tool (Q2 A)
 
-MSBuild targets of `Kazo.Os.Apps.targets`:
+- The manifest generator (`Kazo.Os.Tools.ManifestGenerator`, package
+  `Kazo.Os.App.Build`) has no `keygen` or `sign` command.
+- `Kazo.Os.Apps.targets` has no `KazoOsKeyGen` target and no
+  `KazoOsSigningKeyFile` property; `KazoOsPack` does not read
+  `HACKEROS_APP_SIGNING_KEY` and never signs.
+- Codes `KOSAPP0061` to `KOSAPP0063` (removed tool) are no longer raised; their
+  numbers are not reused.
 
-- `dotnet build -t:HackerOsKeyGen -p:HackerOsSigningKeyFile=<file.pem>`: runs
-  `keygen`. The property is required (`HOSAPP0061`): no default path, so that a
-  key is never created in the repository by accident.
-- `HackerOsPack` signs each package when the `HACKEROS_APP_SIGNING_KEY`
-  environment variable holds the private key (PEM), or when
-  `HackerOsSigningKeyFile` points at the file. The key never goes through the
-  command line. The signature is checked with the public key before it is
-  written to `index.json`.
+### 3. Index: signatures are kept
 
-The new targets need the HackerOS version that contains this work item (the
-next one after 2.2.0): an app repository on 2.2.0 keeps today's behavior.
+`AppPackageWriter.AddToIndex` writes the `signature` field of each version that
+has one: republishing a version or adding one does not lose the others'
+signatures. A republished version loses its own (its bytes may have changed).
 
-### 2. Index: signatures are kept
+### 4. `kazoos-packages` branch: workflow without signing (Q3 A)
 
-`AppPackageWriter.AddToIndex` writes the `signature` field of every version
-that has one: republishing a version or adding one no longer loses the
-signatures of the others. A version republished without a key loses its own
-(its bytes may have changed).
-
-### 3. `hackeros-packages` branch: new workflow (Q2 A)
-
-The `hackeros-solution` template (and so `Kazo-ca/Os-AppTemplate`) gets
-`.github/workflows/publish-packages.yml`, on a `v*` tag:
+The `kazoos-solution` template (and so `Kazo-ca/Os-AppTemplate` and the app
+repositories made from it) has `.github/workflows/publish-packages.yml`, on a
+`v*` tag:
 
 1. checks the submodule and the tag (= manifest version), like the Store
    workflow;
-2. fetches the `hackeros-packages` branch (or creates an orphan one) into a
+2. fetches the `kazoos-packages` branch (or creates an orphan one) into a
    folder, to keep the versions already published;
-3. runs `HackerOsPack` with `HackerOsPackageOutput` on that folder and
-   `HACKEROS_APP_SIGNING_KEY` from the secret of the same name;
-4. commits and pushes the branch. It is the only workflow of the template with
+3. runs `KazoOsPack` with `KazoOsPackageOutput` on that folder, with no key;
+4. pushes the branch. It is the only template workflow with
    `contents: write`.
 
-`hackpkg install <owner>/<repo>` then works without the Store.
+The package carries its SHA-256 only. The OS treats that source like any
+source without a key (ADR 0214 §2.4): the install is accepted, with an
+administrator's approval for an untrusted source (ADR 0208).
 
-### 4. Without a secret: published unsigned, with a warning (Q3 A)
+### 5. Secrets and author keys
 
-Without `HACKEROS_APP_SIGNING_KEY`, the package is published with its SHA-256
-only and the workflow writes a warning (`::warning::`). This is the rule of ADR
-0214 §2.4: a source with no key in `[signing-keys]` is accepted. As soon as an
-administrator has added the author's key, an unsigned package from that
-repository is refused (`apps.package.unsigned`).
-
-### 5. Secret name: `HACKEROS_APP_SIGNING_KEY` (Q4 A)
-
-Distinct from `HACK_STORE_SIGNING_KEY` (official catalog): an author's key
-protects only their repositories.
-
-### 6. The author's key at the administrators
-
-The author publishes their public key (repository README, project page). An
-administrator adds it with `sudo nano /etc/hackeros/app-sources.config`:
-
-```text
-[signing-keys]
-github.com/contoso=MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE…
-```
-
-`github.com/<owner>` covers every repository of the author,
-`github.com/<owner>/<repo>` only one. To change keys without a break, the
-author creates the new pair, has it added after the old one (separated by a
-comma), changes the secret, then the old one is removed. A host can also
-compile the key in with `HackerOsAppSigningKeys`.
+- The `HACKEROS_APP_SIGNING_KEY` secrets of app repositories have no use any
+  more: Benoit deletes them (Settings ▸ Secrets and variables ▸ Actions). No
+  agent handles a private key.
+- The OS still reads `[signing-keys]` and `KazoOsAppSigningKeys` (ADR 0214
+  §2.3), but the only keys planned are catalog keys (`catalog:<name>`). A
+  `github.com/<owner>` key added by an administrator would make the unsigned
+  packages of that repository refused: it must be removed.
 
 ## Consequences
 
-- An author signs with what they already have (`dotnet build`), nothing to
-  install.
-- The official catalog keeps its own tool (`Kazo.Os.MarketPlace.Tool`), in the
-  same format; the two share no code (the catalog builds the OS from its
-  submodule).
-- `Kazo-ca/Os-AppTemplate` gets the workflow when it is regenerated on
-  the version that contains this work item (draft PR until then).
-- The private key never leaves the author's machine, except in their
-  repository's secret; no agent handles it.
+- One private key to keep and rotate: the catalog's.
+- An author cannot prove that a package of their `kazoos-packages` branch
+  comes from them; a user who wants a signed app installs it from the Kazo OS
+  Store.
+- Change to the `Kazo.Os.App.Build` package (MSBuild tooling, no public C#
+  API): an app repository that called `KazoOsKeyGen` or passed
+  `KazoOsSigningKeyFile` must remove that call.
+
+## History
+
+The first version (2026-10-31) gave each author their own key: generator
+`keygen` and `sign`, `KazoOsKeyGen` target, signing by `KazoOsPack` with
+`HACKEROS_APP_SIGNING_KEY` or `KazoOsSigningKeyFile` (warning `KOSAPP0063`
+without a key), and the author's key in `[signing-keys]`
+(`github.com/<owner>=…`). It shipped in Kazo OS 2.2.1 and was removed on
+2026-11-07 (pull request [#390](https://github.com/Kazo-ca/Os/pull/390)).
 
 ## Questions asked to Benoit
 
-Asked on 2026-10-31; Benoit chose the recommendations (A) the same day, as built.
+First version, asked and answered on 2026-10-31:
 
 | Question | Choices | Benoit's answer (2026-10-31) |
 |---|---|---|
-| Q1 Where to put `keygen` and `sign` | **A HackerOS build tooling (recommended)**; B separate `dotnet` tool; C MarketPlace tool | A |
-| Q2 Who publishes `hackeros-packages` | **A new `publish-packages.yml` workflow (recommended)**; B inside the Store workflow; C by hand | A |
-| Q3 Without a secret | **A publish unsigned with a warning (recommended)**; B fail | A |
-| Q4 Secret name | **A `HACKEROS_APP_SIGNING_KEY` (recommended)**; B `HACK_STORE_SIGNING_KEY` | A |
+| Q1 Where to put `keygen` and `sign` | **A build tooling (recommended)**; B separate `dotnet` tool; C MarketPlace tool | A (removed on 2026-11-07) |
+| Q2 Who publishes `kazoos-packages` | **A new `publish-packages.yml` workflow (recommended)**; B inside the Store workflow; C by hand | A |
+| Q3 Without a secret | **A publish unsigned with a warning (recommended)**; B fail | A (moot on 2026-11-07: never signed) |
+| Q4 Secret name | **A `HACKEROS_APP_SIGNING_KEY` (recommended)**; B `HACK_STORE_SIGNING_KEY` | A (secret removed on 2026-11-07) |
+
+Amendment, asked on 2026-11-07 in the thread "Signer les apps seulement dans
+le marketplace":
+
+| Question | Choices | Benoit's answer (2026-11-07) |
+|---|---|---|
+| Q1 How to remove per-repository signing | A new ADR superseding 0219 (recommended); **B amend ADR 0219**; C delete ADR 0219 | B |
+| Q2 Also remove the signing tool from the SDK | **A yes (recommended)**; B only the workflows | A |
+| Q3 Keep publishing to `kazoos-packages` | **A keep, unsigned (recommended)**; B delete the workflow | A |
 
 ## Tasks
 
-- [x] Generator `keygen` and `sign`, signature in `pack`.
-- [x] `HackerOsKeyGen` target and signing in `HackerOsPack`.
-- [x] `AddToIndex` keeps signatures.
-- [x] `publish-packages.yml` workflow of the `hackeros-solution` template, `*.pem` ignored.
-- [x] Tests (`ManifestGenerator`, `AppPackageWriterTests`).
-- [x] Documentation (`app-installation.md`, `framework/app-repository.md`).
-- [ ] `Kazo-ca/Os-AppTemplate` regenerated on the version that contains this work item.
+- [x] `AddToIndex` keeps the signatures.
+- [x] `publish-packages.yml` workflow of the `kazoos-solution` template, `*.pem` ignored.
+- [x] `Kazo-ca/Os-AppTemplate` regenerated on a version that contains this work item.
+- [x] Signing removed from the SDK, the template and the `Os-AppTemplate`, `Os-App-Webamp`, `Os-App-Chess` repositories (2026-11-07).
+- [ ] Benoit deletes the `HACKEROS_APP_SIGNING_KEY` secrets of the app repositories.

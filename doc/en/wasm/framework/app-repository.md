@@ -51,7 +51,7 @@ Two ways, same result:
 | `.github/workflows/ci.yml` | CI: submodule checked, build and tests in `Release` |
 | `.github/workflows/publish-to-kazoos-store.yml` | submission to the catalog on a `v*` tag |
 | `.github/workflows/tag-release.yml` | tags a commit of `main` with the manifest's version and starts the two workflows above (`workflow_dispatch`) |
-| `.github/workflows/publish-packages.yml` | unsigned package pushed to the `kazoos-packages` branch on a `v*` tag ([ADR 0233](../dev/adr/0233-sign-apps-only-in-the-marketplace.md)) |
+| `.github/workflows/publish-packages.yml` | unsigned package pushed to the `kazoos-packages` branch on a `v*` tag ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
 | `README.md`, `readme-fr.md` | these steps, for the created repository |
 
 ## The Kazo OS version
@@ -166,12 +166,12 @@ gh secret set HACK_STORE_TOKEN --repo <owner>/<repository>
 - **Without the secret**, nothing blocks: the `apps/<appId>_<version>/` folder
   stays as a workflow artifact, and the author opens the pull request.
 - This token signs nothing: apps are signed only in the marketplace
-  repository ([ADR 0233](../dev/adr/0233-sign-apps-only-in-the-marketplace.md)).
+  repository ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)).
 
 ## Publishing on `kazoos-packages`
 
-[ADR 0219](../dev/adr/0219-app-authors-signing-tool.md) §3, without signing
-since [ADR 0233](../dev/adr/0233-sign-apps-only-in-the-marketplace.md). The
+[ADR 0219](../dev/adr/0219-app-authors-signing-tool.md) §4, without signing
+since 2026-11-07. The
 same `v*` tag runs **Publish the Kazo OS packages** (`publish-packages.yml`,
 the only workflow with `contents: write`): it fetches the `kazoos-packages`
 branch (orphan the first time), packs the app there (`KazoOsPack`,
@@ -202,4 +202,4 @@ can only work with a submodule on a release that contains this template
 - [x] Test of both profiles (`Kazo.Os.Templates.E2E.Tests`).
 - [ ] Template repository regenerated on the release that contains this template.
 - [x] `publish-packages.yml` workflow and package signing (ADR 0219).
-- [x] Signing removed from app repositories and the template (ADR 0233).
+- [x] Signing removed from app repositories and the template (ADR 0219).

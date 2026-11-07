@@ -82,6 +82,6 @@ pousse sur la branche `kazoos-packages` de ce dépôt, en gardant les versions d
 utilisateurs de Kazo OS l'installent alors avec `kazopkg install <owner>/<repo>`, sans le Kazo OS Store.
 
 Ces paquets ne sont pas signés : les apps sont signées seulement dans le dépôt du Kazo OS Store
-(`Kazo-ca/Os-AppMarketPlace`), quand il compile votre app depuis le catalogue (ADR 0233). Kazo OS
+(`Kazo-ca/Os-AppMarketPlace`), quand il compile votre app depuis le catalogue (ADR 0219). Kazo OS
 les vérifie par leur SHA-256 et demande un administrateur avant d'installer depuis une source non
 fiable. Pour un paquet signé, installez l'app depuis le Kazo OS Store.

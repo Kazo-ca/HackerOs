@@ -313,8 +313,8 @@
     The package holds every static web resource of the project, declared or not (ADR 0221 §1), and
     the satellite assemblies of the app's own assemblies, lib/<culture>/<assembly>.resources.dll
     (ADR 0222).
-    The package is never signed here: only the marketplace repository signs packages (ADR 0233,
-    which removed the authors' KazoOsKeyGen target and signing of ADR 0219).
+    The package is never signed here: only the marketplace repository signs packages (ADR 0219 §1,
+    whose 2026-11-07 amendment removed the authors' KazoOsKeyGen target and signing).
   -->
   <PropertyGroup>
     <KazoOsPackageOutput Condition="'$(KazoOsPackageOutput)' == ''">$(MSBuildProjectDirectory)/bin/kazoos-packages</KazoOsPackageOutput>

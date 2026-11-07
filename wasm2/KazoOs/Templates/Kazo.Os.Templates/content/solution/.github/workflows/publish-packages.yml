@@ -1,4 +1,4 @@
-# Publishes the app on the kazoos-packages branch of this repository (ADR 0182 §2, ADR 0233 §3), so
+# Publishes the app on the kazoos-packages branch of this repository (ADR 0182 §2, ADR 0219 §4), so
 # that "kazopkg install <owner>/<repo>" installs it without the Kazo OS Store.
 #
 # On a tag v<version> (the app's Version in its [AppManifest] class), this workflow:
@@ -6,7 +6,7 @@
 #   2. checks out the kazoos-packages branch (an orphan branch the first time), so the versions
 #      already published stay listed in index.json;
 #   3. packs the app there (KazoOsPack), unsigned: packages are signed only in the marketplace
-#      repository (ADR 0233), so this workflow has no signing key;
+#      repository (ADR 0219), so this workflow has no signing key;
 #   4. commits and pushes the branch.
 # This is the only workflow of the repository allowed to write to it.
 name: Publish the Kazo OS packages
