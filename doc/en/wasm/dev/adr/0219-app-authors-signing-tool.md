@@ -4,6 +4,11 @@
 
 ## Status
 
+**Superseded** by [ADR 0233](0233-sign-apps-only-in-the-marketplace.md)
+(2026-11-07): apps are signed only in the marketplace repository. Only §2 and
+the unsigned publishing of `kazoos-packages` (§3) still apply; the text below
+is kept for the record.
+
 Accepted on 2026-10-31, work item `todo/25-app-signing-tool` (`todo/base`
 series, `TODO` issue [#321](https://github.com/Kazo-ca/Os/issues/321)).
 Completes [ADR 0214](0214-hack-store-hot-add-signing-transactions.md) §2 for

@@ -313,13 +313,8 @@
     The package holds every static web resource of the project, declared or not (ADR 0221 §1), and
     the satellite assemblies of the app's own assemblies, lib/<culture>/<assembly>.resources.dll
     (ADR 0222).
-    ADR 0219: each package is signed with the author's key, read from the HACKEROS_APP_SIGNING_KEY
-    environment variable (a workflow secret) or from the KazoOsSigningKeyFile PEM file; without
-    either it is published unsigned with warning KOSAPP0063. The key never goes on a command line.
-
-    KazoOsKeyGen (ADR 0219 §1): "dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=<file.pem>"
-    creates the author's key pair: the private key goes to that new file (keep it out of the
-    repository), the public key is printed for [signing-keys]. No default path, on purpose.
+    The package is never signed here: only the marketplace repository signs packages (ADR 0233,
+    which removed the authors' KazoOsKeyGen target and signing of ADR 0219).
   -->
   <PropertyGroup>
     <KazoOsPackageOutput Condition="'$(KazoOsPackageOutput)' == ''">$(MSBuildProjectDirectory)/bin/kazoos-packages</KazoOsPackageOutput>
@@ -344,23 +339,7 @@
       <_KazoOsPackWebAssets Condition="'$(_KazoOsPackWebAssets)' == ''">$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '$(IntermediateOutputPath)', 'staticwebassets.build.json'))</_KazoOsPackWebAssets>
       <_KazoOsPackWebAssetsArgument Condition="'$(UsingMicrosoftNETSdkRazor)' == 'true'"> --web-assets &quot;$(_KazoOsPackWebAssets)&quot;</_KazoOsPackWebAssetsArgument>
     </PropertyGroup>
-    <PropertyGroup>
-      <_KazoOsPackKeyArgument Condition="'$(KazoOsSigningKeyFile)' != ''"> --private-key &quot;$([MSBuild]::NormalizePath('$(MSBuildStartupDirectory)', '$(KazoOsSigningKeyFile)'))&quot;</_KazoOsPackKeyArgument>
-    </PropertyGroup>
-    <Exec Command="&quot;$(_KazoOsDotnetHost)&quot; &quot;$(_KazoOsManifestGeneratorPath)&quot; pack --manifest &quot;%(_KazoOsPackManifest.Identity)&quot; --bin &quot;$(_KazoOsPackBin)&quot; --webroot &quot;$(MSBuildProjectDirectory)/wwwroot&quot; --output &quot;$(_KazoOsPackOutput)&quot;$(_KazoOsPackWebAssetsArgument)$(_KazoOsPackKeyArgument)" />
-  </Target>
-
-  <Target Name="_KazoOsRequireSigningKeyFile">
-    <Error Condition="'$(KazoOsSigningKeyFile)' == ''"
-           Code="KOSAPP0061"
-           Text="KazoOsKeyGen needs the file of the new private key, outside the repository: dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=&lt;file.pem&gt; (ADR 0219)." />
-  </Target>
-
-  <!-- Build first: it builds the generator in the Kazo OS repository and in the Debug profile of an app repository. -->
-  <Target Name="KazoOsKeyGen"
-          DependsOnTargets="_KazoOsRequireSigningKeyFile;Build;_KazoOsResolveManifestGeneratorPath"
-          Condition="'$(KazoOsAppProject)' == 'true'">
-    <Exec Command="&quot;$(_KazoOsDotnetHost)&quot; &quot;$(_KazoOsManifestGeneratorPath)&quot; keygen --private-key &quot;$([MSBuild]::NormalizePath('$(MSBuildStartupDirectory)', '$(KazoOsSigningKeyFile)'))&quot;" />
+    <Exec Command="&quot;$(_KazoOsDotnetHost)&quot; &quot;$(_KazoOsManifestGeneratorPath)&quot; pack --manifest &quot;%(_KazoOsPackManifest.Identity)&quot; --bin &quot;$(_KazoOsPackBin)&quot; --webroot &quot;$(MSBuildProjectDirectory)/wwwroot&quot; --output &quot;$(_KazoOsPackOutput)&quot;$(_KazoOsPackWebAssetsArgument)" />
   </Target>
 
   <!-- ===================================================================================== -->

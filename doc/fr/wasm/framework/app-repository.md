@@ -51,7 +51,7 @@ Deux façons, même résultat :
 | `.github/workflows/ci.yml` | CI : sous-module vérifié, build et tests en `Release` |
 | `.github/workflows/publish-to-kazoos-store.yml` | soumission au catalogue sur un tag `v*` |
 | `.github/workflows/tag-release.yml` | pose sur un commit de `main` le tag de la version du manifeste et lance les deux workflows ci-dessus (`workflow_dispatch`) |
-| `.github/workflows/publish-packages.yml` | paquet signé poussé sur la branche `kazoos-packages` sur un tag `v*` ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
+| `.github/workflows/publish-packages.yml` | paquet non signé poussé sur la branche `kazoos-packages` sur un tag `v*` ([ADR 0233](../dev/adr/0233-sign-apps-only-in-the-marketplace.md)) |
 | `README.md`, `readme-fr.md` | ces étapes, pour le dépôt créé |
 
 ## La version de Kazo OS
@@ -168,35 +168,25 @@ gh secret set HACK_STORE_TOKEN --repo <propriétaire>/<dépôt>
   moindre doute.
 - **Sans le secret**, rien ne bloque : le dossier `apps/<appId>_<version>/`
   reste en artefact du workflow, et l'auteur ouvre la pull request lui-même.
-- À ne pas confondre avec `HACKEROS_APP_SIGNING_KEY` (section suivante), une
-  clé que l'outillage Kazo OS génère pour signer les paquets.
+- Ce jeton ne signe rien : les apps sont signées seulement dans le dépôt du
+  marketplace ([ADR 0233](../dev/adr/0233-sign-apps-only-in-the-marketplace.md)).
 
-## Publier sur `kazoos-packages` et signer
+## Publier sur `kazoos-packages`
 
-[ADR 0219](../dev/adr/0219-app-authors-signing-tool.md). Le même tag `v*` lance
-**Publish the Kazo OS packages** (`publish-packages.yml`, seul workflow avec
-`contents: write`) : il récupère la branche `kazoos-packages` (orpheline la
-première fois), y fait le paquet (`KazoOsPack`, `KazoOsPackageOutput`), garde
-les versions déjà publiées et leurs signatures, puis pousse la branche.
-`kazopkg install <owner>/<repo>` installe alors l'app sans le Store.
+[ADR 0219](../dev/adr/0219-app-authors-signing-tool.md) §3, sans signature
+depuis l'[ADR 0233](../dev/adr/0233-sign-apps-only-in-the-marketplace.md). Le
+même tag `v*` lance **Publish the Kazo OS packages** (`publish-packages.yml`,
+seul workflow avec `contents: write`) : il récupère la branche
+`kazoos-packages` (orpheline la première fois), y fait le paquet
+(`KazoOsPack`, `KazoOsPackageOutput`), garde les versions déjà publiées, puis
+pousse la branche. `kazopkg install <owner>/<repo>` installe alors l'app sans
+le Store.
 
-Pour signer :
-
-1. Une fois, hors du dépôt :
-   `dotnet build src/<Nom> -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=$HOME/kazoos-signing-key.pem`.
-   La clé privée (PKCS#8, droits `0600`) va dans ce nouveau fichier, jamais
-   remplacé ; la clé publique et la ligne `github.com/<owner>=…` sont affichées.
-   `*.pem` est dans le `.gitignore` du modèle.
-2. Mettre le contenu du fichier dans le secret `HACKEROS_APP_SIGNING_KEY` du
-   dépôt, puis garder le fichier hors ligne.
-3. Publier la clé publique ; un administrateur l'ajoute à `[signing-keys]` de
-   `/etc/kazoos/app-sources.config`. Dès lors, un paquet non signé ou mal
-   signé de ce dépôt est refusé.
-
-Sans le secret, le paquet part non signé (SHA-256 seulement) avec un
-avertissement. En local : variable `HACKEROS_APP_SIGNING_KEY` ou
-`-p:KazoOsSigningKeyFile=<fichier.pem>` sur `KazoOsPack`. Il faut une
-version de Kazo OS qui contient l'ADR 0219 (2.2.1 ou plus récente).
+Ces paquets ne sont **pas signés** : aucun dépôt d'app ne signe, seul
+`Kazo-ca/Os-AppMarketPlace` signe les paquets du Kazo OS Store. L'OS les
+vérifie par leur SHA-256 et demande un administrateur pour une source non
+fiable (ADR 0208, ADR 0214 §2.4). Un dépôt d'app qui a encore un secret
+`HACKEROS_APP_SIGNING_KEY` (ADR 0219) peut le supprimer : plus rien ne le lit.
 
 ## Le dépôt template GitHub
 
@@ -214,3 +204,4 @@ fonctionner qu'avec un sous-module sur une release qui contient ce modèle
 - [x] Test des deux profils (`Kazo.Os.Templates.E2E.Tests`).
 - [ ] Dépôt template régénéré sur la release qui contient ce modèle.
 - [x] Workflow `publish-packages.yml` et signature des paquets (ADR 0219).
+- [x] Signature retirée des dépôts d'apps et du modèle (ADR 0233).

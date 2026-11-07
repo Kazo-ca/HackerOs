@@ -129,15 +129,8 @@ public static class GeneratorCodes
     /// </summary>
     public const string PackageFailed = "KOSAPP0060";
 
-    // KOSAPP0061 is raised by the KazoOsKeyGen MSBuild target itself: KazoOsSigningKeyFile not set (ADR 0219 §1).
-
-    /// <summary><c>keygen</c> or <c>sign</c> (ADR 0219 §1): the key file exists already, or the key or package cannot be used.</summary>
-    public const string SigningFailed = "KOSAPP0062";
-
-    /// <summary>
-    /// <c>pack</c> warning (ADR 0219 §4): no author key was given, the package is published with its SHA-256 only.
-    /// </summary>
-    public const string UnsignedPackage = "KOSAPP0063";
+    // KOSAPP0061 to KOSAPP0063 belonged to the authors' signing tool of ADR 0219, removed by ADR 0233
+    // (packages are signed only in the marketplace repository); the numbers are not reused.
 
     /// <summary>
     /// <c>pack</c> (ADR 0221 §1), a warning: a static web resource of the project has a path a

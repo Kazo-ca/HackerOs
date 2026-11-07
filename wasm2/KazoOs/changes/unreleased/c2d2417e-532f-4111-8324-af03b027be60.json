@@ -1,0 +1,18 @@
+{
+  "id": "c2d2417e-532f-4111-8324-af03b027be60",
+  "category": "developer",
+  "audience": [
+    "developer"
+  ],
+  "title": {
+    "en": "Apps are signed only in the Kazo OS Store repository",
+    "fr": "Les apps sont signées seulement dans le dépôt du Kazo OS Store"
+  },
+  "description": {
+    "en": "KazoOsPack no longer signs packages: the KazoOsKeyGen target, the KazoOsSigningKeyFile property, the generator's keygen and sign commands and the HACKEROS_APP_SIGNING_KEY variable are gone. The kazoos-solution template still publishes the kazoos-packages branch, unsigned; the secret can be deleted from app repositories.",
+    "fr": "KazoOsPack ne signe plus les paquets : la cible KazoOsKeyGen, la propriété KazoOsSigningKeyFile, les commandes keygen et sign du générateur et la variable HACKEROS_APP_SIGNING_KEY disparaissent. Le modèle kazoos-solution publie toujours la branche kazoos-packages, sans signature ; le secret peut être supprimé des dépôts d'apps."
+  },
+  "links": [
+    "doc/en/wasm/dev/adr/0233-sign-apps-only-in-the-marketplace.md"
+  ]
+}

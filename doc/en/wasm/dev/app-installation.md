@@ -316,7 +316,7 @@ approval:
   writes the package and `index.json` to `bin/kazoos-packages` (property
   `KazoOsPackageOutput`), to push to the `kazoos-packages` branch; the
   `publish-packages.yml` workflow of the `kazoos-solution` template does it on
-  a `v*` tag ([ADR 0219](adr/0219-app-authors-signing-tool.md)). The
+  a `v*` tag, unsigned ([ADR 0233](adr/0233-sign-apps-only-in-the-marketplace.md)). The
   package holds every static resource of the project, declared or not: the
   `wwwroot/`, the collocated JavaScript (`.razor.js`) and the scoped CSS bundle
   (`<assembly>.bundle.scp.css`); those the app does not declare are added, with
@@ -439,25 +439,16 @@ completes the Kazo OS Store.
   secret; an unsigned or forged package is refused. To change keys without a
   break: add the new one to `[signing-keys]` (or `KazoOsAppSigningKeys`),
   republish with it, then replace the constant.
-- **Signing by an app's author** ([ADR 0219](adr/0219-app-authors-signing-tool.md),
-  issue #321): `dotnet build -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=<file.pem>`
-  creates the pair (private key in a new file, public key printed, `KOSAPP0061`
-  without the property); `KazoOsPack` signs each package with the
-  `HACKEROS_APP_SIGNING_KEY` variable (secret of the app repository) or
-  `KazoOsSigningKeyFile`, and checks the signature before writing it. Without
-  a key, the package is published unsigned with warning `KOSAPP0063`.
-  `index.json` keeps the signatures of the versions already published. Generator
-  commands: `keygen --private-key <file.pem>`, `sign --package <file.kazoapp>`.
-  To require an author's signature, an administrator adds their public key with
-  `sudo nano /etc/kazoos/app-sources.config`:
-
-  ```text
-  [signing-keys]
-  github.com/contoso=MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE…
-  ```
-
-  `github.com/<owner>` covers all their repositories, `github.com/<owner>/<repo>`
-  only one; two keys separated by a comma during a key change.
+- **Signing only in the marketplace**
+  ([ADR 0233](adr/0233-sign-apps-only-in-the-marketplace.md), superseding
+  [ADR 0219](adr/0219-app-authors-signing-tool.md)): only the
+  `Kazo-ca/Os-AppMarketPlace` repository signs packages. `KazoOsPack` never
+  signs (no more `KazoOsKeyGen`, generator `keygen`/`sign`, or
+  `HACKEROS_APP_SIGNING_KEY`); a package of a `kazoos-packages` branch carries
+  its SHA-256 only. `index.json` keeps the signatures of the versions already
+  published. The keys of `[signing-keys]` are catalog keys (`catalog:<name>`);
+  an old `github.com/<owner>` key would make the unsigned packages of that
+  repository refused and must be removed.
 - **Transactions**: `<root>/<appId>/.transaction` journal, files written to
   `<version>.partial/` then renamed, the `[installed]` line as commit point,
   clean-up afterwards. `kazopkg repair [--system]` finishes or undoes what an

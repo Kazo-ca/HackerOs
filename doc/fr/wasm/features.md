@@ -294,10 +294,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   service, un site, un hôte complet ou un dépôt d'application entier, visibles
   dans Visual Studio et Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
-- **Signature des paquets par l'auteur d'une application** : `KazoOsKeyGen`
-  crée la clé, `KazoOsPack` et le workflow `publish-packages.yml` du modèle
-  signent et publient la branche `kazoos-packages`.
-  ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
+- **Publication d'une application sur sa branche `kazoos-packages`** : le
+  workflow `publish-packages.yml` du modèle publie le paquet, non signé ; les
+  applications sont signées seulement dans le dépôt du Kazo OS Store.
+  ([ADR 0233](dev/adr/0233-sign-apps-only-in-the-marketplace.md),
   [`app-repository.md`](framework/app-repository.md))
 - **Installation d'une application depuis son dépôt GitHub** avec la commande
   `kazopkg`. ([ADR 0182](dev/adr/0182-install-apps-from-github.md),
