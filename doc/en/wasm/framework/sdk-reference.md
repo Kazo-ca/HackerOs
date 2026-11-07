@@ -428,6 +428,8 @@ Guide: [`asp-kazo-site-data.md`](asp-kazo-site-data.md).
 | `OpenWithDialogRequest`, `FilePropertiesDialogRequest`, `FileConflictDialogRequest` (`.Files`) | Dialogs provided by the explorer (`kazoos.file-dialogs`, ADR 0155 §5): "Open with" (`CandidateAppIds`; result `Status`, `AppId`, `AlwaysUse`), properties (result `Closed`), name conflict (`OfferApplyToAll`; result `Replace`/`KeepBoth`/`Skip` and `ApplyToAll`). Without a provider: `Unavailable` (or `Skip`). |
 | `IDialogService`, `IFileDialogService` | Services injected into `WindowAppBase` (`Dialogs`, `FileDialogs`); plus `CredentialPromptAsync`, `ChooseAppAsync`, `OpenWithAsync`, `ShowFilePropertiesAsync` and `ResolveFileConflictAsync`. The Open / Save / Choose a folder dialogs show the OS file control (`kazoos.file-view`) with the app's rights, or the platform's list without a provider (ADR 0157) |
 
+The start folder (`InitialDirectory`) of the Open, Save and Select folder dialogs: the app's folder when the app can list it, else the user's home (`/home/<login>`), else `/`. A missing or unreadable folder no longer takes the OS down (issue #385).
+
 `FileDialogStatus.Selected` indicates a choice; any other status is a
 cancellation.
 

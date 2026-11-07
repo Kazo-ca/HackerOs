@@ -66,6 +66,58 @@ public sealed class FileDialogCoordinatorTests
     }
 
     [Fact]
+    public async Task A_dialog_without_a_start_folder_opens_on_the_users_home_by_login_name()
+    {
+        // Issue #385: the start folder was /home/{UserId} (a GUID), which does not exist.
+        using FileDialogCoordinator coordinator = new(TestSessionId, new RecordingHandleRegistry());
+        TestExecutionContext context = new(TestSessionId, allowCapabilities: true, listable: new HashSet<string> { "/home/neo", "/" });
+
+        Task<OpenFileDialogResult> open = coordinator.OpenFileAsync(context, new OpenFileDialogRequest()).AsTask();
+
+        OpenFileDialogPresentation active = Assert.IsType<OpenFileDialogPresentation>(coordinator.ActiveRequest);
+        Assert.Equal(VirtualPath.Parse("/home/neo"), active.Request.InitialDirectory);
+        Assert.True(coordinator.Cancel(active.Id));
+        Assert.Equal(FileDialogStatus.Cancelled, (await open).Status);
+    }
+
+    [Fact]
+    public async Task A_missing_start_folder_falls_back_to_home_then_root()
+    {
+        using FileDialogCoordinator coordinator = new(TestSessionId, new RecordingHandleRegistry());
+        TestExecutionContext homeReadable = new(TestSessionId, allowCapabilities: true, listable: new HashSet<string> { "/home/neo", "/" });
+        TestExecutionContext onlyRoot = new(TestSessionId, allowCapabilities: true, listable: new HashSet<string> { "/" });
+
+        Task<SaveFileDialogResult> save = coordinator.SaveFileAsync(
+            homeReadable, new SaveFileDialogRequest { InitialDirectory = VirtualPath.Parse("/media/gone") }).AsTask();
+        SaveFileDialogPresentation activeSave = Assert.IsType<SaveFileDialogPresentation>(coordinator.ActiveRequest);
+        Assert.Equal(VirtualPath.Parse("/home/neo"), activeSave.Request.InitialDirectory);
+        Assert.True(coordinator.Cancel(activeSave.Id));
+        await save;
+
+        Task<SelectFolderDialogResult> folder = coordinator.SelectFolderAsync(
+            onlyRoot, new SelectFolderDialogRequest { InitialDirectory = VirtualPath.Parse("/media/gone") }).AsTask();
+        SelectFolderDialogPresentation activeFolder = Assert.IsType<SelectFolderDialogPresentation>(coordinator.ActiveRequest);
+        Assert.Equal(VirtualPath.Parse("/"), activeFolder.Request.InitialDirectory);
+        Assert.True(coordinator.Cancel(activeFolder.Id));
+        await folder;
+    }
+
+    [Fact]
+    public async Task A_readable_start_folder_is_kept()
+    {
+        using FileDialogCoordinator coordinator = new(TestSessionId, new RecordingHandleRegistry());
+        TestExecutionContext context = new(TestSessionId, allowCapabilities: true, listable: new HashSet<string> { "/home/neo/Music", "/home/neo" });
+
+        Task<OpenFileDialogResult> open = coordinator.OpenFileAsync(
+            context, new OpenFileDialogRequest { InitialDirectory = VirtualPath.Parse("/home/neo/Music") }).AsTask();
+
+        OpenFileDialogPresentation active = Assert.IsType<OpenFileDialogPresentation>(coordinator.ActiveRequest);
+        Assert.Equal(VirtualPath.Parse("/home/neo/Music"), active.Request.InitialDirectory);
+        Assert.True(coordinator.Cancel(active.Id));
+        await open;
+    }
+
+    [Fact]
     public void Capability_is_required_before_a_request_is_queued()
     {
         using FileDialogCoordinator coordinator = new(TestSessionId, new RecordingHandleRegistry());
@@ -182,7 +234,11 @@ public sealed class FileDialogCoordinatorTests
             WindowVisualState.Normal,
             new WindowConstraints(true, 320, 240))));
 
-    private sealed class TestExecutionContext(SessionId sessionId, bool allowCapabilities) : IAppExecutionContext
+    private sealed class TestExecutionContext(
+        SessionId sessionId,
+        bool allowCapabilities,
+        IReadOnlySet<string>? listable = null,
+        string home = "/home/neo") : IAppExecutionContext
     {
         public AppManifest Manifest { get; } = new()
         {
@@ -206,7 +262,8 @@ public sealed class FileDialogCoordinatorTests
         public ProcessId ProcessId { get; } = ProcessId.FromInt64(7);
         public CancellationToken CancellationToken => CancellationToken.None;
         public ICapabilityChecker Capabilities { get; } = new TestCapabilityChecker(allowCapabilities);
-        public IAppFileSystemGateway FileSystem { get; } = new StrictFileSystemGateway();
+        public IAppFileSystemGateway FileSystem { get; } = new StrictFileSystemGateway(listable ?? new HashSet<string>());
+        public string HomeDirectory => home;
         public IAppEventGateway Events => throw new NotSupportedException();
         public IAppNotificationGateway Notifications => throw new NotSupportedException();
         public IAppLoggingGateway Logging => throw new NotSupportedException();
@@ -214,10 +271,22 @@ public sealed class FileDialogCoordinatorTests
         public IAppProcessGateway Processes => throw new NotSupportedException();
     }
 
-    private sealed class StrictFileSystemGateway : IAppFileSystemGateway
+    /// <summary>
+    /// Refuses every data access; only lists the folders it is given, empty, so the coordinator can
+    /// pick the folder a dialog opens on (issue #385).
+    /// </summary>
+    private sealed class StrictFileSystemGateway(IReadOnlySet<string> listable) : IAppFileSystemGateway
     {
+        public List<string> Listed { get; } = [];
         public ValueTask<FileSystemResult<FileSystemContentReadHandle>> ReadAsync(FileSystemReadRequest request, CancellationToken cancellationToken = default) => throw Unexpected();
-        public ValueTask<FileSystemResult<FileSystemDirectorySnapshot>> EnumerateAsync(FileSystemEnumerateRequest request, CancellationToken cancellationToken = default) => throw Unexpected();
+        public ValueTask<FileSystemResult<FileSystemDirectorySnapshot>> EnumerateAsync(FileSystemEnumerateRequest request, CancellationToken cancellationToken = default)
+        {
+            Listed.Add(request.Path.Value);
+            return ValueTask.FromResult(listable.Contains(request.Path.Value)
+                ? FileSystemResult<FileSystemDirectorySnapshot>.Success(new FileSystemDirectorySnapshot(request.Path, 1, []))
+                : FileSystemResult<FileSystemDirectorySnapshot>.Failure(
+                    new FileSystemError(FileSystemOperation.Enumerate, FileSystemErrorCode.NotFound, request.Path)));
+        }
         public ValueTask<FileSystemMutationResult> CreateAsync(FileSystemCreateRequest request, CancellationToken cancellationToken = default) => throw Unexpected();
         public ValueTask<FileSystemMutationResult> WriteAsync(FileSystemWriteRequest request, IFileSystemContentSource content, CancellationToken cancellationToken = default) => throw Unexpected();
         public ValueTask<FileSystemMutationResult> MoveAsync(FileSystemMoveRequest request, CancellationToken cancellationToken = default) => throw Unexpected();
