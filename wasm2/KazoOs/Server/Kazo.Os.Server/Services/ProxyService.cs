@@ -44,6 +44,8 @@ public interface IProxyService
     /// <summary>
     /// Validates and opens one TCP or UDP stream (ADR 0102 §2, §3): the socket is connected when
     /// this returns, and closing the returned channel closes it and frees the device's stream slot.
+    /// With <see cref="ProxyStreamRequest.UseTls"/> the TLS handshake with the target is also
+    /// complete when this returns (ADR 0235 §2).
     /// </summary>
     /// <exception cref="ProxyRequestException">The request is refused or the target cannot be reached.</exception>
     Task<IProxyStreamChannel> OpenStreamAsync(
@@ -95,6 +97,7 @@ public sealed class ProxyService : IProxyService
     private readonly IProxyConnectionPinAccessor _connectionPin;
     private readonly IProxyTcpConnector _tcpConnector;
     private readonly IProxyStreamConnector _streamConnector;
+    private readonly IProxyTlsNegotiator _tls;
     private readonly ProxyRelayPolicy _policy;
     private readonly IProxyGrantAuthority _grants;
 
@@ -123,7 +126,8 @@ public sealed class ProxyService : IProxyService
         IProxyTcpConnector tcpConnector,
         IProxyStreamConnector? streamConnector = null,
         ProxyRelayPolicy? policy = null,
-        IProxyGrantAuthority? grants = null)
+        IProxyGrantAuthority? grants = null,
+        IProxyTlsNegotiator? tls = null)
     {
         _httpClientFactory = httpClientFactory;
         _audit = audit;
@@ -134,6 +138,7 @@ public sealed class ProxyService : IProxyService
         _streamConnector = streamConnector ?? new SocketProxyStreamConnector();
         _policy = policy ?? ProxyRelayPolicy.Default;
         _grants = grants ?? new ProxyGrantAuthority(_policy, db);
+        _tls = tls ?? new SslStreamProxyTlsNegotiator();
     }
 
     /// <inheritdoc />
@@ -264,6 +269,7 @@ public sealed class ProxyService : IProxyService
             throw new ProxyRequestException(ProxyErrorCode.MalformedRequest, "Port must be between 1 and 65535.");
         ValidateAppId(request.AppId);
         ValidateSimulatedDomain(request.Host);
+        string? tlsHost = ValidateTls(protocol, request);
         ProxyAppGrant grant = await ValidateGrantAsync(accountId, request.AppId, ct);
 
         // ADR 0235 §3: a port opens if the policy allows it or the app declared it and that was
@@ -293,14 +299,43 @@ public sealed class ProxyService : IProxyService
             throw;
         }
 
+        // TLS before the WebSocket is accepted (ADR 0235 §2): a refused certificate is a refused
+        // stream, so the app never reads a byte from a target it could not authenticate.
+        ProxyTlsSession? session = null;
+        if (tlsHost is not null)
+        {
+            try
+            {
+                session = await _tls.AuthenticateAsync(socket, tlsHost, ct);
+            }
+            catch (ProxyRequestException refused)
+            {
+                socket.Dispose();
+                ReleaseStreamSlot(deviceId);
+                await _audit.RecordAsync(accountId, deviceId, "PROXY_TLS_FAILED",
+                    $"{{\"host\":\"{request.Host}\",\"targetHost\":\"{tlsHost}\",\"port\":{request.Port},\"appId\":\"{request.AppId}\",\"code\":\"{refused.ErrorCode}\"}}", ct);
+                throw;
+            }
+            catch
+            {
+                socket.Dispose();
+                ReleaseStreamSlot(deviceId);
+                throw;
+            }
+        }
+
         string kind = protocol == ProxyProtocol.Tcp ? "TCP" : "UDP";
         await _audit.RecordAsync(accountId, deviceId, $"PROXY_{kind}_OPEN",
-            $"{{\"host\":\"{request.Host}\",\"address\":\"{pinnedAddress}\",\"port\":{request.Port},\"appId\":\"{request.AppId}\"}}", ct);
+            $"{{\"host\":\"{request.Host}\",\"address\":\"{pinnedAddress}\",\"port\":{request.Port},\"appId\":\"{request.AppId}\",\"tls\":{(session is null ? "null" : $"\"{session.Protocol}\"")}}}", ct);
 
         return new SocketProxyStreamChannel(
             socket,
             protocol,
-            new ProxyStreamOpened(pinnedAddress.ToString(), request.Port),
+            new ProxyStreamOpened(pinnedAddress.ToString(), request.Port)
+            {
+                TlsProtocol = session?.Protocol,
+                CertificateSubject = session?.CertificateSubject
+            },
             _policy.EffectiveStreamIdleTimeout,
             (closure, sent, received) =>
             {
@@ -308,7 +343,30 @@ public sealed class ProxyService : IProxyService
                 // Fire-and-forget: the close may run on a socket callback after the request scope
                 // ended, so a failed audit write must never surface as an unobserved exception.
                 _ = RecordCloseAsync(accountId, deviceId, kind, request.Host, request.Port, closure, sent, received);
-            });
+            },
+            session?.Stream);
+    }
+
+    /// <summary>
+    /// Checks the TLS part of a stream request and returns the name to authenticate, or
+    /// <see langword="null"/> for a clear-text stream.
+    /// </summary>
+    /// <exception cref="ProxyRequestException">
+    /// <see cref="ProxyErrorCode.MalformedRequest"/> for TLS over UDP (no DTLS) or a server name that
+    /// is not a host name; <see cref="ProxyErrorCode.SimulatedDomainBlocked"/> for a simulated one.
+    /// </exception>
+    private static string? ValidateTls(ProxyProtocol protocol, ProxyStreamRequest request)
+    {
+        if (!request.UseTls)
+            return null;
+        if (protocol != ProxyProtocol.Tcp)
+            throw new ProxyRequestException(ProxyErrorCode.MalformedRequest, "TLS is only relayed over TCP.");
+
+        string name = string.IsNullOrWhiteSpace(request.TargetHost) ? request.Host : request.TargetHost.Trim();
+        if (Uri.CheckHostName(name) == UriHostNameType.Unknown)
+            throw new ProxyRequestException(ProxyErrorCode.MalformedRequest, "The TLS server name is not a valid host name.");
+        ValidateSimulatedDomain(name);
+        return name;
     }
 
     private async Task RecordCloseAsync(

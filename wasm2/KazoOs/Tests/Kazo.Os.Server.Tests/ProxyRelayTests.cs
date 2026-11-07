@@ -444,6 +444,130 @@ public sealed class ProxyRelayTests : IDisposable
         Assert.Equal(0, (await proxy.GetPolicyAsync(_accountId, device, CancellationToken.None)).CurrentStreams);
     }
 
+    // ── ADR 0235 §2: TLS opened by the relay ────────────────────────────────
+
+    [Fact]
+    public async Task TlsStream_ToATrustedCertificate_RoundTripsClearText_AndReportsTheSession()
+    {
+        using TestCertificates certificates = new();
+        using TlsEchoServer target = new(certificates.Signed);
+        Guid device = AddDevice();
+        ProxyService proxy = TlsProxy(target.Port, certificates);
+
+        await using IProxyStreamChannel channel = await proxy.OpenStreamAsync(
+            _accountId, device, ProxyProtocol.Tcp, TlsRequest(TestCertificates.ServerName), CancellationToken.None);
+        await channel.SendAsync(Encoding.ASCII.GetBytes("NICK kazo\r\n"));
+        byte[] echoed = await ReadAtLeastAsync(channel, 11);
+
+        Assert.Equal("NICK kazo\r\n", Encoding.ASCII.GetString(echoed));
+        Assert.StartsWith("TLS 1.", channel.Remote.TlsProtocol);
+        Assert.Equal($"CN={TestCertificates.ServerName}", channel.Remote.CertificateSubject);
+        Assert.True(await _db.AuditEntries.AnyAsync(entry => entry.EventCode == "PROXY_TCP_OPEN" && entry.Details!.Contains("TLS 1.")));
+    }
+
+    [Fact]
+    public async Task TlsStream_ToAnUntrustedCertificate_IsRefusedWithTlsFailed_AndFreesItsSlot()
+    {
+        using TestCertificates certificates = new();
+        using TlsEchoServer target = new(certificates.Untrusted);
+        Guid device = AddDevice();
+        ProxyService proxy = TlsProxy(target.Port, certificates);
+
+        var ex = await Assert.ThrowsAsync<ProxyRequestException>(() => proxy.OpenStreamAsync(
+            _accountId, device, ProxyProtocol.Tcp, TlsRequest(TestCertificates.ServerName), CancellationToken.None));
+
+        Assert.Equal(ProxyErrorCode.TlsFailed, ex.ErrorCode);
+        Assert.Equal(0, (await proxy.GetPolicyAsync(_accountId, device, CancellationToken.None)).CurrentStreams);
+        Assert.True(await _db.AuditEntries.AnyAsync(entry => entry.EventCode == "PROXY_TLS_FAILED"));
+    }
+
+    [Fact]
+    public async Task TlsStream_ToACertificateForAnotherName_IsRefusedWithTlsFailed()
+    {
+        using TestCertificates certificates = new();
+        using TlsEchoServer target = new(certificates.Signed);
+        Guid device = AddDevice();
+        ProxyService proxy = TlsProxy(target.Port, certificates);
+
+        var ex = await Assert.ThrowsAsync<ProxyRequestException>(() => proxy.OpenStreamAsync(
+            _accountId, device, ProxyProtocol.Tcp, TlsRequest("other.tls-test.example"), CancellationToken.None));
+
+        Assert.Equal(ProxyErrorCode.TlsFailed, ex.ErrorCode);
+    }
+
+    [Fact]
+    public async Task TlsStream_ChecksTheTargetHost_NotTheConnectedHost()
+    {
+        using TestCertificates certificates = new();
+        using TlsEchoServer target = new(certificates.Signed);
+        Guid device = AddDevice();
+        ProxyService proxy = TlsProxy(target.Port, certificates);
+
+        await using IProxyStreamChannel channel = await proxy.OpenStreamAsync(
+            _accountId, device, ProxyProtocol.Tcp,
+            new ProxyStreamRequest("10.0.0.7", 6697, TestApp) { UseTls = true, TargetHost = TestCertificates.ServerName },
+            CancellationToken.None);
+
+        Assert.Equal($"CN={TestCertificates.ServerName}", channel.Remote.CertificateSubject);
+    }
+
+    [Fact]
+    public async Task TlsStream_ToAClearTextTarget_IsRefusedWithTlsFailed()
+    {
+        using TestCertificates certificates = new();
+        using TcpEchoServer target = new();
+        Guid device = AddDevice();
+        ProxyService proxy = TlsProxy(target.Port, certificates);
+
+        var ex = await Assert.ThrowsAsync<ProxyRequestException>(() => proxy.OpenStreamAsync(
+            _accountId, device, ProxyProtocol.Tcp, TlsRequest(TestCertificates.ServerName), CancellationToken.None));
+
+        Assert.Equal(ProxyErrorCode.TlsFailed, ex.ErrorCode);
+    }
+
+    [Fact]
+    public async Task TlsStream_OverUdp_IsMalformed()
+    {
+        Guid device = AddDevice();
+
+        var ex = await Assert.ThrowsAsync<ProxyRequestException>(() => Proxy().OpenStreamAsync(
+            _accountId, device, ProxyProtocol.Udp, new ProxyStreamRequest("example.com", 53, TestApp) { UseTls = true }, CancellationToken.None));
+
+        Assert.Equal(ProxyErrorCode.MalformedRequest, ex.ErrorCode);
+    }
+
+    [Theory]
+    [InlineData("not a host name", ProxyErrorCode.MalformedRequest)]
+    [InlineData("irc.kazoos.local", ProxyErrorCode.SimulatedDomainBlocked)]
+    public async Task TlsStream_WithABadTargetHost_IsRefusedBeforeConnecting(string targetHost, string expected)
+    {
+        Guid device = AddDevice();
+
+        var ex = await Assert.ThrowsAsync<ProxyRequestException>(() => Proxy().OpenStreamAsync(
+            _accountId, device, ProxyProtocol.Tcp,
+            new ProxyStreamRequest("example.com", 443, TestApp) { UseTls = true, TargetHost = targetHost },
+            CancellationToken.None));
+
+        Assert.Equal(expected, ex.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ClearTextStream_IsUnchanged_AndReportsNoTlsSession()
+    {
+        using TcpEchoServer echo = new();
+        Guid device = AddDevice();
+        ProxyService proxy = StreamProxy(echo.Port, new ProxyOptions { AllowPrivateNetworks = true, AllowAllPorts = true });
+
+        await using IProxyStreamChannel channel = await proxy.OpenStreamAsync(
+            _accountId, device, ProxyProtocol.Tcp, new ProxyStreamRequest("echo.lan.example", 6667, TestApp), CancellationToken.None);
+        await channel.SendAsync(Encoding.ASCII.GetBytes("PING"));
+        byte[] echoed = await ReadAtLeastAsync(channel, 4);
+
+        Assert.Equal("PING", Encoding.ASCII.GetString(echoed));
+        Assert.Null(channel.Remote.TlsProtocol);
+        Assert.Null(channel.Remote.CertificateSubject);
+    }
+
     // ── §3 UDP ──────────────────────────────────────────────────────────────
 
     [Fact]
@@ -491,6 +615,18 @@ public sealed class ProxyRelayTests : IDisposable
             _pin, new FakeProxyTcpConnector(),
             new LoopbackStreamConnector(echoPort),
             Policy(options));
+
+    /// <summary>A stream relay whose TLS trusts only the test root, its sockets landing on <paramref name="targetPort"/>.</summary>
+    private ProxyService TlsProxy(int targetPort, TestCertificates certificates) =>
+        new(new FakeHttpClientFactory(_handler), _audit, _db,
+            new FakeProxyAddressResolver(IPAddress.Parse("10.0.0.7")),
+            _pin, new FakeProxyTcpConnector(),
+            new LoopbackStreamConnector(targetPort),
+            Policy(new ProxyOptions { AllowPrivateNetworks = true, Tcp = new ProxyPortOptions { AllowedPorts = [6697] } }),
+            tls: new SslStreamProxyTlsNegotiator(certificates.TrustedRoots));
+
+    private static ProxyStreamRequest TlsRequest(string targetHost) =>
+        new(TestCertificates.ServerName, 6697, TestApp) { UseTls = true, TargetHost = targetHost };
 
     private static ProxyRelayPolicy Policy(ProxyOptions? options)
     {
