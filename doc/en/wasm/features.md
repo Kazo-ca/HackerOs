@@ -148,6 +148,10 @@ This section lists what is released in the `main` branch and online.
 - **Computer folder mounted as a network drive**: a real folder of the
   computer appears in the OS (Chrome and Edge on desktop).
   ([ADR 0181](dev/adr/0181-host-folder-mounted-as-a-network-drive.md))
+- **Network drives readable by apps**: an app with `filesystem.user-home.*`
+  reads and writes the user's network drives like their personal files,
+  without a dangerous capability; another user's drive and `/mnt` stay system
+  files. ([ADR 0231](dev/adr/0231-network-drives-count-as-personal-files.md))
 - **Backup and restore** of the whole machine in a downloaded archive.
   ([`system-backup.md`](dev/system-backup.md))
 
@@ -282,9 +286,9 @@ This section lists what is released in the `main` branch and online.
   service, a site, a complete host or a whole application repository, shown
   in Visual Studio and Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
-- **Package signing by an application's author**: `KazoOsKeyGen` creates the
-  key, `KazoOsPack` and the template's `publish-packages.yml` workflow sign and
-  publish the `kazoos-packages` branch.
+- **Publishing an application on its `kazoos-packages` branch**: the
+  template's `publish-packages.yml` workflow publishes the package, unsigned;
+  applications are signed only in the Kazo OS Store repository.
   ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
   [`app-repository.md`](framework/app-repository.md))
 - **Install an application from its GitHub repository** with the `kazopkg`
@@ -358,7 +362,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/Os/issues/290) |
-| Network drives readable by apps | Apps read and write the user's network drives like their personal files, without a dangerous capability (to open music or a game from `/mnt`). | [0231](dev/adr/0231-network-drives-count-as-personal-files.md) | [#381](https://github.com/Kazo-ca/Os/issues/381) |
 | Frameless app windows | A window option without the OS title bar or border, with a transparent background, so that an app like Webamp makes its own windows float on the desktop. | To write | [#378](https://github.com/Kazo-ca/Os/issues/378) |
 | File address served on demand | An app gets an address to read a large file (audio, video) without copying it in memory, with partial reads to seek in a track. | To write | [#379](https://github.com/Kazo-ca/Os/issues/379) |
 | Drag files onto an app | Public SDK contract to receive files dragged from the File Explorer or the desktop. | To write | [#380](https://github.com/Kazo-ca/Os/issues/380) |
@@ -397,7 +400,7 @@ with `kazopkg` and then from the Kazo OS Store.
 | --- | --- | --- | --- |
 | Chess | Chess, based on chess.js; first application planned for the catalog. | [Os-App-Chess](https://github.com/Kazo-ca/Os-App-Chess) | [#2](https://github.com/Kazo-ca/Os-App-Chess/issues/2), [#3](https://github.com/Kazo-ca/Os-App-Chess/issues/3) |
 | Webamp | Music player in the style of Winamp, associated with audio files, `.m3u`/`.pls` playlists and `.wsz` skins; also opens the files of network drives (ADR 0231). Plan under discussion. | [Os-App-Webamp](https://github.com/Kazo-ca/Os-App-Webamp) | [#1](https://github.com/Kazo-ca/Os-App-Webamp/issues/1), [#381](https://github.com/Kazo-ca/Os/issues/381) |
-| IRC | IRC chat client (KiwiIRC). | [Os-App-IRC](https://github.com/Kazo-ca/Os-App-IRC) | Coming |
+| IRC | Native IRC chat client (C# and Blazor) for real IRC networks, desktop and mobile: WebSocket without a server, and TCP with TLS through the relay when the server is connected ([ADR 0235](dev/adr/0235-real-network-for-chat-apps.md)). Plan under discussion. | [Os-App-IRC](https://github.com/Kazo-ca/Os-App-IRC) | [#395](https://github.com/Kazo-ca/Os/issues/395), [#393](https://github.com/Kazo-ca/Os/issues/393), [#394](https://github.com/Kazo-ca/Os/issues/394) |
 | EmulatorJS | Retro console emulator. | [Os-App-EmulatorJS](https://github.com/Kazo-ca/Os-App-EmulatorJS) | Coming |
 | BoxedWine | Run old Windows programs in the OS. | [Os-App-BoxedWine](https://github.com/Kazo-ca/Os-App-BoxedWine) | Coming |
 

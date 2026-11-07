@@ -234,6 +234,12 @@ name is translated by `Resources/AppManifest.fr.resx`.
   and no longer replaces an existing file (copy name), like a drop.
 - **Explorer capabilities**: `clipboard.read`, `clipboard.write` and
   `notifications.post` (failure summary), all normal.
+- **Network drives and apps** ([ADR 0231](adr/0231-network-drives-count-as-personal-files.md)):
+  a file opened from one of the user's network drives (double-click, "Open
+  with", open dialog) is readable by any app with `filesystem.user-home.read`,
+  like a file of their home folder; writing it needs
+  `filesystem.user-home.write`. The explorer keeps its capabilities; another
+  user's drive stays closed (mode `0700`).
 
 ## Tests
 

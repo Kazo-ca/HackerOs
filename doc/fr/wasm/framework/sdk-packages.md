@@ -406,7 +406,7 @@ bibliothèque du SDK : une app 2.x tourne sans être recompilée. Elle apporte a
 auteurs d'apps ce dont le Kazo OS Store a besoin : toutes les ressources statiques
 d'une app dans son paquet et le CSS isolé d'une app installée (ADR 0221), les
 assemblages satellites des apps installées (ADR 0222) et l'outil de signature
-(ADR 0219).
+(ADR 0219, retiré depuis par sa modification du 2026-11-07).
 
 | Bibliothèque | Ajout | Décision |
 |---|---|---|

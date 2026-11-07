@@ -743,7 +743,12 @@ public sealed class FileSystemService : IFileSystemService, IExternalFileSystemC
         return authorization.Error;
     }
 
-    private static string ResolveCapability(
+    /// <summary>
+    /// Chooses the capability an app needs for <paramref name="path"/>: its private settings,
+    /// the user's personal files (the home folder and, per ADR 0231, the network drives the
+    /// acting user mounted), or the system files for everything else.
+    /// </summary>
+    private string ResolveCapability(
         VirtualPath path,
         FileSystemAuthorizationContext context,
         bool isWrite)
@@ -781,7 +786,37 @@ public sealed class FileSystemService : IFileSystemService, IExternalFileSystemC
             return isWrite ? AppCapabilities.FileSystemUserHomeWrite : AppCapabilities.FileSystemUserHomeRead;
         }
 
-        return isWrite ? AppCapabilities.FileSystemSystemWrite : AppCapabilities.FileSystemSystemRead;
+        string system = isWrite ? AppCapabilities.FileSystemSystemWrite : AppCapabilities.FileSystemSystemRead;
+
+        // ADR 0231: a network drive (hostfs, ADR 0181) mounted by the acting user is one of their
+        // personal files, like the home folder. Another user's drive, /mnt itself and every other
+        // path stay under filesystem.system.*; the mode bits (0700/0600) still apply afterwards.
+        // An app that holds only the system capability (mount, umount, df...) keeps the access it
+        // had before (ADR 0231 section 3), so the user-home capability widens, never narrows.
+        if (IsOwnNetworkDrive(path, userId, username))
+        {
+            string home = isWrite ? AppCapabilities.FileSystemUserHomeWrite : AppCapabilities.FileSystemUserHomeRead;
+            AppOperationContext operation = context.OperationContext;
+            return !operation.HasCapability(home) && operation.HasCapability(system) ? system : home;
+        }
+
+        return system;
+    }
+
+    /// <summary>
+    /// Whether <paramref name="path"/> lies inside a <c>hostfs</c> mount whose owner is the acting
+    /// user, matched by login name or by user ID (ADR 0231 section 1).
+    /// </summary>
+    private bool IsOwnNetworkDrive(VirtualPath path, string userId, string? username)
+    {
+        if (_router.Resolve(path).Mount.Provider is not HostFolders.HostFolderFileSystemProvider drive
+            || !IsWithin(path, drive.MountPath.Value))
+        {
+            return false;
+        }
+
+        return (!string.IsNullOrWhiteSpace(username) && string.Equals(drive.OwnerId, username, StringComparison.Ordinal))
+            || (!string.IsNullOrWhiteSpace(userId) && string.Equals(drive.OwnerId, userId, StringComparison.Ordinal));
     }
 
     private static bool IsSystemPath(VirtualPath path) =>

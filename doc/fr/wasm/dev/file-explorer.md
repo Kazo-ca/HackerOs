@@ -234,6 +234,12 @@ l'app est traduit par `Resources/AppManifest.fr.resx`.
   remplace plus un fichier existant (nom de copie), comme un dépôt.
 - **Capacités de l'explorateur** : `clipboard.read`, `clipboard.write` et
   `notifications.post` (résumé des échecs), toutes normales.
+- **Lecteurs réseau et apps** ([ADR 0231](adr/0231-network-drives-count-as-personal-files.md)) :
+  un fichier ouvert depuis un lecteur réseau de l'utilisateur (double-clic,
+  « Ouvrir avec », dialogue d'ouverture) est lisible par toute app qui a
+  `filesystem.user-home.read`, comme un fichier de son dossier personnel ;
+  l'écrire demande `filesystem.user-home.write`. L'explorateur garde ses
+  capacités ; le lecteur d'un autre utilisateur reste fermé (mode `0700`).
 
 ## Tests
 
