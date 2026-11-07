@@ -849,7 +849,9 @@ Kazo.Os.Platform.Blazor.Windows.AppBackHandlerRegistry.RegisterForward(Kazo.Os.W
 Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory
 Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.AppWindowGatewayFactory(Kazo.Os.Windowing.Core.WindowRuntime! runtime) -> void
 Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.AppWindowGatewayFactory(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator! launchCoordinator) -> void
+Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.AppWindowGatewayFactory(Kazo.Os.Windowing.Core.WindowRuntime! runtime, Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator! launchCoordinator, System.IServiceProvider! services) -> void
 Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.Create(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.App.Abstractions.AppManifest! manifest) -> Kazo.Os.AppSdk.Blazor.IAppWindowGateway!
+Kazo.Os.Platform.Blazor.Windows.AppWindowGatewayFactory.Create(Kazo.Os.Windowing.Abstractions.WindowId windowId, Kazo.Os.AppSdk.IAppExecutionContext! context) -> Kazo.Os.AppSdk.Blazor.IAppWindowGateway!
 Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe
 Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe.BrowserWindowClientAreaProbe(Microsoft.JSInterop.IJSRuntime! jsRuntime) -> void
 Kazo.Os.Platform.Blazor.Windows.BrowserWindowClientAreaProbe.DisposeAsync() -> System.Threading.Tasks.ValueTask
@@ -1266,6 +1268,7 @@ static Kazo.Os.Platform.Blazor.Windows.WindowKeyInput.operator ==(Kazo.Os.Platfo
 static Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.InitialBounds(Kazo.Os.App.Abstractions.WindowOptions! options, int cascadeIndex, Kazo.Os.Windowing.Abstractions.WindowBounds workArea) -> Kazo.Os.Windowing.Abstractions.WindowBounds
 static Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.RestoredBounds(Kazo.Os.App.Abstractions.WindowOptions! options, double savedWidth, double savedHeight, int cascadeIndex, Kazo.Os.Windowing.Abstractions.WindowBounds workArea) -> Kazo.Os.Windowing.Abstractions.WindowBounds
 static Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.ToConstraints(Kazo.Os.App.Abstractions.WindowOptions! options) -> Kazo.Os.Windowing.Abstractions.WindowConstraints!
+static Kazo.Os.Platform.Blazor.Windows.WindowLaunchCoordinator.ToFrame(Kazo.Os.App.Abstractions.WindowOptions! options) -> Kazo.Os.Windowing.Abstractions.WindowFrame!
 static Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.operator !=(Kazo.Os.Platform.Blazor.Windows.WindowMenuItem? left, Kazo.Os.Platform.Blazor.Windows.WindowMenuItem? right) -> bool
 static Kazo.Os.Platform.Blazor.Windows.WindowMenuItem.operator ==(Kazo.Os.Platform.Blazor.Windows.WindowMenuItem? left, Kazo.Os.Platform.Blazor.Windows.WindowMenuItem? right) -> bool
 static Kazo.Os.Platform.Blazor.Windows.WindowMenuState.operator !=(Kazo.Os.Platform.Blazor.Windows.WindowMenuState? left, Kazo.Os.Platform.Blazor.Windows.WindowMenuState? right) -> bool

@@ -88,6 +88,15 @@ This section lists what is released in the `main` branch and online.
   edges, with plain animations to open, close, minimize into the taskbar,
   maximize and snap, turned off by "Reduce motion".
   ([`window-model.md`](framework/window-model.md), [`window-animations.md`](dev/window-animations.md))
+- **Window styles inspired by WinForms** (version 3.1.0): an app picks the
+  `Normal`, `Tool` (close only, the style of the OS dialogs) or `None` style
+  (client area only, transparent: a click where the app draws nothing reaches
+  the desktop), and the `ShowIcon`, `Resizable`, `MaximizeBox`, `MinimizeBox`,
+  `ShowInTaskbar` and `Modal` options, in its manifest or at run time. It opens
+  its own windows and modal dialogs (`ShowWindowAsync`, `ShowDialogAsync`) and
+  minimizes, maximizes, moves or resizes its window.
+  ([ADR 0234](dev/adr/0234-window-styles-inspired-by-winforms.md),
+  [`window-model.md`](framework/window-model.md))
 - **Taskbar and Start menu** with pinned applications and open windows. A
   right click on the taskbar gives the window menu, "New window", the task
   manager, "Show the desktop" and cascaded or tiled windows.
@@ -250,6 +259,10 @@ This section lists what is released in the `main` branch and online.
 
 ### Personalization
 
+- **Illustrated app icons**: the system apps have colour icons that show what
+  each app does, and the Start menu, the desktop and the explorer show each
+  app's own icon, installed apps included.
+  ([ADR 0232](dev/adr/0232-illustrated-app-icons-everywhere.md))
 - **OS themes**, and an editor to create your own.
   ([`theme-files.md`](framework/theme-files.md))
 - **Image wallpapers**: a PNG, JPEG or WebP image (4 shipped with the OS,
@@ -286,9 +299,9 @@ This section lists what is released in the `main` branch and online.
   service, a site, a complete host or a whole application repository, shown
   in Visual Studio and Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
-- **Package signing by an application's author**: `KazoOsKeyGen` creates the
-  key, `KazoOsPack` and the template's `publish-packages.yml` workflow sign and
-  publish the `kazoos-packages` branch.
+- **Publishing an application on its `kazoos-packages` branch**: the
+  template's `publish-packages.yml` workflow publishes the package, unsigned;
+  applications are signed only in the Kazo OS Store repository.
   ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
   [`app-repository.md`](framework/app-repository.md))
 - **Install an application from its GitHub repository** with the `kazopkg`
@@ -362,7 +375,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/Os/issues/290) |
-| Window styles inspired by WinForms | `Normal`, `Tool` (close only, for dialogs) and `None` (client area only, transparent background, so an app like Webamp floats its own windows) styles, `ShowIcon`, `Resizable`, `MaximizeBox`, `MinimizeBox`, `ShowInTaskbar` and `Modal` options, app child windows and dialogs, an app minimizes its own window. Planned for version 3.1.0. | [0234](dev/adr/0234-window-styles-inspired-by-winforms.md) | [#378](https://github.com/Kazo-ca/Os/issues/378), [#384](https://github.com/Kazo-ca/Os/issues/384) |
 | File address served on demand | An app gets an address to read a large file (audio, video) without copying it in memory, with partial reads to seek in a track. | To write | [#379](https://github.com/Kazo-ca/Os/issues/379) |
 | Drag files onto an app | Public SDK contract to receive files dragged from the File Explorer or the desktop. | To write | [#380](https://github.com/Kazo-ca/Os/issues/380) |
 
@@ -399,7 +411,7 @@ with `kazopkg` and then from the Kazo OS Store.
 | --- | --- | --- | --- |
 | Chess | Chess, based on chess.js; first application planned for the catalog. | [Os-App-Chess](https://github.com/Kazo-ca/Os-App-Chess) | [#2](https://github.com/Kazo-ca/Os-App-Chess/issues/2), [#3](https://github.com/Kazo-ca/Os-App-Chess/issues/3) |
 | Webamp | Music player in the style of Winamp, associated with audio files, `.m3u`/`.pls` playlists and `.wsz` skins; also opens the files of network drives (ADR 0231). Plan under discussion. | [Os-App-Webamp](https://github.com/Kazo-ca/Os-App-Webamp) | [#1](https://github.com/Kazo-ca/Os-App-Webamp/issues/1), [#381](https://github.com/Kazo-ca/Os/issues/381) |
-| IRC | IRC chat client (KiwiIRC). | [Os-App-IRC](https://github.com/Kazo-ca/Os-App-IRC) | Coming |
+| IRC | Native IRC chat client (C# and Blazor) for real IRC networks, desktop and mobile: WebSocket without a server, and TCP with TLS through the relay when the server is connected ([ADR 0235](dev/adr/0235-real-network-for-chat-apps.md)). Plan under discussion. | [Os-App-IRC](https://github.com/Kazo-ca/Os-App-IRC) | [#395](https://github.com/Kazo-ca/Os/issues/395), [#393](https://github.com/Kazo-ca/Os/issues/393), [#394](https://github.com/Kazo-ca/Os/issues/394) |
 | EmulatorJS | Retro console emulator. | [Os-App-EmulatorJS](https://github.com/Kazo-ca/Os-App-EmulatorJS) | Coming |
 | BoxedWine | Run old Windows programs in the OS. | [Os-App-BoxedWine](https://github.com/Kazo-ca/Os-App-BoxedWine) | Coming |
 

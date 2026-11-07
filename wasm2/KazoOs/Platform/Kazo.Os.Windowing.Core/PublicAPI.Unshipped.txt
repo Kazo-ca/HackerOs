@@ -1,2 +1,1 @@
 #nullable enable
-Kazo.Os.Windowing.Core.WindowRuntime.ActivationTarget(Kazo.Os.Windowing.Abstractions.WindowId id) -> Kazo.Os.Windowing.Abstractions.WindowId

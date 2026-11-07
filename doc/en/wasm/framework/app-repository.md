@@ -51,7 +51,7 @@ Two ways, same result:
 | `.github/workflows/ci.yml` | CI: submodule checked, build and tests in `Release` |
 | `.github/workflows/publish-to-kazoos-store.yml` | submission to the catalog on a `v*` tag |
 | `.github/workflows/tag-release.yml` | tags a commit of `main` with the manifest's version and starts the two workflows above (`workflow_dispatch`) |
-| `.github/workflows/publish-packages.yml` | signed package pushed to the `kazoos-packages` branch on a `v*` tag ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
+| `.github/workflows/publish-packages.yml` | unsigned package pushed to the `kazoos-packages` branch on a `v*` tag ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)) |
 | `README.md`, `readme-fr.md` | these steps, for the created repository |
 
 ## The Kazo OS version
@@ -165,36 +165,26 @@ gh secret set HACK_STORE_TOKEN --repo <owner>/<repository>
   slightest doubt.
 - **Without the secret**, nothing blocks: the `apps/<appId>_<version>/` folder
   stays as a workflow artifact, and the author opens the pull request.
-- Not to be confused with `HACKEROS_APP_SIGNING_KEY` (next section), a key the
-  Kazo OS tooling generates to sign packages.
+- This token signs nothing: apps are signed only in the marketplace
+  repository ([ADR 0219](../dev/adr/0219-app-authors-signing-tool.md)).
 
-## Publishing on `kazoos-packages` and signing
+## Publishing on `kazoos-packages`
 
-[ADR 0219](../dev/adr/0219-app-authors-signing-tool.md). The same `v*` tag runs
-**Publish the Kazo OS packages** (`publish-packages.yml`, the only workflow
-with `contents: write`): it fetches the `kazoos-packages` branch (orphan the
-first time), packs the app there (`KazoOsPack`, `KazoOsPackageOutput`),
-keeps the versions already published and their signatures, then pushes the
+[ADR 0219](../dev/adr/0219-app-authors-signing-tool.md) §4, without signing
+since 2026-11-07. The
+same `v*` tag runs **Publish the Kazo OS packages** (`publish-packages.yml`,
+the only workflow with `contents: write`): it fetches the `kazoos-packages`
+branch (orphan the first time), packs the app there (`KazoOsPack`,
+`KazoOsPackageOutput`), keeps the versions already published, then pushes the
 branch. `kazopkg install <owner>/<repo>` then installs the app without the
 Store.
 
-To sign:
-
-1. Once, outside the repository:
-   `dotnet build src/<Name> -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=$HOME/kazoos-signing-key.pem`.
-   The private key (PKCS#8, mode `0600`) goes to that new file, never replaced;
-   the public key and the `github.com/<owner>=…` line are printed. `*.pem` is in
-   the template's `.gitignore`.
-2. Put the content of the file in the repository's `HACKEROS_APP_SIGNING_KEY`
-   secret, then keep the file offline.
-3. Publish the public key; an administrator adds it to `[signing-keys]` of
-   `/etc/kazoos/app-sources.config`. From then on, an unsigned or badly signed
-   package from this repository is refused.
-
-Without the secret, the package goes out unsigned (SHA-256 only) with a
-warning. Locally: `HACKEROS_APP_SIGNING_KEY` variable or
-`-p:KazoOsSigningKeyFile=<file.pem>` on `KazoOsPack`. It needs a Kazo OS
-version that contains ADR 0219 (2.2.1 or later).
+These packages are **not signed**: no app repository signs, only
+`Kazo-ca/Os-AppMarketPlace` signs the Kazo OS Store packages. The OS checks
+them by their SHA-256 and asks an administrator for an untrusted source
+(ADR 0208, ADR 0214 §2.4). An app repository that still has a
+`HACKEROS_APP_SIGNING_KEY` secret (ADR 0219) can delete it: nothing reads it
+any more.
 
 ## The GitHub template repository
 
@@ -212,3 +202,4 @@ can only work with a submodule on a release that contains this template
 - [x] Test of both profiles (`Kazo.Os.Templates.E2E.Tests`).
 - [ ] Template repository regenerated on the release that contains this template.
 - [x] `publish-packages.yml` workflow and package signing (ADR 0219).
+- [x] Signing removed from app repositories and the template (ADR 0219).

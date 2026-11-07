@@ -37,11 +37,16 @@
     3.0.0 (series rename/base, ADR 0228, ADR 0229): HackerOS becomes Kazo OS. Every package moves
     from HackerOs.* to Kazo.Os.* and every SDK type from Hack* to Kazo* (HackFile -> KazoFile...);
     an app built on 2.x is refused and must be rebuilt against Kazo.Os.AppSdk.
+    3.1.0 (series os-3-1/base, ADR 0234): WinForms-like window styles (Normal, Tool, transparent
+    None) and their options, app window control (minimize, maximize, move, resize), child windows
+    and modal dialogs (ShowWindowAsync, ShowDialogAsync), file dialogs that start in an existing
+    folder, capabilities of an app installed during the session, network drives readable by apps
+    (ADR 0231) and illustrated app icons (ADR 0232), all folded into PublicAPI.Shipped.txt.
 
     The App SDK version an app is compiled against comes from this number (KazoOsSdk.Version), and
     the manifest generator writes it as the app's sdkCompatibility.minimumVersion (ADR 0098 §3).
   -->
   <PropertyGroup>
-    <KazoOsVersion>3.0.0</KazoOsVersion>
+    <KazoOsVersion>3.1.0</KazoOsVersion>
   </PropertyGroup>
 </Project>

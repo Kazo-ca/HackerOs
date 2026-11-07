@@ -551,7 +551,6 @@ Kazo.Os.App.Abstractions.FileHandlerManifest.Priority.init -> void
 Kazo.Os.App.Abstractions.FileIntentAction
 Kazo.Os.App.Abstractions.FileIntentAction.Edit = 1 -> Kazo.Os.App.Abstractions.FileIntentAction
 Kazo.Os.App.Abstractions.FileIntentAction.Open = 0 -> Kazo.Os.App.Abstractions.FileIntentAction
-Kazo.Os.App.Abstractions.KazoOsSdk
 Kazo.Os.App.Abstractions.IAppIntent
 Kazo.Os.App.Abstractions.IAppIntent.IntentId.get -> string!
 Kazo.Os.App.Abstractions.IAppPlatformCapabilityRegistry
@@ -561,6 +560,7 @@ Kazo.Os.App.Abstractions.IPersistentAppCatalogRepository
 Kazo.Os.App.Abstractions.IPersistentAppCatalogRepository.ReadAllAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.PersistedAppCatalogEntry!>!>
 Kazo.Os.App.Abstractions.IPersistentAppCatalogRepository.ReconcileAsync(System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.AppManifest!>! selectedManifests, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.PersistedAppCatalogEntry!>!>
 Kazo.Os.App.Abstractions.IPersistentAppCatalogRepository.SetEnabledAsync(string! appId, bool enabled, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.App.Abstractions.KazoOsSdk
 Kazo.Os.App.Abstractions.LaunchAppIntent
 Kazo.Os.App.Abstractions.LaunchAppIntent.<Clone>$() -> Kazo.Os.App.Abstractions.LaunchAppIntent!
 Kazo.Os.App.Abstractions.LaunchAppIntent.Arguments.get -> System.Collections.Generic.IReadOnlyList<string!>!
@@ -974,15 +974,31 @@ Kazo.Os.App.Abstractions.WindowOptions.MaxHeight.get -> int?
 Kazo.Os.App.Abstractions.WindowOptions.MaxHeight.init -> void
 Kazo.Os.App.Abstractions.WindowOptions.MaxWidth.get -> int?
 Kazo.Os.App.Abstractions.WindowOptions.MaxWidth.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.MaximizeBox.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.MaximizeBox.init -> void
 Kazo.Os.App.Abstractions.WindowOptions.MinHeight.get -> int
 Kazo.Os.App.Abstractions.WindowOptions.MinHeight.init -> void
 Kazo.Os.App.Abstractions.WindowOptions.MinWidth.get -> int
 Kazo.Os.App.Abstractions.WindowOptions.MinWidth.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.MinimizeBox.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.MinimizeBox.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.Modal.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.Modal.init -> void
 Kazo.Os.App.Abstractions.WindowOptions.RememberGeometry.get -> bool
 Kazo.Os.App.Abstractions.WindowOptions.RememberGeometry.init -> void
 Kazo.Os.App.Abstractions.WindowOptions.Resizable.get -> bool
 Kazo.Os.App.Abstractions.WindowOptions.Resizable.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.ShowIcon.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.ShowIcon.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.ShowInTaskbar.get -> bool
+Kazo.Os.App.Abstractions.WindowOptions.ShowInTaskbar.init -> void
+Kazo.Os.App.Abstractions.WindowOptions.Style.get -> Kazo.Os.App.Abstractions.WindowStyle
+Kazo.Os.App.Abstractions.WindowOptions.Style.init -> void
 Kazo.Os.App.Abstractions.WindowOptions.WindowOptions(int defaultWidth = 800, int defaultHeight = 560, int minWidth = 360, int minHeight = 240, int? maxWidth = null, int? maxHeight = null, bool resizable = true) -> void
+Kazo.Os.App.Abstractions.WindowStyle
+Kazo.Os.App.Abstractions.WindowStyle.None = 2 -> Kazo.Os.App.Abstractions.WindowStyle
+Kazo.Os.App.Abstractions.WindowStyle.Normal = 0 -> Kazo.Os.App.Abstractions.WindowStyle
+Kazo.Os.App.Abstractions.WindowStyle.Tool = 1 -> Kazo.Os.App.Abstractions.WindowStyle
 abstract Kazo.Os.App.Abstractions.AppDefinition.EntryPoint.get -> System.Type!
 abstract Kazo.Os.App.Abstractions.AppDefinition.Id.get -> string!
 abstract Kazo.Os.App.Abstractions.AppDefinition.Kind.get -> Kazo.Os.App.Abstractions.AppKind
@@ -1570,6 +1586,7 @@ virtual Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.PrintMembers
 ~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.NullableAppServiceStartup.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.AppServiceStartup?>
 ~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.NullableBoolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool?>
 ~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.NullableInt32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int?>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.NullableWindowStyle.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.WindowStyle?>
 ~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.OsCompatibilityManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.OsCompatibilityManifest>
 ~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.PresentationManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.PresentationManifest>
 ~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.String.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<string>
@@ -1579,6 +1596,7 @@ virtual Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.PrintMembers
 ~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.WebAppManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.WebAppManifest>
 ~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.WebBlazorManifest.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.WebBlazorManifest>
 ~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.WindowOptions.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.WindowOptions>
+~Kazo.Os.App.Abstractions.AppManifestJsonSerializerContext.WindowStyle.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.App.Abstractions.WindowStyle>
 ~override Kazo.Os.App.Abstractions.AppPlatformId.Equals(object obj) -> bool
 ~override Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.Equals(object obj) -> bool
 ~override Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.Equals(object obj) -> bool

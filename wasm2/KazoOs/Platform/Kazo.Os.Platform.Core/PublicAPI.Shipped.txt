@@ -2236,14 +2236,6 @@ Kazo.Os.Platform.Core.Network.Local.DnsAnswer.Equals(Kazo.Os.Platform.Core.Netwo
 Kazo.Os.Platform.Core.Network.Local.DnsAnswer.IsLocal.get -> bool
 Kazo.Os.Platform.Core.Network.Local.DnsAnswer.Source.get -> Kazo.Os.AppSdk.Net.KazoDnsSource
 Kazo.Os.Platform.Core.Network.Local.DnsAnswer.Source.init -> void
-Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver
-Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.CacheTimeToLive.get -> System.TimeSpan
-Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.CacheTimeToLive.init -> void
-Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.FindWebApp(string! hostName) -> Kazo.Os.App.Abstractions.AppManifest?
-Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.FlushCache() -> void
-Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.KazoDnsResolver(Kazo.Os.Simulation.Abstractions.Network.ISimulatedNetworkService! network, Kazo.Os.Simulation.Abstractions.FileSystem.IFileSystemService? fileSystem, Kazo.Os.Simulation.Abstractions.Time.ISimulationClock! clock, System.Func<System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.AppManifest!>!>! webApps, Kazo.Os.Platform.Core.Network.Local.IHostedSiteNameSource? hostedSites = null) -> void
-Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.ResolveAsync(string! hostName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Platform.Core.Network.Local.DnsAnswer?>
-Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.ReverseLookupAsync(System.Net.IPAddress! address, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string?>
 Kazo.Os.Platform.Core.Network.Local.HostedSiteNameSource
 Kazo.Os.Platform.Core.Network.Local.HostedSiteNameSource.FindSiteAsync(string! hostName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string?>
 Kazo.Os.Platform.Core.Network.Local.HostedSiteNameSource.GetNamesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyDictionary<string!, string!>!>
@@ -2265,6 +2257,14 @@ Kazo.Os.Platform.Core.Network.Local.HostsFileLine.Names.get -> System.Collection
 Kazo.Os.Platform.Core.Network.Local.HostsFileLine.Names.init -> void
 Kazo.Os.Platform.Core.Network.Local.IHostedSiteNameSource
 Kazo.Os.Platform.Core.Network.Local.IHostedSiteNameSource.FindSiteAsync(string! hostName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string?>
+Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver
+Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.CacheTimeToLive.get -> System.TimeSpan
+Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.CacheTimeToLive.init -> void
+Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.FindWebApp(string! hostName) -> Kazo.Os.App.Abstractions.AppManifest?
+Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.FlushCache() -> void
+Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.KazoDnsResolver(Kazo.Os.Simulation.Abstractions.Network.ISimulatedNetworkService! network, Kazo.Os.Simulation.Abstractions.FileSystem.IFileSystemService? fileSystem, Kazo.Os.Simulation.Abstractions.Time.ISimulationClock! clock, System.Func<System.Collections.Generic.IEnumerable<Kazo.Os.App.Abstractions.AppManifest!>!>! webApps, Kazo.Os.Platform.Core.Network.Local.IHostedSiteNameSource? hostedSites = null) -> void
+Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.ResolveAsync(string! hostName, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Platform.Core.Network.Local.DnsAnswer?>
+Kazo.Os.Platform.Core.Network.Local.KazoDnsResolver.ReverseLookupAsync(System.Net.IPAddress! address, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string?>
 Kazo.Os.Platform.Core.Network.Local.ListeningPortTable
 Kazo.Os.Platform.Core.Network.Local.ListeningPortTable.IsListening(int port, bool loopbackDestination) -> bool
 Kazo.Os.Platform.Core.Network.Local.ListeningPortTable.ListeningPortTable(System.Func<Kazo.Os.Simulation.Abstractions.Processes.ProcessId, bool>! isAlive, System.Func<System.Collections.Generic.IEnumerable<int>!>? systemDaemonPorts = null) -> void
@@ -2336,10 +2336,10 @@ Kazo.Os.Platform.Core.Network.Websites.CryptoBankController
 Kazo.Os.Platform.Core.Network.Websites.CryptoBankController.CryptoBankController() -> void
 Kazo.Os.Platform.Core.Network.Websites.DarknetMarketController
 Kazo.Os.Platform.Core.Network.Websites.DarknetMarketController.DarknetMarketController() -> void
-Kazo.Os.Platform.Core.Network.Websites.KazoMailController
-Kazo.Os.Platform.Core.Network.Websites.KazoMailController.KazoMailController() -> void
 Kazo.Os.Platform.Core.Network.Websites.KazoForumController
 Kazo.Os.Platform.Core.Network.Websites.KazoForumController.KazoForumController() -> void
+Kazo.Os.Platform.Core.Network.Websites.KazoMailController
+Kazo.Os.Platform.Core.Network.Websites.KazoMailController.KazoMailController() -> void
 Kazo.Os.Platform.Core.Network.Websites.KazoSearchController
 Kazo.Os.Platform.Core.Network.Websites.KazoSearchController.KazoSearchController() -> void
 Kazo.Os.Platform.Core.Network.Websites.SimulatedWebsiteControllerBase
@@ -2508,6 +2508,7 @@ Kazo.Os.Platform.Core.Power.ISystemPowerDevice.EraseStorageAsync(System.Threadin
 Kazo.Os.Platform.Core.Power.ISystemPowerDevice.RestartAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
 Kazo.Os.Platform.Core.Power.SystemPowerService
 Kazo.Os.Platform.Core.Power.SystemPowerService.FactoryResetAsync(string! administratorLogin, Kazo.Os.Simulation.Abstractions.Sessions.AuthenticatedPrincipal? requestedBy) -> System.Threading.Tasks.Task!
+Kazo.Os.Platform.Core.Power.SystemPowerService.FactoryResetFromSignInAsync() -> System.Threading.Tasks.Task!
 Kazo.Os.Platform.Core.Power.SystemPowerService.RebootAsync(string! administratorLogin, Kazo.Os.Simulation.Abstractions.Sessions.AuthenticatedPrincipal? requestedBy) -> System.Threading.Tasks.Task!
 Kazo.Os.Platform.Core.Power.SystemPowerService.RestartAfterAsync(System.Func<System.Threading.Tasks.Task!>! whileStopped) -> System.Threading.Tasks.Task!
 Kazo.Os.Platform.Core.Power.SystemPowerService.SystemPowerService(Kazo.Os.Platform.Core.Power.ISystemPowerDevice! device, Kazo.Os.Simulation.Abstractions.Sessions.ISessionService! session, Kazo.Os.Platform.Core.Diagnostics.LogFileWriter? logs = null, Kazo.Os.Simulation.Abstractions.Diagnostics.IAuditLog? auditLog = null, System.Func<System.DateTimeOffset>? clock = null) -> void
@@ -3055,6 +3056,7 @@ Kazo.Os.Platform.Core.Sessions.LocalPasswordService.ResetPasswordAsync(Kazo.Os.S
 Kazo.Os.Platform.Core.Sessions.LocalSessionService
 Kazo.Os.Platform.Core.Sessions.LocalSessionService.CreateLinkedCancellationSource() -> System.Threading.CancellationTokenSource!
 Kazo.Os.Platform.Core.Sessions.LocalSessionService.CurrentPrincipal.get -> Kazo.Os.Simulation.Abstractions.Sessions.AuthenticatedPrincipal?
+Kazo.Os.Platform.Core.Sessions.LocalSessionService.Dispose() -> void
 Kazo.Os.Platform.Core.Sessions.LocalSessionService.LocalSessionService(Kazo.Os.Simulation.Abstractions.Sessions.ILocalUserRepository! users, Kazo.Os.Platform.Core.FileSystem.FileSystemSeeder! homeSeeder, Kazo.Os.Simulation.Abstractions.Events.IEventBus! eventBus, Kazo.Os.Simulation.Abstractions.Diagnostics.IAuditLog! auditLog, Kazo.Os.Simulation.Abstractions.Sessions.InstallationId installationId, Kazo.Os.Simulation.Abstractions.Sessions.DeviceId deviceId, System.Func<System.DateTimeOffset>? clock = null, Kazo.Os.Simulation.Abstractions.Sessions.ILoginProgressTracker? progressTracker = null, Kazo.Os.Platform.Core.Sessions.KeyDerivationAsyncDelegate? asyncHasher = null, Kazo.Os.App.Abstractions.Policy.ICapabilityGrantRepository? grantRepository = null, Kazo.Os.Platform.Core.AppCatalog? catalog = null, Kazo.Os.Platform.Core.Settings.IUserProfileInitializer? profileInitializer = null, Kazo.Os.Platform.Core.Keyring.ISessionKeyring? keyring = null) -> void
 Kazo.Os.Platform.Core.Sessions.LocalSessionService.LoginAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalLoginName loginName, string? password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Simulation.Abstractions.Sessions.AuthenticatedPrincipal!>!
 Kazo.Os.Platform.Core.Sessions.LocalSessionService.LoginWithPasskeyAsync(Kazo.Os.Simulation.Abstractions.Sessions.LocalLoginName loginName, Kazo.Os.Platform.Core.Sessions.PasskeyService! passkeys, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.Simulation.Abstractions.Sessions.AuthenticatedPrincipal!>!
@@ -3990,6 +3992,7 @@ const Kazo.Os.Platform.Core.Apps.Packages.AppCatalogDocument.MaximumBytes = 8388
 const Kazo.Os.Platform.Core.Apps.Packages.AppCatalogDocument.SupportedSchemaVersion = 1 -> int
 const Kazo.Os.Platform.Core.Apps.Packages.AppCatalogDocument.ThemePackKind = "theme-pack" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.BackupsUnderHome = ".local/share/kazoos/app-backups" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.LegacyPreviousVersionVariable = "HACKEROS_PREVIOUS_VERSION" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.MaximumBackups = 2 -> int
 const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.PreviousVersionVariable = "KAZOOS_PREVIOUS_VERSION" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.VersionsConfigUnderHome = ".config/kazoos/app-data-versions.config" -> string!
@@ -3997,6 +4000,8 @@ const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.VersionsSection = "versio
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.AssetFolder = "wwwroot/" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.DescriptionFileName = "kazoos-package.json" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.Extension = ".kazoapp" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.LegacyDescriptionFileName = "hackeros-package.json" -> string!
+const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.LegacyExtension = ".hackapp" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.LibraryFolder = "lib/" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.ManifestFileName = "manifest.json" -> string!
 const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.MaximumArchiveBytes = 67108864 -> long
@@ -4509,12 +4514,12 @@ override Kazo.Os.Platform.Core.Network.Websites.CryptoBankController.Theme.get -
 override Kazo.Os.Platform.Core.Network.Websites.DarknetMarketController.PrimaryHostname.get -> string!
 override Kazo.Os.Platform.Core.Network.Websites.DarknetMarketController.SiteName.get -> string!
 override Kazo.Os.Platform.Core.Network.Websites.DarknetMarketController.Theme.get -> string!
-override Kazo.Os.Platform.Core.Network.Websites.KazoMailController.PrimaryHostname.get -> string!
-override Kazo.Os.Platform.Core.Network.Websites.KazoMailController.SiteName.get -> string!
-override Kazo.Os.Platform.Core.Network.Websites.KazoMailController.Theme.get -> string!
 override Kazo.Os.Platform.Core.Network.Websites.KazoForumController.PrimaryHostname.get -> string!
 override Kazo.Os.Platform.Core.Network.Websites.KazoForumController.SiteName.get -> string!
 override Kazo.Os.Platform.Core.Network.Websites.KazoForumController.Theme.get -> string!
+override Kazo.Os.Platform.Core.Network.Websites.KazoMailController.PrimaryHostname.get -> string!
+override Kazo.Os.Platform.Core.Network.Websites.KazoMailController.SiteName.get -> string!
+override Kazo.Os.Platform.Core.Network.Websites.KazoMailController.Theme.get -> string!
 override Kazo.Os.Platform.Core.Network.Websites.KazoSearchController.PrimaryHostname.get -> string!
 override Kazo.Os.Platform.Core.Network.Websites.KazoSearchController.SiteName.get -> string!
 override Kazo.Os.Platform.Core.Network.Websites.KazoSearchController.Theme.get -> string!
@@ -4857,6 +4862,7 @@ static Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.GetBackupPath(string! ho
 static Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.GetVersionsPath(string! home) -> Kazo.Os.App.Abstractions.VirtualPath
 static Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.ReadVersion(string? content, string! appId) -> Kazo.Os.App.Abstractions.SemanticVersion?
 static Kazo.Os.Platform.Core.Apps.Packages.AppPackage.GetDeclaredAssemblies(Kazo.Os.App.Abstractions.AppManifest! manifest) -> System.Collections.Generic.IReadOnlySet<string!>!
+static Kazo.Os.Platform.Core.Apps.Packages.AppPackage.HasPackageExtension(string! path) -> bool
 static Kazo.Os.Platform.Core.Apps.Packages.AppPackage.IsSafeRelativePath(string! path) -> bool
 static Kazo.Os.Platform.Core.Apps.Packages.AppPackage.Read(byte[]! archive) -> Kazo.Os.Platform.Core.Apps.Packages.AppPackage!
 static Kazo.Os.Platform.Core.Apps.Packages.AppPackage.Sha256(byte[]! bytes) -> string!

@@ -1,7 +1,1 @@
 #nullable enable
-Kazo.Os.Platform.Core.Power.SystemPowerService.FactoryResetFromSignInAsync() -> System.Threading.Tasks.Task!
-const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.LegacyDescriptionFileName = "hackeros-package.json" -> string!
-const Kazo.Os.Platform.Core.Apps.Packages.AppPackage.LegacyExtension = ".hackapp" -> string!
-static Kazo.Os.Platform.Core.Apps.Packages.AppPackage.HasPackageExtension(string! path) -> bool
-const Kazo.Os.Platform.Core.Apps.Packages.AppDataGuard.LegacyPreviousVersionVariable = "HACKEROS_PREVIOUS_VERSION" -> string!
-Kazo.Os.Platform.Core.Sessions.LocalSessionService.Dispose() -> void

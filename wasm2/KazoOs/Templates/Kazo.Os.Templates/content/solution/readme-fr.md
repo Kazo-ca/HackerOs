@@ -75,26 +75,13 @@ Forcez l'un ou l'autre avec `-p:KazoOsUseSource=true` ou `false`.
 Le catalogue ne prend jamais de binaire de votre part : une fois votre pull request relue et
 fusionnée, sa CI compile l'app au commit du tag.
 
-## Publier sur la branche `kazoos-packages`, signé
+## Publier sur la branche `kazoos-packages`
 
 Le même tag `v*` lance aussi **Publish the Kazo OS packages** : il fait le paquet de l'app et le
 pousse sur la branche `kazoos-packages` de ce dépôt, en gardant les versions déjà publiées. Les
 utilisateurs de Kazo OS l'installent alors avec `kazopkg install <owner>/<repo>`, sans le Kazo OS Store.
 
-Signez vos paquets pour que personne d'autre ne puisse publier en votre nom :
-
-1. Une fois, sur votre machine, hors du dépôt :
-   `dotnet build src/Kazo.Os.Template.Solution -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=$HOME/kazoos-signing-key.pem`.
-   La clé privée va dans ce nouveau fichier (`*.pem` est ignoré par git) ; la clé publique est affichée.
-2. Mettez le contenu du fichier dans le secret `HACKEROS_APP_SIGNING_KEY` de ce dépôt
-   (Settings ▸ Secrets and variables ▸ Actions), puis gardez le fichier hors ligne.
-3. Publiez la clé publique affichée (dans ce README par exemple). Un administrateur l'ajoute à
-   `[signing-keys]` de `/etc/kazoos/app-sources.config`, sous la forme `github.com/<owner>=<clé>`
-   (tous vos dépôts) ou `github.com/<owner>/<repo>=<clé>` (celui-ci). Dès lors, un paquet à vous non
-   signé ou mal signé est refusé.
-
-Sans le secret, le paquet est publié non signé (SHA-256 seulement) et le run affiche un
-avertissement. Pour signer en local, définissez `HACKEROS_APP_SIGNING_KEY` ou passez
-`-p:KazoOsSigningKeyFile=<fichier.pem>` à `KazoOsPack`. Pour changer de clé sans coupure, faites
-ajouter la nouvelle clé après l'ancienne (séparées par une virgule), changez le secret, puis faites
-retirer l'ancienne.
+Ces paquets ne sont pas signés : les apps sont signées seulement dans le dépôt du Kazo OS Store
+(`Kazo-ca/Os-AppMarketPlace`), quand il compile votre app depuis le catalogue (ADR 0219). Kazo OS
+les vérifie par leur SHA-256 et demande un administrateur avant d'installer depuis une source non
+fiable. Pour un paquet signé, installez l'app depuis le Kazo OS Store.

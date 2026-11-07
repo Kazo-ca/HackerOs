@@ -92,6 +92,15 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   bords de l'écran, avec des animations sobres pour ouvrir, fermer, minimiser
   vers la barre, agrandir et ancrer, coupées par « Réduire les animations ».
   ([`window-model.md`](framework/window-model.md), [`window-animations.md`](dev/window-animations.md))
+- **Styles de fenêtre inspirés de WinForms** (version 3.1.0) : une app choisit
+  le style `Normal`, `Tool` (fermer seulement, celui des dialogues de l'OS) ou
+  `None` (zone cliente seule, transparente : un clic là où l'app ne dessine rien
+  atteint le bureau), et les options `ShowIcon`, `Resizable`, `MaximizeBox`,
+  `MinimizeBox`, `ShowInTaskbar` et `Modal`, dans son manifeste ou pendant
+  l'exécution. Elle ouvre ses propres fenêtres et dialogues modaux
+  (`ShowWindowAsync`, `ShowDialogAsync`) et réduit, agrandit, déplace ou
+  redimensionne sa fenêtre. ([ADR 0234](dev/adr/0234-window-styles-inspired-by-winforms.md),
+  [`window-model.md`](framework/window-model.md))
 - **Barre des tâches et menu Démarrer** avec les applications épinglées et les
   fenêtres ouvertes. Un clic droit sur la barre donne le menu de la fenêtre,
   « Nouvelle fenêtre », le gestionnaire des tâches, « Afficher le bureau » et
@@ -257,6 +266,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 
 ### Personnalisation
 
+- **Icônes d'apps illustrées** : les apps système ont des icônes en couleur
+  qui montrent ce que fait chaque app, et le menu Démarrer, le bureau et
+  l'explorateur affichent l'icône propre de chaque app, y compris installée.
+  ([ADR 0232](dev/adr/0232-illustrated-app-icons-everywhere.md))
 - **Thèmes** de l'OS, et éditeur pour créer les siens.
   ([`theme-files.md`](framework/theme-files.md))
 - **Fonds d'écran en image** : une image PNG, JPEG ou WebP (4 livrées avec
@@ -294,9 +307,9 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
   service, un site, un hôte complet ou un dépôt d'application entier, visibles
   dans Visual Studio et Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
-- **Signature des paquets par l'auteur d'une application** : `KazoOsKeyGen`
-  crée la clé, `KazoOsPack` et le workflow `publish-packages.yml` du modèle
-  signent et publient la branche `kazoos-packages`.
+- **Publication d'une application sur sa branche `kazoos-packages`** : le
+  workflow `publish-packages.yml` du modèle publie le paquet, non signé ; les
+  applications sont signées seulement dans le dépôt du Kazo OS Store.
   ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
   [`app-repository.md`](framework/app-repository.md))
 - **Installation d'une application depuis son dépôt GitHub** avec la commande
@@ -372,7 +385,6 @@ dans `main`, le lien mène à sa PR.
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Changer d'utilisateur | Ouvrir une autre session sans fermer la première. Reste grisé dans le menu Marche/arrêt par choix de Benoit : une session à la fois, Se déconnecter pour changer de compte. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/Os/issues/290) |
-| Styles de fenêtre inspirés de WinForms | Styles `Normal`, `Tool` (fermer seulement, pour les dialogues) et `None` (zone cliente seule, fond transparent, pour qu'une app comme Webamp fasse flotter ses propres fenêtres), options `ShowIcon`, `Resizable`, `MaximizeBox`, `MinimizeBox`, `ShowInTaskbar` et `Modal`, fenêtres enfants et dialogues des apps, une app réduit sa propre fenêtre. Prévu pour la version 3.1.0. | [0234](dev/adr/0234-window-styles-inspired-by-winforms.md) | [#378](https://github.com/Kazo-ca/Os/issues/378), [#384](https://github.com/Kazo-ca/Os/issues/384) |
 | Adresse de fichier servie à la demande | Une app reçoit une adresse pour lire un gros fichier (audio, vidéo) sans le copier en mémoire, avec lecture partielle pour avancer dans un morceau. | À écrire | [#379](https://github.com/Kazo-ca/Os/issues/379) |
 | Glisser des fichiers vers une app | Contrat public du SDK pour recevoir des fichiers glissés depuis l'explorateur ou le bureau. | À écrire | [#380](https://github.com/Kazo-ca/Os/issues/380) |
 
@@ -409,7 +421,7 @@ par `kazopkg` puis par le Kazo OS Store.
 | --- | --- | --- | --- |
 | Chess | Échecs, basés sur chess.js ; première application prévue du catalogue. | [Os-App-Chess](https://github.com/Kazo-ca/Os-App-Chess) | [#2](https://github.com/Kazo-ca/Os-App-Chess/issues/2), [#3](https://github.com/Kazo-ca/Os-App-Chess/issues/3) |
 | Webamp | Lecteur de musique dans le style de Winamp, associé aux fichiers audio, aux listes `.m3u`/`.pls` et aux skins `.wsz` ; ouvre aussi les fichiers des lecteurs réseau (ADR 0231). Plan en discussion. | [Os-App-Webamp](https://github.com/Kazo-ca/Os-App-Webamp) | [#1](https://github.com/Kazo-ca/Os-App-Webamp/issues/1), [#381](https://github.com/Kazo-ca/Os/issues/381) |
-| IRC | Client de discussion IRC (KiwiIRC). | [Os-App-IRC](https://github.com/Kazo-ca/Os-App-IRC) | À venir |
+| IRC | Client de discussion IRC natif (C# et Blazor) pour les vrais réseaux IRC, ordinateur et mobile : WebSocket sans serveur, et TCP avec TLS par le relais quand le serveur est connecté ([ADR 0235](dev/adr/0235-real-network-for-chat-apps.md)). Plan en discussion. | [Os-App-IRC](https://github.com/Kazo-ca/Os-App-IRC) | [#395](https://github.com/Kazo-ca/Os/issues/395), [#393](https://github.com/Kazo-ca/Os/issues/393), [#394](https://github.com/Kazo-ca/Os/issues/394) |
 | EmulatorJS | Émulateur de consoles rétro. | [Os-App-EmulatorJS](https://github.com/Kazo-ca/Os-App-EmulatorJS) | À venir |
 | BoxedWine | Exécuter d'anciens programmes Windows dans l'OS. | [Os-App-BoxedWine](https://github.com/Kazo-ca/Os-App-BoxedWine) | À venir |
 

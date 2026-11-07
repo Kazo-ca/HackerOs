@@ -12,7 +12,8 @@ This document describes what an app uses for the desktop: the `KazoDesktop*` SDK
 | `KazoDesktopEntry` | `AppSdk` (`Files/KazoDesktopEntry.cs`) | Reading and writing `.desktop` files, `CreateShortcutAsync`. |
 | `KazoDesktopLink` | `AppSdk` (`Files/KazoDesktopLink.cs`) | Shortcut to a file or a folder (`Type=Link`), `CreateLinkAsync` (ADR 0185 §13). |
 | `KazoDesktopSettings` | `AppSdk` (`Files/KazoDesktopSettings.cs`) | Reading and writing `desktop.config`. |
-| `KazoAppIcons.LucideName` | `AppSdk` (`Apps/`) | The Lucide icon of an app (the one in the Start menu), reused by shortcuts. |
+| `KazoAppIcons.LucideName` | `AppSdk` (`Apps/`) | The Lucide icon of an app, fallback of the Start menu and shortcuts when the app declares no image (ADR 0232). |
+| `KazoAppInfo.IconUrl` | `AppSdk` (`Apps/`) | URL of an app's declared icon, drawn by shortcuts after the icon pack's image (ADR 0232). |
 
 ## `desktop.config` file
 
