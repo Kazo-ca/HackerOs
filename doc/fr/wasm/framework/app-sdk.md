@@ -231,6 +231,7 @@ KazoOpenFileResult opened = await KazoApps.OpenFileAsync("~/notes.md");   // Ope
 ```
 
 - `KazoAppInfo` : `Id`, `Name`, `Description`, `Kind`, `Category`, `Icon`,
+  `IconUrl` (URL `_content/<assembly>/<chemin>` de l'icône, ADR 0232),
   `Version`, `PublisherId`, `IsSystemApp`, `IsHidden`, `FileHandlers`, `Urls`
   (adresses `web.urls` d'une app web, vide sinon ; liste des sites externes du
   Web Server Manager).

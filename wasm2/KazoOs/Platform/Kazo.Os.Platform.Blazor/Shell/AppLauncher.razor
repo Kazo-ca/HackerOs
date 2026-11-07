@@ -230,7 +230,14 @@
                         aria-label="@L["Launcher.OpenFileExplorer"]"
                         @onclick="() => LaunchQuickAppAsync(FileExplorerAppId)">
                     <span class="quick-icon" aria-hidden="true">
-                        <KazoIcon Library="IconLibrary.Lucide" Name="folder" Size="22" Title="" />
+                        @if (FileExplorerApp is { } explorerApp)
+                        {
+                            <ShellAppIcon App="explorerApp" Size="22" />
+                        }
+                        else
+                        {
+                            <KazoIcon Library="IconLibrary.Lucide" Name="folder" Size="22" Title="" />
+                        }
                     </span>
                     <span>
                         <strong>@L["Launcher.FileExplorer"]</strong>
@@ -243,7 +250,14 @@
                         aria-label="@L["Launcher.OpenSettings"]"
                         @onclick="() => LaunchQuickAppAsync(SettingsAppId)">
                     <span class="quick-icon" aria-hidden="true">
-                        <KazoIcon Library="IconLibrary.Lucide" Name="settings" Size="22" Title="" />
+                        @if (SettingsApp is { } settingsApp)
+                        {
+                            <ShellAppIcon App="settingsApp" Size="22" />
+                        }
+                        else
+                        {
+                            <KazoIcon Library="IconLibrary.Lucide" Name="settings" Size="22" Title="" />
+                        }
                     </span>
                     <span>
                         <strong>@L["Launcher.Settings"]</strong>

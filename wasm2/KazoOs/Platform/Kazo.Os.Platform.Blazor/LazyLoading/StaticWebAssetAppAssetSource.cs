@@ -26,16 +26,8 @@ public sealed class StaticWebAssetAppAssetSource : IAppAssetSource, IDisposable
     /// <param name="manifest">The app the asset belongs to.</param>
     /// <param name="assetPath">The declared package-relative path.</param>
     /// <returns>For example <c>_content/Contoso.Notes/icons/app.svg</c>.</returns>
-    public static string RelativeUrl(AppManifest manifest, string assetPath)
-    {
-        ArgumentNullException.ThrowIfNull(manifest);
-        ArgumentException.ThrowIfNullOrWhiteSpace(assetPath);
-        string assembly = manifest.EntryPoint?.Assembly
-            ?? manifest.Platform?.EntryPoints.FirstOrDefault()?.Assembly
-            ?? throw new InvalidOperationException($"'{manifest.Id}' has no entry-point assembly.");
-        string package = assembly.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ? assembly[..^4] : assembly;
-        return $"_content/{Uri.EscapeDataString(package)}/{string.Join('/', assetPath.Split('/').Select(Uri.EscapeDataString))}";
-    }
+    public static string RelativeUrl(AppManifest manifest, string assetPath) =>
+        Kazo.Os.AppSdk.Apps.KazoAppAssets.RelativeUrl(manifest, assetPath);
 
     /// <inheritdoc />
     public async ValueTask<byte[]?> ReadAsync(AppManifest manifest, string assetPath, CancellationToken cancellationToken = default)

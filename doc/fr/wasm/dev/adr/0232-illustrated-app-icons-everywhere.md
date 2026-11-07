@@ -143,8 +143,8 @@ Posées le 2026-11-06 avec une planche de comparaison ; réponse le 2026-11-07 :
 ## Tâches
 
 - [x] ADR (série `icons/base`, chantier `icons/1-adr`).
-- [ ] Redessiner les `icons/app.svg` des apps système (chantier `icons/2-system-apps`).
-- [ ] `KazoAppAssets.RelativeUrl` et `KazoAppInfo.IconUrl` dans le SDK.
-- [ ] Menu Démarrer, accueil mobile et raccourcis : ordre du point 2.
-- [ ] Tests, docs (`window-model.md`, `desktop-api.md`, `sdk-reference.md`),
+- [x] Redessiner les `icons/app.svg` des apps système (chantier `icons/2-system-apps`).
+- [x] `KazoAppAssets.RelativeUrl` et `KazoAppInfo.IconUrl` dans le SDK.
+- [x] Menu Démarrer, accueil mobile et raccourcis : ordre du point 2.
+- [x] Tests, docs (`window-model.md`, `desktop-api.md`, `sdk-reference.md`),
       `features.md`, entrée de changement.

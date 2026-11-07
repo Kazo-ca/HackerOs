@@ -43,6 +43,13 @@ public sealed record KazoAppInfo(
     /// </summary>
     public IReadOnlyList<string> Capabilities { get; init; } = [];
 
+    /// <summary>
+    /// Gets the page-relative URL of <see cref="Icon"/> (<c>_content/&lt;assembly&gt;/icons/app.svg</c>,
+    /// ADR 0232 §3), or <see langword="null"/> when the app declares no icon. The Start menu, the desktop
+    /// and the file control draw it, unless the icon pack names the app.
+    /// </summary>
+    public string? IconUrl { get; init; }
+
     /// <summary>Builds the public description of a manifest. Called by the platform's catalog gateway.</summary>
     /// <param name="manifest">Validated manifest.</param>
     /// <param name="isSystemApp">Whether the host declares the app as a system app.</param>
@@ -64,7 +71,8 @@ public sealed record KazoAppInfo(
                 new KazoAppFileHandler(handler.MediaType, [.. handler.Extensions], [.. handler.Actions]))])
         {
             Urls = manifest.Web is { } web ? [.. web.Urls] : [],
-            Capabilities = [.. manifest.Capabilities]
+            Capabilities = [.. manifest.Capabilities],
+            IconUrl = KazoAppAssets.IconUrlOf(manifest)
         };
     }
 }
