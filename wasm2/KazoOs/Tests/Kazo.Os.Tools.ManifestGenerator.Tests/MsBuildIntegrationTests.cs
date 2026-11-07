@@ -97,26 +97,26 @@ public sealed class MsBuildIntegrationTests
     }
 
     [Fact]
-    public async Task KazoOsPack_signs_the_package_with_the_author_key_of_the_environment()
+    public async Task KazoOsPack_never_signs_even_when_the_former_author_key_variable_is_set()
     {
+        // ADR 0233: packages are signed only in the marketplace repository; the variable of ADR 0219
+        // left in an app repository's workflow must change nothing.
         string output = Directory.CreateTempSubdirectory("kazoos-pack-").FullName;
-        (string privateKey, string publicKey) = PackageSigner.CreateKeyPair();
         try
         {
             (int exitCode, string log) = await BuildFixtureAsync(
                 "SingleApp",
-                new Dictionary<string, string> { [PackageSigner.KeyVariable] = privateKey },
+                new Dictionary<string, string> { [FormerAuthorKeyVariable] = "not a key" },
                 "-t:KazoOsPack",
                 $"-p:KazoOsPackageOutput={output}");
 
             Assert.True(exitCode == 0, log);
-            Assert.DoesNotContain(GeneratorCodes.UnsignedPackage, log, StringComparison.Ordinal);
-            Assert.DoesNotContain("PRIVATE KEY", log, StringComparison.Ordinal);
+            Assert.DoesNotContain("KOSAPP0063", log, StringComparison.Ordinal);
             Platform.Core.Apps.Packages.AppPackageIndex index = Platform.Core.Apps.Packages.AppPackageIndex.Parse(
                 await File.ReadAllBytesAsync(Path.Combine(output, "index.json")));
             Platform.Core.Apps.Packages.AppPackageIndexEntry entry = Assert.Single(index.Versions);
-            byte[] package = await File.ReadAllBytesAsync(Path.Combine(output, entry.Path));
-            Assert.True(PackageSigner.Verify(package, entry.Signature!, publicKey));
+            Assert.Null(entry.Signature);
+            Assert.True(File.Exists(Path.Combine(output, entry.Path)));
         }
         finally
         {
@@ -124,14 +124,8 @@ public sealed class MsBuildIntegrationTests
         }
     }
 
-    [Fact]
-    public async Task KazoOsKeyGen_requires_the_key_file_property()
-    {
-        (int exitCode, string output) = await BuildFixtureAsync("SingleApp", null, "-t:KazoOsKeyGen");
-
-        Assert.NotEqual(0, exitCode);
-        Assert.Contains("error KOSAPP0061", output, StringComparison.Ordinal);
-    }
+    /// <summary>The author key variable of ADR 0219, superseded by ADR 0233.</summary>
+    private const string FormerAuthorKeyVariable = "HACKEROS_APP_SIGNING_KEY";
 
     private static string FixtureDirectory(string name) =>
         Path.Combine(FindSolutionDirectory(), "Tests", $"ManifestGenerator.Fixtures.{name}");
@@ -159,8 +153,6 @@ public sealed class MsBuildIntegrationTests
             startInfo.ArgumentList.Add(argument);
         }
 
-        // A key set on the machine running the tests must not sign the fixtures by accident.
-        startInfo.Environment.Remove(PackageSigner.KeyVariable);
         foreach ((string variable, string value) in environment ?? new Dictionary<string, string>())
         {
             startInfo.Environment[variable] = value;

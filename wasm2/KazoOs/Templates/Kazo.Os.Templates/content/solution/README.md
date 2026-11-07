@@ -75,25 +75,13 @@ Force either one with `-p:KazoOsUseSource=true` or `false`.
 The catalog never takes a binary from you: once your pull request is reviewed and merged, its CI
 compiles the app at the tagged commit.
 
-## Publishing on the `kazoos-packages` branch, signed
+## Publishing on the `kazoos-packages` branch
 
 The same `v*` tag also runs **Publish the Kazo OS packages**: it packs the app and pushes it to the
 `kazoos-packages` branch of this repository, keeping the versions already published. Kazo OS
 users then install it with `kazopkg install <owner>/<repo>`, without the Kazo OS Store.
 
-Sign your packages so that nobody else can publish under your name:
-
-1. Once, on your machine, outside the repository:
-   `dotnet build src/Kazo.Os.Template.Solution -t:KazoOsKeyGen -p:KazoOsSigningKeyFile=$HOME/kazoos-signing-key.pem`.
-   The private key goes to that new file (`*.pem` is ignored by git); the public key is printed.
-2. Put the content of the file in the `HACKEROS_APP_SIGNING_KEY` secret of this repository
-   (Settings ▸ Secrets and variables ▸ Actions), then keep the file offline.
-3. Publish the printed public key (in this README for example). An administrator adds it to
-   `[signing-keys]` of `/etc/kazoos/app-sources.config`, as `github.com/<owner>=<key>` (all your
-   repositories) or `github.com/<owner>/<repo>=<key>` (this one). From then on, an unsigned or
-   badly signed package of yours is refused.
-
-Without the secret the package is published unsigned (SHA-256 only) and the run shows a warning.
-To sign locally, set `HACKEROS_APP_SIGNING_KEY` or pass `-p:KazoOsSigningKeyFile=<file.pem>` to
-`KazoOsPack`. To change keys without a break, have the new key added after the old one
-(separated by a comma), change the secret, then have the old one removed.
+These packages are not signed: apps are signed only in the Kazo OS Store repository
+(`Kazo-ca/Os-AppMarketPlace`), when it builds your app from the catalog (ADR 0233). Kazo OS checks
+them by their SHA-256 and asks an administrator before installing from an untrusted source. Users
+who want a signed package install your app from the Kazo OS Store.
