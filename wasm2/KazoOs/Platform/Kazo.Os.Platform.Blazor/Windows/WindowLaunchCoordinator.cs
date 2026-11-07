@@ -297,12 +297,13 @@ public sealed class WindowLaunchCoordinator
                 supportsBack: manifest.SupportsBack)
             {
                 DisplayId = display,
+                Frame = ToFrame(options),
             };
             _windows.Apply(new CreateWindowCommand(state));
 
             // Maximized last time: open maximized with the saved bounds as restore geometry. A fixed-size
             // window has no Maximize button, so it never reopens maximized.
-            if (saved is { IsMaximized: true } && options.Resizable)
+            if (saved is { IsMaximized: true } && state.Frame.UserCanMaximize(state.Constraints))
             {
                 _windows.Apply(new MaximizeWindowCommand(state.Id));
             }
@@ -334,6 +335,26 @@ public sealed class WindowLaunchCoordinator
             minHeight: options.MinHeight,
             maxWidth: options.MaxWidth,
             maxHeight: options.MaxHeight);
+    }
+
+    /// <summary>
+    /// Maps an app's declared style and switches (ADR 0234 §1-§2) to the window manager's frame.
+    /// </summary>
+    /// <param name="options">Declared or default window options.</param>
+    public static WindowFrame ToFrame(WindowOptions options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return new WindowFrame(
+            options.Style switch
+            {
+                WindowStyle.Tool => WindowFrameStyle.Tool,
+                WindowStyle.None => WindowFrameStyle.None,
+                _ => WindowFrameStyle.Normal,
+            },
+            options.ShowIcon,
+            options.MaximizeBox,
+            options.MinimizeBox,
+            options.ShowInTaskbar);
     }
 
     /// <summary>

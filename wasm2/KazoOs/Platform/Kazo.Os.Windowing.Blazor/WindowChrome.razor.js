@@ -198,11 +198,19 @@ export function attachWindowGestures(root, dotNetReference) {
 
     const onPointerDown = event => {
         if (active || event.button !== 0 || event.target.closest("button")) return;
-        const target = event.target.closest("[data-window-gesture]");
         const host = root.closest("[data-window-id]");
-        if (!target || !root.contains(target) || !host) return;
+        if (!host) return;
+        // The frame's own gestures (title bar, resize handles), or an app element marked
+        // data-kazo-window-drag that moves its window like a title bar (ADR 0234 §4), never a field.
+        let target = event.target.closest("[data-window-gesture]");
+        if (!target || !root.contains(target)) {
+            target = event.target.closest("[data-kazo-window-drag]");
+            if (!target || !host.contains(target) || root.contains(target)
+                || event.target.closest("input, textarea, select, a, [contenteditable='true']")
+                || target.closest("[data-window-id]") !== host) return;
+        }
 
-        const mode = target.dataset.windowGesture;
+        const mode = target.dataset.windowGesture ?? "move";
         const edge = target.dataset.resizeEdge ?? null;
         // A maximized or snapped window is dragged by its title bar only, and first gets back its
         // geometry from before the maximize or the snap (ADR 0177).
@@ -396,11 +404,13 @@ export function attachWindowGestures(root, dotNetReference) {
         });
     };
 
-    root.addEventListener("pointerdown", onPointerDown);
+    // Listened on the window itself: the app's drag areas live in its content, beside this layer.
+    const listened = root.closest("[data-window-id]") ?? root;
+    listened.addEventListener("pointerdown", onPointerDown);
     root.addEventListener("dblclick", onDoubleClick);
     registrations.set(root, () => {
         disposed = true;
-        root.removeEventListener("pointerdown", onPointerDown);
+        listened.removeEventListener("pointerdown", onPointerDown);
         root.removeEventListener("dblclick", onDoubleClick);
         active?.();
     });

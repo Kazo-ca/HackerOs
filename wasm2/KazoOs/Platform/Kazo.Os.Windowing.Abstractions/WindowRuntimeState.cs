@@ -171,4 +171,11 @@ public sealed record WindowRuntimeState
     /// in <see cref="RestoreBounds"/>: restoring it, or dragging its title bar, gives that geometry back.
     /// </summary>
     public bool IsSnapped { get; init; }
+
+    /// <summary>
+    /// Gets the frame drawn around the window and the buttons it offers the user (ADR 0234). Defaults
+    /// to <see cref="WindowFrame.Default"/>; only <see cref="SetWindowFrameCommand"/> changes it once
+    /// the window exists.
+    /// </summary>
+    public WindowFrame Frame { get; init; } = WindowFrame.Default;
 }

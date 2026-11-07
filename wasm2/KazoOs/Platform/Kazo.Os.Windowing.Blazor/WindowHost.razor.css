@@ -48,6 +48,13 @@
     background: var(--kos-window-content-background, var(--kos-window-background, #0c1516));
 }
 
+/* ADR 0234 §1: a None window shows its client area only, so the content takes the whole window. */
+.window-host.is-frameless {
+    grid-template-rows: minmax(0, 1fr);
+    border: none;
+    border-radius: 0;
+}
+
 @media (max-width: 40rem) {
     .window-host {
         min-width: 0;
