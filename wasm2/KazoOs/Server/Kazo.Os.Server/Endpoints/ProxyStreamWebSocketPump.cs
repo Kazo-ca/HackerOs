@@ -34,6 +34,9 @@ public static class ProxyStreamWebSocketPump
         string host = context.Request.Query[ProxyStreamRoutes.HostParameter].ToString();
         string appId = context.Request.Query[ProxyStreamRoutes.AppIdParameter].ToString();
         int port = int.TryParse(context.Request.Query[ProxyStreamRoutes.PortParameter], out int parsed) ? parsed : 0;
+        // ADR 0235 §2: tls=1 asks the server to open TLS to the target before the WebSocket is accepted.
+        bool useTls = context.Request.Query[ProxyStreamRoutes.TlsParameter].ToString() == "1";
+        string? targetHost = context.Request.Query[ProxyStreamRoutes.TargetHostParameter].ToString() is { Length: > 0 } name ? name : null;
 
         // Connect first: the browser cannot read the status of a refused upgrade, so a refusal is
         // reported as the close code of an accepted WebSocket instead.
@@ -45,7 +48,7 @@ public static class ProxyStreamWebSocketPump
                 ProxyEndpoints.GetAccountId(context.User),
                 ProxyEndpoints.GetDeviceId(context.User),
                 protocol,
-                new ProxyStreamRequest(host, port, appId),
+                new ProxyStreamRequest(host, port, appId) { UseTls = useTls, TargetHost = targetHost },
                 aborted);
         }
         catch (ProxyRequestException exception)

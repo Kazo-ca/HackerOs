@@ -255,6 +255,13 @@ public static class ProxyErrorCode
     /// <summary>The target did not answer the connection attempt (unreachable or filtered).</summary>
     public const string HostUnreachable = "HOST_UNREACHABLE";
 
+    /// <summary>
+    /// The TLS handshake with the target failed: invalid, expired or untrusted certificate, a name
+    /// that does not match the target host, or no common protocol (ADR 0235 §2). A stream is
+    /// refused with it, close code <c>4001</c>; the SDK throws <c>AuthenticationException</c>.
+    /// </summary>
+    public const string TlsFailed = "TLS_FAILED";
+
     /// <summary>The target hostname ends in a simulated-domain suffix (.kazoos.local, .sim).</summary>
     public const string SimulatedDomainBlocked = "SIMULATED_DOMAIN_BLOCKED";
 

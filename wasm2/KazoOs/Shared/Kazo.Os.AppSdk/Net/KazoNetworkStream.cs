@@ -5,7 +5,7 @@ namespace Kazo.Os.AppSdk.Net;
 
 /// <summary>
 /// The byte stream of a TCP connection, shaped like <see cref="NetworkStream"/> (ADR 0102 §2);
-/// returned by <see cref="KazoTcpClient.ConnectAsync"/>.
+/// returned by <see cref="KazoTcpClient.ConnectAsync(string, int, CancellationToken)"/>.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -32,6 +32,24 @@ public sealed class KazoNetworkStream : Stream
 
     /// <summary>Gets the address and port of the other end, as <c>Socket.RemoteEndPoint</c>.</summary>
     public IPEndPoint RemoteEndPoint => _socket.RemoteEndPoint;
+
+    /// <summary>
+    /// Gets whether the connection is encrypted, as <c>SslStream.IsEncrypted</c>: opened with
+    /// <see cref="KazoTcpConnectOptions.UseTls"/> (ADR 0235 §2).
+    /// </summary>
+    public bool IsEncrypted => _socket.TlsProtocol is not null;
+
+    /// <summary>
+    /// Gets the TLS version negotiated with the server (<c>TLS 1.3</c>, <c>TLS 1.2</c>), or
+    /// <see langword="null"/> for a clear-text connection; what <c>SslStream.SslProtocol</c> says.
+    /// </summary>
+    public string? TlsProtocol => _socket.TlsProtocol;
+
+    /// <summary>
+    /// Gets the subject of the server's certificate (<c>CN=irc.example.net</c>), or
+    /// <see langword="null"/> for a clear-text connection; what <c>SslStream.RemoteCertificate.Subject</c> says.
+    /// </summary>
+    public string? RemoteCertificateSubject => _socket.RemoteCertificateSubject;
 
     /// <summary>Gets whether bytes already received wait to be read, as <see cref="NetworkStream.DataAvailable"/>.</summary>
     public bool DataAvailable => _pendingOffset < _pending.Length;

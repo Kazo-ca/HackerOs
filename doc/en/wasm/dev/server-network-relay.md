@@ -47,12 +47,13 @@ Paramètres     ──► KazoServerConnection.GetRelayPolicyAsync ────�
 | `ProxyHttpRequest` | carries `Body` and `ContentType`; `Create(...)` computes `BodyBytes` and `BodyHash` (lowercase hexadecimal SHA-256). |
 | `ProxyPolicyResponse` | effective policy: relay active, HTTP/TCP/UDP ports, private ranges, quotas, open streams, granted apps, warnings. |
 | `ProxyStreamRoutes`, `ProxyStreamCloseCodes` | routes, query parameters and close codes of the streams. |
-| `ProxyStreamRequest`, `ProxyStreamOpened`, `ProxyStreamClosure` | opening of a stream, pinned address, reason for closing. |
+| `ProxyStreamRequest`, `ProxyStreamOpened`, `ProxyStreamClosure` | opening of a stream (with `UseTls` and `TargetHost`, ADR 0235 §2), pinned address (with `TlsProtocol` and `CertificateSubject`), reason for closing. |
 | `IProxyStreamChannel` | an open stream: `SendAsync`, `ReceiveAsync` (`null` at the end), `Closure`. |
 | `ProxyStreamException` | refusal to open with its `ProxyErrorCode`. |
 
 New error codes: `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
-`BODY_MISMATCH` (400), `CONNECTION_REFUSED` and `HOST_UNREACHABLE` (502).
+`BODY_MISMATCH` (400), `CONNECTION_REFUSED` and `HOST_UNREACHABLE` (502),
+`TLS_FAILED` (stream refused, close `4001`, ADR 0235 §2).
 
 ### Server
 
@@ -61,7 +62,8 @@ New error codes: `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
 | `ProxyOptions`, `ProxyRelayPolicy` | `KazoOs:Proxy` section; `ProxyRelayPolicy.From` sets the default values and computes the effective limits. |
 | `ProxyGrantAuthority` | `IsGrantedAsync`: the app is in `GrantedApps` or a synchronized `grants` record of the account gives it `network.real.access`. |
 | `ProxyService` | common validations (relay active, app, grant, port, pinned address, blocked ranges, quotas); `ExecuteHttpRequestAsync` sends the body; `OpenStreamAsync` connects the socket. |
-| `SocketProxyStreamConnector`, `SocketProxyStreamChannel` | TCP/UDP connection (10 s), idle timeout, byte counters, audit at close. |
+| `SocketProxyStreamConnector`, `SocketProxyStreamChannel` | TCP/UDP connection (10 s), idle timeout, byte counters, audit at close; the channel reads and writes through the TLS session when there is one. |
+| `IProxyTlsNegotiator`, `SslStreamProxyTlsNegotiator` | TLS handshake with the target (`SslStream`, 10 s), certificate checked by the system store and the `TargetHost` name; `TLS_FAILED` otherwise. |
 | `ProxyStreamWebSocketPump` | accepts the WebSocket and pumps frames in both directions. |
 | `ProxyPolicyStartupReporter` | startup warnings (events 1020 to 1022). |
 
@@ -79,17 +81,46 @@ New error codes: `GRANT_MISSING` (403), `RELAY_DISABLED` (503),
 
 1. The client opens `GET /api/proxy/tcp?host=…&port=…&appId=…&access_token=…`
    (or `/udp`) as a WebSocket. The `access_token` parameter is accepted only on
-   these two routes; elsewhere only the `Authorization` header counts.
+   these two routes; elsewhere only the `Authorization` header counts. Over TCP,
+   `tls=1` asks for TLS to the target and `targetHost=…` gives the name to check
+   when it differs from `host` (ADR 0235 §2).
 2. The server validates the request and connects the socket **before** accepting the
-   WebSocket.
+   WebSocket. With `tls=1`, it also completes the TLS handshake with the target
+   before accepting.
 3. Success: the first frame is a **text** JSON frame
-   `ProxyStreamOpened` (pinned address, port). All the following ones are
+   `ProxyStreamOpened` (pinned address, port; with TLS, `tlsProtocol`, for
+   example `TLS 1.3`, and `certificateSubject`). All the following ones are
    binary: a TCP message is a sequence of bytes (64 KiB at most), a
    UDP message is a datagram (65,507 bytes at most, empty allowed).
 4. Refusal: the WebSocket is accepted then closed with `4001` and the reason
    `"<ProxyErrorCode> <message>"`; the client throws `ProxyStreamException`.
 5. End: `4000` when the target closes, `4002` after inactivity, `1000` when
    the client closes.
+
+## TLS opened by the relay (ADR 0235 §2)
+
+The browser has no `SslStream`: an app cannot encrypt a TCP stream itself.
+With `UseTls`, the server opens TLS to the target and the app reads and writes
+clear text in the stream; the encryption runs between the server and the
+target, and the browser → server trip is protected by the server's own `https`.
+
+- Order: socket connected, then TLS handshake (SNI = `TargetHost`, or `host`
+  without it), then only the WebSocket accepted. A refused target never hands
+  the app a byte.
+- Validation: the chain must end at a root of the server's system store, the
+  name must match, the certificate must be valid at this date. The versions are
+  those the system accepts (TLS 1.2 and 1.3). Revocation follows the
+  `SslStream` default (no OCSP/CRL request), like `HttpClient`.
+- **No option to accept an invalid certificate**, neither in
+  `appsettings.json` nor in the SDK.
+- Refusal: untrusted, expired or wrong-name certificate, clear-text target, or
+  a handshake that does not finish within 10 s → `TLS_FAILED`, close `4001`,
+  audit `PROXY_TLS_FAILED`. TLS over UDP (DTLS) or a `TargetHost` that is not a
+  host name → `MALFORMED_REQUEST`; a simulated `TargetHost` →
+  `SIMULATED_DOMAIN_BLOCKED`.
+- The `PROXY_TCP_OPEN` audit records the TLS version (`"tls":"TLS 1.3"`, or `null`).
+- Ports are still filtered by `Tcp:AllowedPorts` (6697 is not shipped; ports
+  declared by the app come with ADR 0235 §3).
 
 ## Configuration (`appsettings.json`)
 
@@ -149,7 +180,13 @@ await using KazoNetworkStream stream = await KazoTcpClient.ConnectAsync("example
 await stream.WriteAsync(request);
 int read = await stream.ReadAsync(buffer); // 0 quand la cible a fermé
 
-// UDP : un socket « connecté » à une cible.
+// TLS opened by the relay (ADR 0235 §2): the app reads and writes clear text.
+await using KazoNetworkStream irc = await KazoTcpClient.ConnectAsync(
+    "irc.libera.chat", 6697, new KazoTcpConnectOptions { UseTls = true }, cancellationToken);
+string? version = irc.TlsProtocol;               // "TLS 1.3"
+string? subject = irc.RemoteCertificateSubject;  // "CN=irc.libera.chat"
+
+// UDP: a socket "connected" to one target.
 await using KazoUdpClient udp = await KazoUdpClient.ConnectAsync("pool.ntp.org", 123);
 await udp.SendAsync(ntpRequest);
 KazoUdpReceiveResult answer = await udp.ReceiveAsync();
@@ -172,6 +209,7 @@ KazoHttpResponse response = await http.PostAsync(url, new KazoStringContent(json
 |---|---|
 | `BLOCKED_PORT`, `BLOCKED_ADDRESS`, `CONNECTION_REFUSED` | `ConnectionRefused` |
 | `HOST_UNREACHABLE` | `HostUnreachable` |
+| `TLS_FAILED` | `AuthenticationException` (as `SslStream`), `KazoNetworkError.TlsFailed` in the gateway |
 | `GRANT_MISSING`, `RELAY_DISABLED`, `SIMULATED_DOMAIN_BLOCKED` | `HostNotFound` |
 | other | `ConnectionFailed` (SDK network error) |
 
@@ -216,5 +254,6 @@ open streams, granted apps and warnings.
 - [x] `KazoServerConnection.GetRelayPolicyAsync` and Settings panel.
 - [x] Tests: service, WebSocket endpoints, direct client, network gateway, policy.
 - [x] ADR 0108 and documentation.
+- [x] TLS opened by the relay (ADR 0235 §2, work item `real-network/2-relay-tls`): `tls=1`, `targetHost`, `SslStream` before accepting the WebSocket, `TLS_FAILED`, `ProxyStreamOpened` with the session, `KazoTcpConnectOptions`, tests with a test TLS server (trusted, untrusted and wrong-name certificate, clear-text target, clear-text stream unchanged).
 
 See also [ADR 0191](adr/0191-installable-local-server.md): server installable on the computer or the local network.
