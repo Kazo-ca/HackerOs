@@ -150,6 +150,12 @@ public sealed partial class WindowAppBaseWindowTitleTests
 
         public ValueTask<bool> OptionsAsync(WindowOptions options) => SetWindowOptionsAsync(options);
 
+        public ValueTask<IKazoWindow> ShowAsync<TWindow>(KazoWindowRequest request)
+            where TWindow : KazoWindowBase => ShowWindowAsync<TWindow>(request);
+
+        public ValueTask<KazoDialogResult> DialogAsync<TWindow>(KazoWindowRequest request, CancellationToken cancellationToken = default)
+            where TWindow : KazoWindowBase => ShowDialogAsync<TWindow>(request, cancellationToken);
+
         protected override void OnAppInitialized()
         {
             if (InitialTitle is not null)

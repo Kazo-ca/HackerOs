@@ -14,3 +14,70 @@ Kazo.Os.AppSdk.Blazor.WindowAppBase.RestoreWindowAsync(System.Threading.Cancella
 Kazo.Os.AppSdk.Blazor.WindowAppBase.SetWindowOptionsAsync(Kazo.Os.App.Abstractions.WindowOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
 Kazo.Os.AppSdk.Blazor.WindowAppBase.SetWindowStyleAsync(Kazo.Os.App.Abstractions.WindowStyle style, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
 Kazo.Os.AppSdk.Blazor.WindowAppBase.WindowOptions.get -> Kazo.Os.App.Abstractions.WindowOptions!
+Kazo.Os.AppSdk.Blazor.IAppChildWindowGateway
+Kazo.Os.AppSdk.Blazor.IAppChildWindowGateway.OpenWindowAsync(System.Type! componentType, Kazo.Os.AppSdk.Blazor.KazoWindowRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.IKazoWindow?>
+Kazo.Os.AppSdk.Blazor.IKazoWindow
+Kazo.Os.AppSdk.Blazor.IKazoWindow.CloseAsync(Kazo.Os.AppSdk.Blazor.KazoDialogResult? result = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.IKazoWindow.Closed.get -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Blazor.KazoDialogResult!>!
+Kazo.Os.AppSdk.Blazor.IKazoWindow.Id.get -> string!
+Kazo.Os.AppSdk.Blazor.IKazoWindow.IsOpen.get -> bool
+Kazo.Os.AppSdk.Blazor.KazoDialogResult
+Kazo.Os.AppSdk.Blazor.KazoDialogResult.<Clone>$() -> Kazo.Os.AppSdk.Blazor.KazoDialogResult!
+Kazo.Os.AppSdk.Blazor.KazoDialogResult.Deconstruct(out Kazo.Os.AppSdk.Blazor.KazoDialogResultKind Kind, out object? Value) -> void
+Kazo.Os.AppSdk.Blazor.KazoDialogResult.Equals(Kazo.Os.AppSdk.Blazor.KazoDialogResult? other) -> bool
+Kazo.Os.AppSdk.Blazor.KazoDialogResult.IsAccepted.get -> bool
+Kazo.Os.AppSdk.Blazor.KazoDialogResult.KazoDialogResult(Kazo.Os.AppSdk.Blazor.KazoDialogResultKind Kind, object? Value = null) -> void
+Kazo.Os.AppSdk.Blazor.KazoDialogResult.Kind.get -> Kazo.Os.AppSdk.Blazor.KazoDialogResultKind
+Kazo.Os.AppSdk.Blazor.KazoDialogResult.Kind.init -> void
+Kazo.Os.AppSdk.Blazor.KazoDialogResult.Value.get -> object?
+Kazo.Os.AppSdk.Blazor.KazoDialogResult.Value.init -> void
+Kazo.Os.AppSdk.Blazor.KazoDialogResult.ValueAs<T>() -> T?
+Kazo.Os.AppSdk.Blazor.KazoDialogResultKind
+Kazo.Os.AppSdk.Blazor.KazoDialogResultKind.Abort = 3 -> Kazo.Os.AppSdk.Blazor.KazoDialogResultKind
+Kazo.Os.AppSdk.Blazor.KazoDialogResultKind.Cancel = 2 -> Kazo.Os.AppSdk.Blazor.KazoDialogResultKind
+Kazo.Os.AppSdk.Blazor.KazoDialogResultKind.Ignore = 5 -> Kazo.Os.AppSdk.Blazor.KazoDialogResultKind
+Kazo.Os.AppSdk.Blazor.KazoDialogResultKind.No = 7 -> Kazo.Os.AppSdk.Blazor.KazoDialogResultKind
+Kazo.Os.AppSdk.Blazor.KazoDialogResultKind.None = 0 -> Kazo.Os.AppSdk.Blazor.KazoDialogResultKind
+Kazo.Os.AppSdk.Blazor.KazoDialogResultKind.Ok = 1 -> Kazo.Os.AppSdk.Blazor.KazoDialogResultKind
+Kazo.Os.AppSdk.Blazor.KazoDialogResultKind.Retry = 4 -> Kazo.Os.AppSdk.Blazor.KazoDialogResultKind
+Kazo.Os.AppSdk.Blazor.KazoDialogResultKind.Yes = 6 -> Kazo.Os.AppSdk.Blazor.KazoDialogResultKind
+Kazo.Os.AppSdk.Blazor.KazoWindowBase
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.CloseAsync(Kazo.Os.AppSdk.Blazor.KazoDialogResult? result = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.KazoWindowBase() -> void
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.MaximizeWindowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.MinimizeWindowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.MoveWindowAsync(double x, double y, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.ResizeWindowAsync(double width, double height, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.RestoreWindowAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.SetWindowOptionsAsync(Kazo.Os.App.Abstractions.WindowOptions! options, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.SetWindowStyleAsync(Kazo.Os.App.Abstractions.WindowStyle style, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<bool>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.SetWindowTitleAsync(string? title, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<string!>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.ShowDialogAsync<TComponent>(Kazo.Os.AppSdk.Blazor.KazoWindowRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.KazoDialogResult!>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.ShowWindowAsync<TComponent>(Kazo.Os.AppSdk.Blazor.KazoWindowRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.IKazoWindow!>
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.WindowOptions.get -> Kazo.Os.App.Abstractions.WindowOptions!
+Kazo.Os.AppSdk.Blazor.KazoWindowBase.WindowTitle.get -> string!
+Kazo.Os.AppSdk.Blazor.KazoWindowRequest
+Kazo.Os.AppSdk.Blazor.KazoWindowRequest.<Clone>$() -> Kazo.Os.AppSdk.Blazor.KazoWindowRequest!
+Kazo.Os.AppSdk.Blazor.KazoWindowRequest.Equals(Kazo.Os.AppSdk.Blazor.KazoWindowRequest? other) -> bool
+Kazo.Os.AppSdk.Blazor.KazoWindowRequest.KazoWindowRequest() -> void
+Kazo.Os.AppSdk.Blazor.KazoWindowRequest.Options.get -> Kazo.Os.App.Abstractions.WindowOptions?
+Kazo.Os.AppSdk.Blazor.KazoWindowRequest.Options.init -> void
+Kazo.Os.AppSdk.Blazor.KazoWindowRequest.Parameters.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object?>!
+Kazo.Os.AppSdk.Blazor.KazoWindowRequest.Parameters.init -> void
+Kazo.Os.AppSdk.Blazor.KazoWindowRequest.Title.get -> string?
+Kazo.Os.AppSdk.Blazor.KazoWindowRequest.Title.init -> void
+Kazo.Os.AppSdk.Blazor.WindowAppBase.ShowDialogAsync<TComponent>(Kazo.Os.AppSdk.Blazor.KazoWindowRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.KazoDialogResult!>
+Kazo.Os.AppSdk.Blazor.WindowAppBase.ShowWindowAsync<TComponent>(Kazo.Os.AppSdk.Blazor.KazoWindowRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Blazor.IKazoWindow!>
+override Kazo.Os.AppSdk.Blazor.KazoDialogResult.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Blazor.KazoDialogResult.GetHashCode() -> int
+override Kazo.Os.AppSdk.Blazor.KazoDialogResult.ToString() -> string!
+override Kazo.Os.AppSdk.Blazor.KazoWindowRequest.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Blazor.KazoWindowRequest.GetHashCode() -> int
+override Kazo.Os.AppSdk.Blazor.KazoWindowRequest.ToString() -> string!
+static Kazo.Os.AppSdk.Blazor.KazoDialogResult.Cancel.get -> Kazo.Os.AppSdk.Blazor.KazoDialogResult!
+static Kazo.Os.AppSdk.Blazor.KazoDialogResult.None.get -> Kazo.Os.AppSdk.Blazor.KazoDialogResult!
+static Kazo.Os.AppSdk.Blazor.KazoDialogResult.Ok(object? value = null) -> Kazo.Os.AppSdk.Blazor.KazoDialogResult!
+static Kazo.Os.AppSdk.Blazor.KazoDialogResult.operator !=(Kazo.Os.AppSdk.Blazor.KazoDialogResult? left, Kazo.Os.AppSdk.Blazor.KazoDialogResult? right) -> bool
+static Kazo.Os.AppSdk.Blazor.KazoDialogResult.operator ==(Kazo.Os.AppSdk.Blazor.KazoDialogResult? left, Kazo.Os.AppSdk.Blazor.KazoDialogResult? right) -> bool
+static Kazo.Os.AppSdk.Blazor.KazoWindowRequest.operator !=(Kazo.Os.AppSdk.Blazor.KazoWindowRequest? left, Kazo.Os.AppSdk.Blazor.KazoWindowRequest? right) -> bool
+static Kazo.Os.AppSdk.Blazor.KazoWindowRequest.operator ==(Kazo.Os.AppSdk.Blazor.KazoWindowRequest? left, Kazo.Os.AppSdk.Blazor.KazoWindowRequest? right) -> bool

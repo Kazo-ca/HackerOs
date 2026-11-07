@@ -375,6 +375,49 @@ still minimize its window.
   screen.
 - `WindowHost` adds `is-tool` or `is-frameless`; `None` transparency comes with work item 6.
 
+## 7. An app's child windows and dialogs (ADR 0234 §3)
+
+```csharp
+// In a WindowAppBase: the equivalent of Form.ShowDialog(owner).
+KazoDialogResult result = await ShowDialogAsync<RenameDialog>(new KazoWindowRequest
+{
+    Title = "Rename",
+    Options = new WindowOptions { DefaultWidth = 360, DefaultHeight = 180, MinWidth = 300, MinHeight = 160, Style = WindowStyle.Tool },
+    Parameters = new Dictionary<string, object?> { [nameof(RenameDialog.Name)] = fileName },
+});
+if (result.IsAccepted) { fileName = result.ValueAs<string>()!; }
+
+// Modeless window: the equivalent of Form.Show(owner).
+IKazoWindow palette = await ShowWindowAsync<PaletteWindow>(new KazoWindowRequest { Title = "Palette" });
+```
+
+```razor
+@inherits KazoWindowBase
+<input @bind="Name" />
+<button @onclick="() => CloseAsync(KazoDialogResult.Ok(Name))">OK</button>
+<button @onclick="() => CloseAsync(KazoDialogResult.Cancel)">Cancel</button>
+@code { [Parameter] public string? Name { get; set; } }
+```
+
+- The child window belongs to the app instance: same process, same rights, same `AppContext`,
+  same context menus. Its owner is the window that opens it. It opens centered on its owner, on
+  the same screen, and closes with its app or its owner (result `None`).
+- `ShowDialogAsync` forces `Modal = true`: the owner is blocked, and the owner's taskbar button
+  brings the dialog forward. Cancelling the token closes the dialog (`Cancel`).
+- The Close button, Alt+F4 and the taskbar give `KazoDialogResult.Cancel`.
+- `KazoWindowBase` (derives from `KazoComponentBase`): `CloseAsync(result)`, `WindowTitle`,
+  `SetWindowTitleAsync`, `WindowOptions` and the window methods of §6, and its own
+  `ShowWindowAsync` and `ShowDialogAsync` for a child of a child window.
+- `KazoDialogResult`: `Kind` (`None`, `Ok`, `Cancel`, `Abort`, `Retry`, `Ignore`, `Yes`, `No`, as
+  `DialogResult`) and an optional `Value`.
+- Without a window manager (tests, detached window, platform older than SDK 3.1),
+  `ShowWindowAsync` and `ShowDialogAsync` throw `InvalidOperationException`.
+
+Architecture: `IAppChildWindowGateway.OpenWindowAsync`, implemented by the gateway from
+`AppWindowGatewayFactory.Create(windowId, context)`. The window is a `WindowRuntimeState` with
+`Content` (as the OS dialogs) that cascades the app's context, its menus, its own gateway and its
+`IKazoWindow`. It has no remembered size (ADR 0116).
+
 ## Implementation decisions
 
 - **Full screen added** (`toggle-fullscreen`, `Alt+F11`, menu entry): keyboard
@@ -427,6 +470,9 @@ still minimize its window.
   `WindowAppBaseWindowFrameTests` (SDK Blazor), serializer (App.Abstractions): styles and booleans
   (ADR 0234), chrome drawn per style, taskbar, app requests (#384), dialog brought forward by its
   owner, fields written only when not default.
+- `ChildWindowTests` (Platform.Blazor), `WindowAppBaseChildWindowTests` (SDK Blazor): child window
+  centered, modal, result, Close button, closing with the owner, component parameters and
+  cascade, `Modal` forced by `ShowDialogAsync`, cancelled token.
 
 ## Task list
 
@@ -463,5 +509,12 @@ still minimize its window.
 - [x] Chrome, handles, keyboard, arrangement and taskbar follow the style.
 - [x] OS dialogs as `Tool` with no taskbar button.
 - [x] `IAppWindowGateway` and `WindowAppBase` methods (#384).
+- [x] Tests and documentation.
+
+### Work item `os-3-1/5-child-windows` (ADR 0234 §3)
+
+- [x] `KazoWindowRequest`, `KazoDialogResult`, `IKazoWindow`, `IAppChildWindowGateway`, `KazoWindowBase`.
+- [x] `ShowWindowAsync` and `ShowDialogAsync` in `WindowAppBase` and `KazoWindowBase`.
+- [x] Child windows in `AppWindowGatewayFactory`: cascade, modal, closing with the owner.
 - [x] Tests and documentation.
 
