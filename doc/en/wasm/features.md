@@ -286,9 +286,9 @@ This section lists what is released in the `main` branch and online.
   service, a site, a complete host or a whole application repository, shown
   in Visual Studio and Rider.
   ([`sdk-developer-guide.md`](framework/sdk-developer-guide.md))
-- **Package signing by an application's author**: `KazoOsKeyGen` creates the
-  key, `KazoOsPack` and the template's `publish-packages.yml` workflow sign and
-  publish the `kazoos-packages` branch.
+- **Publishing an application on its `kazoos-packages` branch**: the
+  template's `publish-packages.yml` workflow publishes the package, unsigned;
+  applications are signed only in the Kazo OS Store repository.
   ([ADR 0219](dev/adr/0219-app-authors-signing-tool.md),
   [`app-repository.md`](framework/app-repository.md))
 - **Install an application from its GitHub repository** with the `kazopkg`

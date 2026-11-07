@@ -404,7 +404,7 @@ window to the window, ADR 0220), a base app and not an SDK library: a 2.x app
 runs without being recompiled. It brings to app authors what the Kazo OS Store
 needs: every static resource of an app in its package and an installed app's
 scoped CSS (ADR 0221), the satellite assemblies of installed apps (ADR 0222)
-and the signing tool (ADR 0219).
+and the signing tool (ADR 0219, since removed by its 2026-11-07 amendment).
 
 | Library | Addition | Decision |
 |---|---|---|
