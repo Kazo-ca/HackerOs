@@ -373,6 +373,7 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
+| Illustrated app icons | System app icons redrawn (dark tile, a colour drawing that shows what the app does), and each app's own icon, installed apps included, in the Start menu, on the desktop and in the explorer. | [0232](dev/adr/0232-illustrated-app-icons-everywhere.md) | Series `icons/base` |
 | Catalog checks of theme packs | The catalog CI checks the `kind: "theme-pack"` entries as the OS does at install. | [0213](dev/adr/0213-theme-packs-build.md) | [AppMarketPlace #4](https://github.com/Kazo-ca/Os-AppMarketPlace/issues/4) |
 
 ### Network and server
