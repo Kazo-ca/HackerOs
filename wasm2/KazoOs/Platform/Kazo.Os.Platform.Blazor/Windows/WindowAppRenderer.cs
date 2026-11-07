@@ -77,7 +77,7 @@ public sealed class WindowAppRenderer : ComponentBase, IDisposable
         }
         else if (_windowGateway is null || _windowGatewayId != Window.Id)
         {
-            _windowGateway = WindowGateways.Create(Window.Id, AppContext.Manifest);
+            _windowGateway = WindowGateways.Create(Window.Id, AppContext);
             _windowGatewayId = Window.Id;
         }
 

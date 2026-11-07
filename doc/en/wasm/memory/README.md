@@ -12,10 +12,14 @@ at the end of each series or when a convention changes.
 - **Active code**: `wasm2/KazoOs/` (simulated OS in Blazor WebAssembly, .NET 10,
   solution `Kazo.Os.sln`). `src/` is the old version, kept as a
   reference.
-- **Version**: Kazo OS and the SDK move to **2.2.2** (`build/Versions.props`),
-  prepared on 2026-11-01 in the `release/2.2.2` PR to `main`; it is published
-  (`v2.2.2` tag, GitHub Release, nuget.org) when that PR lands in `main`. It
-  compiles the official catalog's public key into the OS
+- **Version**: Kazo OS and the SDK move to **3.1.0** (`build/Versions.props`),
+  prepared on 2026-11-07 by the `os-3-1/7-release-3-1-0` work item of the
+  `os-3-1/base` series; it is published (`v3.1.0` tag, GitHub Release,
+  nuget.org) when `os-3-1/base` lands in `main`. It folds 366 API lines into
+  `Shipped` (WinForms window styles, child windows, real network for chat apps,
+  ADRs 0231 to 0235) and gathers 15 entries into `changes/3.1.0.json`. 3.0.0 (2026-11-05, published,
+  rename to Kazo OS) had not gathered its 15 entries: they are filed afterwards
+  in `changes/3.0.0.json`. 2.2.2 (2026-11-01) compiles the official catalog's public key into the OS
   (`AppPackageDefaults.OfficialCatalogSigningKey`, PR #349): every Kazo OS Store
   package must carry the catalog's signature. 2.2.1 (2026-11-01, published) has a
   patch number chosen by Benoit although the API grows: it folds 190 API lines
@@ -125,7 +129,7 @@ at the end of each series or when a convention changes.
   (`[signing-keys]`, `KazoOsAppSigningKeys`), `.transaction` journal,
   `kazopkg rollback`/`repair`, `AppDataGuard`. Five questions asked to Benoit,
   answer A to each. Benoit created the official catalog key on 2026-11-01
-  (`keygen`, the catalog's `HACK_STORE_SIGNING_KEY` secret); its public key is in
+  (`keygen`, the catalog's `KAZO_STORE_SIGNING_KEY` secret); its public key is in
   `AppPackageDefaults.OfficialCatalogSigningKey`; tool for authors: `TODO`
   issue #321.
 - **Notification bubbles** (ADR 0197, work item 1 of #242, series
@@ -163,7 +167,7 @@ at the end of each series or when a convention changes.
   0193 local time, 0194 taskbar menus, 0195 Start menu Power button, 0196 unread notifications dot;
   `todo/base` series: 0197 notification bubbles, 0201 "Switch user" stays greyed out, 0203 icon packs, 0207
   `kazoos-solution` template, 0208 Kazo OS Store trusted sources, 0212 Kazo OS Store app, 0213 theme packs, 0214 Kazo OS Store without a restart, signing and transactions, 0215 Kazo OS Store answers (no badge, ambiguous appId refused) (the other numbers up to 0211 are reserved by
-  its work items; 0216 to 0219 by lot 3: 0216 "Do not disturb" mode, 0217 mobile home wallpaper, 0218 "Set as wallpaper" in the menu of images, 0219 app authors' signing tool); 0220 mouse Back and Forward buttons, series `mouse-back/base`; 0221 every static resource of an app in its package and an installed app's scoped CSS (branch `app-assets/static-web-assets`); 0222 translations of installed apps, satellite assemblies (#337, branch `app-assets/satellite-assemblies`); 0223 restart onto the new version (`version-cache/base` series); 0224 retry the boot after a server error (branch `boot/retry-server-errors`); 0225 serve installed apps' files to every page (branch `installed-apps/serve-uncontrolled-page`); 0226 forgot password, reset from the sign-in screen (branch `login/forgot-password-factory-reset`); 0227 the factory reset erases the whole browser storage (branch `login/factory-reset-erase-everything`); 0228 HackerOS becomes Kazo OS (series `rename/base`); 0229 "Kazo OS" with a space, `Os-App-*` repositories, redirect to os.kazo.ca; 0230 rename migration based on the previous version; 0231 the user's network drives count as their personal files (#381, ADR in `docs/network-drive-app-access`, code in `network-drives/app-access`, for the Webamp app); 0232 illustrated app icons (`icons/base` series); 0233 the server issues the real-network grant with its ports (`real-network/base` series, work item 4; the ADR first planned for this number was folded into ADR 0219); 0234 window styles inspired by WinForms (open PR); 0235 the real network for chat apps (WebSocket in the SDK, TLS by the relay, requested ports; #395, ADR in `docs/real-network-for-chat-apps`, code in the `real-network/base` series, for the IRC app). **Next free number:
+  its work items; 0216 to 0219 by lot 3: 0216 "Do not disturb" mode, 0217 mobile home wallpaper, 0218 "Set as wallpaper" in the menu of images, 0219 app authors' signing tool); 0220 mouse Back and Forward buttons, series `mouse-back/base`; 0221 every static resource of an app in its package and an installed app's scoped CSS (branch `app-assets/static-web-assets`); 0222 translations of installed apps, satellite assemblies (#337, branch `app-assets/satellite-assemblies`); 0223 restart onto the new version (`version-cache/base` series); 0224 retry the boot after a server error (branch `boot/retry-server-errors`); 0225 serve installed apps' files to every page (branch `installed-apps/serve-uncontrolled-page`); 0226 forgot password, reset from the sign-in screen (branch `login/forgot-password-factory-reset`); 0227 the factory reset erases the whole browser storage (branch `login/factory-reset-erase-everything`); 0228 HackerOS becomes Kazo OS (series `rename/base`); 0229 "Kazo OS" with a space, `Os-App-*` repositories, redirect to os.kazo.ca; 0230 rename migration based on the previous version; 0231 the user's network drives count as their personal files (#381, ADR in `docs/network-drive-app-access`, code in `network-drives/app-access`, for the Webamp app); 0232 illustrated app icons (`icons/base` series); 0233 the server issues the real-network grant with its ports (`real-network/base` series, work item 4; the ADR first planned for this number was folded into ADR 0219); 0234 window styles inspired by WinForms (series `os-3-1/base`, version 3.1.0); 0235 the real network for chat apps (WebSocket in the SDK, TLS by the relay, requested ports; #395, ADR in `docs/real-network-for-chat-apps`, code in the `real-network/base` series, for the IRC app). **Next free number:
   0236.** Before taking one, check `dev/adr/` on
   `main` and the open PRs.
 

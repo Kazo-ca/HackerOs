@@ -62,15 +62,6 @@ Kazo.Os.Ecosystem.EcosystemServiceCollectionExtensions
 Kazo.Os.Ecosystem.FileDialogServiceFactory
 Kazo.Os.Ecosystem.FileDialogServiceFactory.Create(Kazo.Os.Simulation.Abstractions.Sessions.SessionId sessionId) -> Kazo.Os.AppSdk.Blazor.IFileDialogService!
 Kazo.Os.Ecosystem.FileDialogServiceFactory.FileDialogServiceFactory(Kazo.Os.Simulation.Abstractions.Gateways.IFileSystemSelectedResourceHandleRegistry! handleRegistry) -> void
-Kazo.Os.Ecosystem.KazoOsBrowserHostExtensions
-Kazo.Os.Ecosystem.KazoOsBrowserHostOptions
-Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.<Clone>$() -> Kazo.Os.Ecosystem.KazoOsBrowserHostOptions!
-Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.Equals(Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? other) -> bool
-Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.KazoOsBrowserHostOptions() -> void
-Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.RootSelector.get -> string!
-Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.RootSelector.init -> void
-Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.WorkerPreloadAssemblies.get -> System.Collections.Generic.IReadOnlyList<string!>?
-Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.WorkerPreloadAssemblies.init -> void
 Kazo.Os.Ecosystem.HardwareServiceCollectionExtensions
 Kazo.Os.Ecosystem.HostAppCatalog
 Kazo.Os.Ecosystem.HostAppCatalog.Catalog.get -> Kazo.Os.Platform.Core.AppCatalog!
@@ -119,10 +110,20 @@ Kazo.Os.Ecosystem.InstalledAppsBoot.InstalledAppsBoot(Kazo.Os.Ecosystem.HostAppC
 Kazo.Os.Ecosystem.InstalledAppsBoot.IsLoaded.get -> bool
 Kazo.Os.Ecosystem.InstalledAppsBoot.Live.get -> Kazo.Os.Platform.Core.AppCatalog!
 Kazo.Os.Ecosystem.InstalledAppsBoot.Packages.get -> Kazo.Os.Platform.Core.Apps.Packages.InstalledPackageCatalog!
+Kazo.Os.Ecosystem.InstalledAppsBoot.ReadInstalledOnDiskAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.Platform.Core.Apps.Packages.InstalledApp!>!>
 Kazo.Os.Ecosystem.InstalledAppsBoot.Refresh(Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsImage! image, System.Func<Kazo.Os.Platform.Core.Apps.Packages.InstalledApp!, bool>! isLoaded) -> Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsActivation!
 Kazo.Os.Ecosystem.InstalledAppsBoot.ReloadAsync(System.Func<Kazo.Os.Platform.Core.Apps.Packages.InstalledApp!, bool>! isLoaded, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.Platform.Core.Apps.Packages.InstalledAppsActivation!>
 Kazo.Os.Ecosystem.InstalledAppsBoot.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
 Kazo.Os.Ecosystem.InstalledAppsBootExtensions
+Kazo.Os.Ecosystem.KazoOsBrowserHostExtensions
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.<Clone>$() -> Kazo.Os.Ecosystem.KazoOsBrowserHostOptions!
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.Equals(Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? other) -> bool
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.KazoOsBrowserHostOptions() -> void
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.RootSelector.get -> string!
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.RootSelector.init -> void
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.WorkerPreloadAssemblies.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.WorkerPreloadAssemblies.init -> void
 Kazo.Os.Ecosystem.LoginProgressScreen
 Kazo.Os.Ecosystem.LoginProgressScreen.Dispose() -> void
 Kazo.Os.Ecosystem.LoginProgressScreen.LoginProgressScreen() -> void
@@ -153,6 +154,22 @@ Kazo.Os.Ecosystem.ResourceLimitsSettings.Enabled.get -> bool
 Kazo.Os.Ecosystem.ResourceLimitsSettings.Enabled.init -> void
 Kazo.Os.Ecosystem.ResourceLimitsSettings.Equals(Kazo.Os.Ecosystem.ResourceLimitsSettings? other) -> bool
 Kazo.Os.Ecosystem.ResourceLimitsSettings.ResourceLimitsSettings(bool Enabled) -> void
+Kazo.Os.Ecosystem.SignInFactoryReset
+Kazo.Os.Ecosystem.SignInFactoryResetPrompt
+Kazo.Os.Ecosystem.SignInFactoryResetPrompt.Disabled.get -> bool
+Kazo.Os.Ecosystem.SignInFactoryResetPrompt.Disabled.set -> void
+Kazo.Os.Ecosystem.SignInFactoryResetPrompt.InitiallyOpen.get -> bool
+Kazo.Os.Ecosystem.SignInFactoryResetPrompt.InitiallyOpen.set -> void
+Kazo.Os.Ecosystem.SignInFactoryResetPrompt.OnConfirmed.get -> Microsoft.AspNetCore.Components.EventCallback
+Kazo.Os.Ecosystem.SignInFactoryResetPrompt.OnConfirmed.set -> void
+Kazo.Os.Ecosystem.SignInFactoryResetPrompt.SignInFactoryResetPrompt() -> void
+Kazo.Os.Ecosystem.SignInFactoryResetSettings
+Kazo.Os.Ecosystem.SignInFactoryResetSettings.<Clone>$() -> Kazo.Os.Ecosystem.SignInFactoryResetSettings!
+Kazo.Os.Ecosystem.SignInFactoryResetSettings.Deconstruct(out bool Enabled) -> void
+Kazo.Os.Ecosystem.SignInFactoryResetSettings.Enabled.get -> bool
+Kazo.Os.Ecosystem.SignInFactoryResetSettings.Enabled.init -> void
+Kazo.Os.Ecosystem.SignInFactoryResetSettings.Equals(Kazo.Os.Ecosystem.SignInFactoryResetSettings? other) -> bool
+Kazo.Os.Ecosystem.SignInFactoryResetSettings.SignInFactoryResetSettings(bool Enabled) -> void
 Kazo.Os.Ecosystem.WebAssemblyEcosystemHostEnvironment
 Kazo.Os.Ecosystem.WebAssemblyEcosystemHostEnvironment.IsDevelopment.get -> bool
 Kazo.Os.Ecosystem.WebAssemblyEcosystemHostEnvironment.WebAssemblyEcosystemHostEnvironment(Microsoft.AspNetCore.Components.WebAssembly.Hosting.IWebAssemblyHostEnvironment! inner) -> void
@@ -166,6 +183,7 @@ const Kazo.Os.Ecosystem.HardwareServiceCollectionExtensions.SectionName = "KazoO
 const Kazo.Os.Ecosystem.InstalledAppAssetContentTypes.Default = "application/octet-stream" -> string!
 const Kazo.Os.Ecosystem.ResourceAccountingServiceCollectionExtensions.SectionName = "KazoOs:ResourceAccounting" -> string!
 const Kazo.Os.Ecosystem.ResourceLimitsServiceCollectionExtensions.SectionName = "KazoOs:ResourceLimits" -> string!
+const Kazo.Os.Ecosystem.SignInFactoryResetSettings.SectionName = "KazoOs:SignIn:FactoryReset" -> string!
 override Kazo.Os.Ecosystem.App.OnAfterRender(bool firstRender) -> void
 override Kazo.Os.Ecosystem.App.OnInitializedAsync() -> System.Threading.Tasks.Task!
 override Kazo.Os.Ecosystem.CpuAccountingRegistration.Equals(object? obj) -> bool
@@ -187,14 +205,14 @@ override Kazo.Os.Ecosystem.ResourceAccountingHookInstallation.ToString() -> stri
 override Kazo.Os.Ecosystem.ResourceLimitsSettings.Equals(object? obj) -> bool
 override Kazo.Os.Ecosystem.ResourceLimitsSettings.GetHashCode() -> int
 override Kazo.Os.Ecosystem.ResourceLimitsSettings.ToString() -> string!
+override Kazo.Os.Ecosystem.SignInFactoryResetSettings.Equals(object? obj) -> bool
+override Kazo.Os.Ecosystem.SignInFactoryResetSettings.GetHashCode() -> int
+override Kazo.Os.Ecosystem.SignInFactoryResetSettings.ToString() -> string!
 static Kazo.Os.Ecosystem.CpuAccountingRegistration.operator !=(Kazo.Os.Ecosystem.CpuAccountingRegistration? left, Kazo.Os.Ecosystem.CpuAccountingRegistration? right) -> bool
 static Kazo.Os.Ecosystem.CpuAccountingRegistration.operator ==(Kazo.Os.Ecosystem.CpuAccountingRegistration? left, Kazo.Os.Ecosystem.CpuAccountingRegistration? right) -> bool
 static Kazo.Os.Ecosystem.EcosystemBootResult.operator !=(Kazo.Os.Ecosystem.EcosystemBootResult? left, Kazo.Os.Ecosystem.EcosystemBootResult? right) -> bool
 static Kazo.Os.Ecosystem.EcosystemBootResult.operator ==(Kazo.Os.Ecosystem.EcosystemBootResult? left, Kazo.Os.Ecosystem.EcosystemBootResult? right) -> bool
 static Kazo.Os.Ecosystem.EcosystemServiceCollectionExtensions.AddKazoOsEcosystem(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, Kazo.Os.Platform.Core.AppCatalog? catalog = null, System.Func<System.IServiceProvider!, System.Collections.Generic.IReadOnlyDictionary<string!, Kazo.Os.Platform.Core.Discovery.AppDescriptor!>!>? descriptorProvider = null, System.Func<System.IServiceProvider!, Kazo.Os.Platform.Core.Lifecycle.IAppDescriptorLoader?>? descriptorLoaderProvider = null) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
-static Kazo.Os.Ecosystem.KazoOsBrowserHostExtensions.AddKazoOsBrowserHost(this Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHostBuilder! builder, Kazo.Os.Ecosystem.HostAppCatalog! apps, Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? options = null) -> Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHostBuilder!
-static Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.operator !=(Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? left, Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? right) -> bool
-static Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.operator ==(Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? left, Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? right) -> bool
 static Kazo.Os.Ecosystem.HardwareServiceCollectionExtensions.AddKazoOsHardware(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, Microsoft.Extensions.Configuration.IConfiguration? configuration) -> Kazo.Os.Simulation.Abstractions.Processes.VirtualHardwareProfile!
 static Kazo.Os.Ecosystem.HardwareServiceCollectionExtensions.ReadProfile(Microsoft.Extensions.Configuration.IConfiguration? configuration) -> Kazo.Os.Simulation.Abstractions.Processes.VirtualHardwareProfile!
 static Kazo.Os.Ecosystem.HostAppCatalog.Load(System.Reflection.Assembly! hostAssembly) -> Kazo.Os.Ecosystem.HostAppCatalog!
@@ -204,6 +222,9 @@ static Kazo.Os.Ecosystem.InstalledAppAssetPublisher.GetUrl(Kazo.Os.Platform.Core
 static Kazo.Os.Ecosystem.InstalledAppSatellites.Find(System.Reflection.AssemblyName! name) -> System.Reflection.Assembly?
 static Kazo.Os.Ecosystem.InstalledAppsActivator.IsLoaded(Kazo.Os.Platform.Core.Apps.Packages.InstalledApp! app) -> bool
 static Kazo.Os.Ecosystem.InstalledAppsBootExtensions.LoadInstalledAppsAsync(this Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHost! host) -> System.Threading.Tasks.Task!
+static Kazo.Os.Ecosystem.KazoOsBrowserHostExtensions.AddKazoOsBrowserHost(this Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHostBuilder! builder, Kazo.Os.Ecosystem.HostAppCatalog! apps, Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? options = null) -> Microsoft.AspNetCore.Components.WebAssembly.Hosting.WebAssemblyHostBuilder!
+static Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.operator !=(Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? left, Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? right) -> bool
+static Kazo.Os.Ecosystem.KazoOsBrowserHostOptions.operator ==(Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? left, Kazo.Os.Ecosystem.KazoOsBrowserHostOptions? right) -> bool
 static Kazo.Os.Ecosystem.MemoryAccountingRegistration.operator !=(Kazo.Os.Ecosystem.MemoryAccountingRegistration? left, Kazo.Os.Ecosystem.MemoryAccountingRegistration? right) -> bool
 static Kazo.Os.Ecosystem.MemoryAccountingRegistration.operator ==(Kazo.Os.Ecosystem.MemoryAccountingRegistration? left, Kazo.Os.Ecosystem.MemoryAccountingRegistration? right) -> bool
 static Kazo.Os.Ecosystem.ResourceAccountingHookInstallation.operator !=(Kazo.Os.Ecosystem.ResourceAccountingHookInstallation? left, Kazo.Os.Ecosystem.ResourceAccountingHookInstallation? right) -> bool
@@ -217,6 +238,13 @@ static Kazo.Os.Ecosystem.ResourceLimitsServiceCollectionExtensions.ReadSettings(
 static Kazo.Os.Ecosystem.ResourceLimitsSettings.Default.get -> Kazo.Os.Ecosystem.ResourceLimitsSettings!
 static Kazo.Os.Ecosystem.ResourceLimitsSettings.operator !=(Kazo.Os.Ecosystem.ResourceLimitsSettings? left, Kazo.Os.Ecosystem.ResourceLimitsSettings? right) -> bool
 static Kazo.Os.Ecosystem.ResourceLimitsSettings.operator ==(Kazo.Os.Ecosystem.ResourceLimitsSettings? left, Kazo.Os.Ecosystem.ResourceLimitsSettings? right) -> bool
+static Kazo.Os.Ecosystem.SignInFactoryReset.IsOffered(System.IServiceProvider! services) -> bool
+static Kazo.Os.Ecosystem.SignInFactoryReset.RunAsync(System.IServiceProvider! services) -> System.Threading.Tasks.Task!
+static Kazo.Os.Ecosystem.SignInFactoryResetPrompt.IsConfirmationTyped(string? typed, string! word) -> bool
+static Kazo.Os.Ecosystem.SignInFactoryResetSettings.Default.get -> Kazo.Os.Ecosystem.SignInFactoryResetSettings!
+static Kazo.Os.Ecosystem.SignInFactoryResetSettings.Read(Microsoft.Extensions.Configuration.IConfiguration? configuration) -> Kazo.Os.Ecosystem.SignInFactoryResetSettings!
+static Kazo.Os.Ecosystem.SignInFactoryResetSettings.operator !=(Kazo.Os.Ecosystem.SignInFactoryResetSettings? left, Kazo.Os.Ecosystem.SignInFactoryResetSettings? right) -> bool
+static Kazo.Os.Ecosystem.SignInFactoryResetSettings.operator ==(Kazo.Os.Ecosystem.SignInFactoryResetSettings? left, Kazo.Os.Ecosystem.SignInFactoryResetSettings? right) -> bool
 static readonly Kazo.Os.Ecosystem.BrowserInstalledAppAssetCache.ServiceWorkerTimeout -> System.TimeSpan
 ~override Kazo.Os.Ecosystem.App.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void
 ~override Kazo.Os.Ecosystem.LoginProgressScreen.BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) -> void

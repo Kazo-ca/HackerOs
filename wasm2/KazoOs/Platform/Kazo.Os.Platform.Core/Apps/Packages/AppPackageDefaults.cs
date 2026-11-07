@@ -52,7 +52,7 @@ public sealed record AppPackageDefaults(
     /// Public key (base64 SubjectPublicKeyInfo, ECDSA P-256) of the official catalog (ADR 0214 §2, Q3):
     /// every package of <c>catalog:official</c> must carry its signature. Created by Benoit with
     /// <c>Kazo.Os.MarketPlace.Tool keygen</c> on 2026-11-01; the private key stays in the catalog
-    /// repository's <c>HACK_STORE_SIGNING_KEY</c> secret, which <c>publish.yml</c> signs with. To
+    /// repository's <c>KAZO_STORE_SIGNING_KEY</c> secret, which <c>publish.yml</c> signs with. To
     /// change it without a break, list the new key next to this one in <c>[signing-keys]</c> first.
     /// </summary>
     public const string OfficialCatalogSigningKey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAETFtnNlpmUlpSvnqWeaHkF7t5v51wpoZrHW06ziYPigF0jJUnyQkd09C7Vxbl37RTq9Qg+sd1u16gtx2soqK0/g==";

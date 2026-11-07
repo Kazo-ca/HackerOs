@@ -59,7 +59,7 @@
     private int _filterIndex;
 
     private VirtualPath EffectiveInitialDirectory =>
-        Presentation.Request.InitialDirectory ?? VirtualPath.Parse($"/home/{Presentation.UserId}");
+        Presentation.Request.InitialDirectory ?? VirtualPath.Parse(Presentation.Context?.HomeDirectory ?? "/");
 
     private string TitleId => _titleId;
     private string SelectionSummary => _selection.Count switch

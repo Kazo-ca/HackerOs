@@ -1,3 +1,5 @@
+using Kazo.Os.App.Abstractions;
+
 namespace Kazo.Os.AppSdk.Blazor;
 
 /// <summary>
@@ -31,4 +33,58 @@ public interface IAppWindowGateway
     /// <param name="cancellationToken">Cancels the request before it is applied.</param>
     /// <returns>The title actually shown once cleaned.</returns>
     ValueTask<string> SetTitleAsync(string? title, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets the window's current options (ADR 0234 §4): the manifest's <c>window</c> object until
+    /// <see cref="SetOptionsAsync"/> changes them. Added in SDK 3.1; an older implementation reports
+    /// <see cref="WindowOptions.Default"/>.
+    /// </summary>
+    WindowOptions Options => WindowOptions.Default;
+
+    /// <summary>
+    /// Replaces the window's style, switches and size constraints at run time (ADR 0234 §4), as
+    /// setting <c>FormBorderStyle</c> or <c>MaximizeBox</c> on a shown WinForms form. The default
+    /// sizes only matter for a new window and are ignored here.
+    /// </summary>
+    /// <param name="options">The new options.</param>
+    /// <param name="cancellationToken">Cancels the request before it is applied.</param>
+    /// <returns><see langword="true"/> when the window manager applied them.</returns>
+    ValueTask<bool> SetOptionsAsync(WindowOptions options, CancellationToken cancellationToken = default) =>
+        ValueTask.FromResult(false);
+
+    /// <summary>
+    /// Minimizes the window (ADR 0234 §4, issue #384), whatever buttons its frame shows.
+    /// </summary>
+    /// <param name="cancellationToken">Cancels the request before it is applied.</param>
+    /// <returns><see langword="true"/> when the window is minimized.</returns>
+    ValueTask<bool> MinimizeAsync(CancellationToken cancellationToken = default) => ValueTask.FromResult(false);
+
+    /// <summary>Maximizes the window to its screen's work area (ADR 0234 §4); needs a resizable window.</summary>
+    /// <param name="cancellationToken">Cancels the request before it is applied.</param>
+    /// <returns><see langword="true"/> when the window is maximized.</returns>
+    ValueTask<bool> MaximizeAsync(CancellationToken cancellationToken = default) => ValueTask.FromResult(false);
+
+    /// <summary>Gives a minimized, maximized or snapped window back its normal geometry (ADR 0234 §4).</summary>
+    /// <param name="cancellationToken">Cancels the request before it is applied.</param>
+    /// <returns><see langword="true"/> when the window is in its normal state.</returns>
+    ValueTask<bool> RestoreAsync(CancellationToken cancellationToken = default) => ValueTask.FromResult(false);
+
+    /// <summary>
+    /// Moves the window's top-left corner to <paramref name="x"/>, <paramref name="y"/> in its
+    /// screen's work area (ADR 0234 §4); the window manager keeps it on the screen.
+    /// </summary>
+    /// <param name="x">Left edge, in CSS pixels from the work area's left.</param>
+    /// <param name="y">Top edge, in CSS pixels from the work area's top.</param>
+    /// <param name="cancellationToken">Cancels the request before it is applied.</param>
+    /// <returns><see langword="true"/> when the window moved; <see langword="false"/> when it is not in its normal state.</returns>
+    ValueTask<bool> MoveAsync(double x, double y, CancellationToken cancellationToken = default) => ValueTask.FromResult(false);
+
+    /// <summary>
+    /// Resizes the window (ADR 0234 §4) within its declared minimum and maximum and the work area.
+    /// </summary>
+    /// <param name="width">Outer width in CSS pixels.</param>
+    /// <param name="height">Outer height in CSS pixels.</param>
+    /// <param name="cancellationToken">Cancels the request before it is applied.</param>
+    /// <returns><see langword="true"/> when the window was resized; <see langword="false"/> when it is not resizable or not in its normal state.</returns>
+    ValueTask<bool> ResizeAsync(double width, double height, CancellationToken cancellationToken = default) => ValueTask.FromResult(false);
 }

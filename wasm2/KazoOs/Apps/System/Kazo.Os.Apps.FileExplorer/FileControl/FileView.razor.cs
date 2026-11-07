@@ -359,7 +359,7 @@ public partial class FileView : IAsyncDisposable
         if (!_initialized)
         {
             _initialized = true;
-            await NavigateAsync(InitialDirectory);
+            await NavigateToInitialDirectoryAsync();
         }
 
         ApplyCutPaths();
@@ -412,6 +412,29 @@ public partial class FileView : IAsyncDisposable
         foreach (FileViewItem item in _items)
         {
             item.IsCut = CutPaths is not null && CutPaths.Contains(item.FullPath.Value);
+        }
+    }
+
+    /// <summary>
+    /// Opens the first folder (issue #385): <see cref="InitialDirectory"/>, or its nearest ancestor
+    /// that can be listed when it is missing or unreadable, up to <c>/</c>. A start folder that cannot
+    /// be listed never throws out of the first render, which would take the whole OS down; with
+    /// nothing readable the view stays empty.
+    /// </summary>
+    private async Task NavigateToInitialDirectoryAsync()
+    {
+        VirtualPath? candidate = InitialDirectory;
+        while (candidate is VirtualPath path)
+        {
+            try
+            {
+                await NavigateAsync(path);
+                return;
+            }
+            catch (InvalidOperationException)
+            {
+                candidate = path.Value == "/" ? null : ParentOf(path);
+            }
         }
     }
 

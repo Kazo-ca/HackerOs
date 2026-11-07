@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace Kazo.Os.AppSdk.Blazor.Tests;
 
 /// <summary>ADR 0117 §2: a window app sets its whole window title through <see cref="WindowAppBase"/>.</summary>
-public sealed class WindowAppBaseWindowTitleTests
+public sealed partial class WindowAppBaseWindowTitleTests
 {
     [Fact]
     public async Task A_title_set_during_initialization_reaches_the_window_before_the_first_render()
@@ -133,6 +133,28 @@ public sealed class WindowAppBaseWindowTitleTests
         public string Format(string? document, bool modified = false) => FormatWindowTitle(document, modified);
 
         public IDisposable Track(IDisplaySurface surface) => TrackDisplaySurface(surface);
+
+        public WindowOptions Options => WindowOptions;
+
+        public ValueTask<bool> MinimizeAsync() => MinimizeWindowAsync();
+
+        public ValueTask<bool> MaximizeAsync() => MaximizeWindowAsync();
+
+        public ValueTask<bool> RestoreAsync() => RestoreWindowAsync();
+
+        public ValueTask<bool> MoveAsync(double x, double y) => MoveWindowAsync(x, y);
+
+        public ValueTask<bool> ResizeAsync(double width, double height) => ResizeWindowAsync(width, height);
+
+        public ValueTask<bool> StyleAsync(WindowStyle style) => SetWindowStyleAsync(style);
+
+        public ValueTask<bool> OptionsAsync(WindowOptions options) => SetWindowOptionsAsync(options);
+
+        public ValueTask<IKazoWindow> ShowAsync<TWindow>(KazoWindowRequest request)
+            where TWindow : KazoWindowBase => ShowWindowAsync<TWindow>(request);
+
+        public ValueTask<KazoDialogResult> DialogAsync<TWindow>(KazoWindowRequest request, CancellationToken cancellationToken = default)
+            where TWindow : KazoWindowBase => ShowDialogAsync<TWindow>(request, cancellationToken);
 
         protected override void OnAppInitialized()
         {
