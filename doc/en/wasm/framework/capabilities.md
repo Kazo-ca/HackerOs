@@ -108,6 +108,12 @@ CapabilityDescription d = AppCapabilities.Describe(AppCapabilities.FileSystemSys
 `CleanProfileCapabilityGrantSeeder.SeedDeclaredCapabilities(repository, manifest, userId, isSystemApp)`
 with `isSystemApp = AppCatalog.IsSystemApp(manifest.Id)` (ADR 0048).
 
+It runs the same pass again when the catalog changes during the session
+(`AppCatalog.Changed`, ADR 0214 §1): an app installed or updated by `kazopkg`
+or the Kazo OS Store gets its normal capabilities for the signed-in user at
+once, without waiting for the next login (issue #386). Dangerous capabilities
+still wait for approval.
+
 | App | Declared normal capability | Declared dangerous capability |
 |---|---|---|
 | System | granted, source `BuildProfile` | granted, source `SystemPolicy` |
