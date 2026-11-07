@@ -34,6 +34,12 @@ public static class AppPermissionsDocument
     /// <summary>Section holding every decision.</summary>
     public const string Section = "permissions";
 
+    /// <summary>
+    /// Machine-file section holding the real-network ports an administrator approved with
+    /// <c>network.real.access</c> (ADR 0233 §4): one line <c>&lt;appId&gt;=tcp/6667,tcp/6697</c> per app.
+    /// </summary>
+    public const string RealNetworkPortsSection = "real-network-ports";
+
     /// <summary>Serialized <see cref="AppPermissionDecision.Allow"/>.</summary>
     public const string AllowValue = "allow";
 
@@ -91,6 +97,30 @@ public static class AppPermissionsDocument
             FormatKey(appId, capability),
             ToValue(decision));
 
+    /// <summary>
+    /// Records the real-network ports approved for <paramref name="appId"/> in
+    /// <see cref="RealNetworkPortsSection"/> (ADR 0233 §4), in canonical order; an empty list keeps a
+    /// line with no port, so an app that later declares one is asked again.
+    /// </summary>
+    /// <param name="content">Current machine content, or <see langword="null"/> for a new file.</param>
+    /// <param name="appId">App identifier.</param>
+    /// <param name="ports">The approved declarations, <c>tcp/6697</c>; invalid ones are dropped.</param>
+    public static string SetRealNetworkPorts(string? content, string appId, IEnumerable<string>? ports)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(appId);
+        return ConfigDocumentEditor.SetValue(
+            string.IsNullOrEmpty(content) ? DefaultMachineContent : content,
+            RealNetworkPortsSection,
+            appId,
+            string.Join(",", RealNetworkPorts.Normalize(ports) ?? []));
+    }
+
+    /// <summary>Removes the approved-ports line of <paramref name="appId"/>; unchanged when absent.</summary>
+    /// <param name="content">Current machine content.</param>
+    /// <param name="appId">App identifier.</param>
+    public static string RemoveRealNetworkPorts(string? content, string appId) =>
+        ConfigDocumentEditor.RemoveValue(content, RealNetworkPortsSection, appId);
+
     /// <summary>Removes one decision line; unchanged when absent.</summary>
     /// <param name="content">Current content.</param>
     /// <param name="appId">App identifier.</param>
@@ -113,19 +143,22 @@ public sealed class AppPermissionDecisions
 {
     private readonly Dictionary<(string AppId, string Capability), AppPermissionDecision> _machine;
     private readonly HashSet<(string AppId, string Capability)> _userDenials;
+    private readonly Dictionary<string, IReadOnlySet<RealNetworkPort>> _approvedPorts;
 
     private AppPermissionDecisions(
         Dictionary<(string AppId, string Capability), AppPermissionDecision> machine,
         HashSet<(string AppId, string Capability)> userDenials,
+        Dictionary<string, IReadOnlySet<RealNetworkPort>> approvedPorts,
         IReadOnlyList<string> warnings)
     {
         _machine = machine;
         _userDenials = userDenials;
+        _approvedPorts = approvedPorts;
         Warnings = warnings;
     }
 
     /// <summary>Gets decisions with no line at all (both files absent).</summary>
-    public static AppPermissionDecisions Empty { get; } = new([], [], []);
+    public static AppPermissionDecisions Empty { get; } = new([], [], [], []);
 
     /// <summary>Gets one warning line per ignored line, formatted like ADR 0044 settings warnings.</summary>
     public IReadOnlyList<string> Warnings { get; }
@@ -143,14 +176,15 @@ public sealed class AppPermissionDecisions
     {
         Dictionary<(string, string), AppPermissionDecision> machine = [];
         HashSet<(string, string)> userDenials = [];
+        Dictionary<string, IReadOnlySet<RealNetworkPort>> approvedPorts = new(StringComparer.Ordinal);
         List<string> warnings = [];
 
-        foreach (((string appId, string capability), AppPermissionDecision decision) in ParseFile(machineContent, machinePath, warnings))
+        foreach (((string appId, string capability), AppPermissionDecision decision) in ParseFile(machineContent, machinePath, warnings, approvedPorts))
         {
             machine[(appId, capability)] = decision;
         }
 
-        foreach (((string appId, string capability), AppPermissionDecision decision) in ParseFile(userContent, userPath, warnings))
+        foreach (((string appId, string capability), AppPermissionDecision decision) in ParseFile(userContent, userPath, warnings, approvedPorts: null))
         {
             if (decision == AppPermissionDecision.Allow)
             {
@@ -162,7 +196,7 @@ public sealed class AppPermissionDecisions
             userDenials.Add((appId, capability));
         }
 
-        return new AppPermissionDecisions(machine, userDenials, warnings);
+        return new AppPermissionDecisions(machine, userDenials, approvedPorts, warnings);
     }
 
     /// <summary>Gets the machine decision for one app capability, or <see langword="null"/> when none.</summary>
@@ -176,8 +210,19 @@ public sealed class AppPermissionDecisions
     /// <param name="capability">Capability identifier.</param>
     public bool IsDeniedByUser(string appId, string capability) => _userDenials.Contains((appId, capability));
 
+    /// <summary>
+    /// Gets the real-network ports an administrator approved for <paramref name="appId"/> with
+    /// <c>network.real.access</c> (machine section <c>[real-network-ports]</c>, ADR 0233 §4); empty
+    /// when the file has no line for it.
+    /// </summary>
+    /// <param name="appId">App identifier.</param>
+    public IReadOnlySet<RealNetworkPort> GetApprovedRealNetworkPorts(string appId) =>
+        _approvedPorts.TryGetValue(appId, out IReadOnlySet<RealNetworkPort>? ports) ? ports : NoPorts;
+
+    private static readonly IReadOnlySet<RealNetworkPort> NoPorts = new HashSet<RealNetworkPort>();
+
     private static IEnumerable<KeyValuePair<(string AppId, string Capability), AppPermissionDecision>> ParseFile(
-        string? content, string path, List<string> warnings)
+        string? content, string path, List<string> warnings, Dictionary<string, IReadOnlySet<RealNetworkPort>>? approvedPorts)
     {
         if (string.IsNullOrEmpty(content))
         {
@@ -191,8 +236,15 @@ public sealed class AppPermissionDecisions
         }
 
         string prefix = AppPermissionsDocument.Section + ".";
+        string portsPrefix = AppPermissionsDocument.RealNetworkPortsSection + ".";
         foreach ((string qualifiedKey, string rawValue) in parsed.Values)
         {
+            if (qualifiedKey.StartsWith(portsPrefix, StringComparison.Ordinal))
+            {
+                ReadApprovedPorts(qualifiedKey[portsPrefix.Length..], rawValue, path, warnings, approvedPorts);
+                continue;
+            }
+
             if (!qualifiedKey.StartsWith(prefix, StringComparison.Ordinal))
             {
                 if (!string.Equals(qualifiedKey, "schemaVersion", StringComparison.Ordinal))
@@ -243,5 +295,34 @@ public sealed class AppPermissionDecisions
 
             yield return new((appId, capability), decision);
         }
+    }
+
+    /// <summary>
+    /// Reads one <c>[real-network-ports]</c> line (ADR 0233 §4). Only the machine file can approve
+    /// ports: the line is ignored with a warning in the user file. An invalid port drops the whole
+    /// line, so a typo never approves something else.
+    /// </summary>
+    private static void ReadApprovedPorts(
+        string appId, string rawValue, string path, List<string> warnings, Dictionary<string, IReadOnlySet<RealNetworkPort>>? approvedPorts)
+    {
+        if (approvedPorts is null)
+        {
+            warnings.Add($"settings: {path}: [{AppPermissionsDocument.RealNetworkPortsSection}] '{appId}' ignored, only the machine file approves ports");
+            return;
+        }
+
+        HashSet<RealNetworkPort> ports = [];
+        foreach (string entry in rawValue.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            if (!RealNetworkPorts.TryParse(entry, out RealNetworkPort port, out string? error))
+            {
+                warnings.Add($"settings: {path}: [{AppPermissionsDocument.RealNetworkPortsSection}] '{appId}': {error} Line ignored");
+                return;
+            }
+
+            ports.Add(port);
+        }
+
+        approvedPorts[appId] = ports;
     }
 }

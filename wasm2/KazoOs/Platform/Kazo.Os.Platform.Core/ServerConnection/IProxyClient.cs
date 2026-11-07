@@ -49,6 +49,20 @@ public interface IProxyClient
         Uri serverBaseUrl, string accessToken, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Asks the server to issue, or withdraw, the <c>network.real.access</c> grant an OS
+    /// administrator approved, with its ports (<c>POST api/proxy/grants</c>, ADR 0233 §1).
+    /// </summary>
+    /// <param name="serverBaseUrl">The server's base URL; endpoint paths are resolved relative to it.</param>
+    /// <param name="accessToken">The bearer token of the connected account.</param>
+    /// <param name="request">The app, user, approved ports and whether to withdraw.</param>
+    /// <param name="cancellationToken">Cancels the HTTP request.</param>
+    /// <returns>The grant as the server now holds it.</returns>
+    /// <exception cref="ServerConnectionException">The server refused the request; its proxy error code says why.</exception>
+    Task<ProxyGrantIssued> IssueGrantAsync(
+        Uri serverBaseUrl, string accessToken, ProxyGrantIssueRequest request, CancellationToken cancellationToken = default) =>
+        throw new NotSupportedException("This proxy client cannot issue grants.");
+
+    /// <summary>
     /// Opens one relayed TCP stream or "connected" UDP socket (ADR 0102 §2, §3). The socket is
     /// connected on the server when this returns; disposing the channel closes it.
     /// </summary>
@@ -193,6 +207,32 @@ public sealed class HttpProxyClient(
 
         return (await response.Content.ReadFromJsonAsync(
             ProxyContractsJsonContext.Default.ProxyPolicyResponse, cancellationToken).ConfigureAwait(false))!;
+    }
+
+    /// <inheritdoc />
+    public async Task<ProxyGrantIssued> IssueGrantAsync(
+        Uri serverBaseUrl, string accessToken, ProxyGrantIssueRequest request, CancellationToken cancellationToken = default)
+    {
+        using HttpRequestMessage message = new(HttpMethod.Post, new Uri(serverBaseUrl, "api/proxy/grants"))
+        {
+            Content = JsonContent.Create(request, ProxyContractsJsonContext.Default.ProxyGrantIssueRequest)
+        };
+        message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        using HttpResponseMessage response = await httpClient.SendAsync(message, cancellationToken).ConfigureAwait(false);
+        if (!response.IsSuccessStatusCode)
+        {
+            ProxyErrorResponse? error = await TryReadErrorAsync(response, cancellationToken).ConfigureAwait(false);
+            throw new ServerConnectionException(
+                error is null
+                    ? $"Issuing the grant failed ({(int)response.StatusCode} {response.ReasonPhrase})."
+                    : $"Issuing the grant failed: {error.ErrorCode} — {error.Message}",
+                null,
+                error?.ErrorCode);
+        }
+
+        return (await response.Content.ReadFromJsonAsync(
+            ProxyContractsJsonContext.Default.ProxyGrantIssued, cancellationToken).ConfigureAwait(false))!;
     }
 
     /// <inheritdoc />

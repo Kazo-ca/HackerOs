@@ -64,6 +64,12 @@ public sealed class AppPermissionAdministration
         _clock = clock ?? (() => DateTimeOffset.UtcNow);
     }
 
+    /// <summary>
+    /// Issues or withdraws the app's <c>network.real.access</c> grant on the connected server after a
+    /// decision (ADR 0233 §3); <see langword="null"/> without a server connection layer.
+    /// </summary>
+    public ServerConnection.IRealNetworkGrantReconciler? RealNetworkGrants { get; init; }
+
     /// <summary>Reads the effective <c>dangerousCapabilities</c> policy.</summary>
     /// <param name="cancellationToken">Cancels the read.</param>
     public ValueTask<DangerousCapabilityPolicy> GetPolicyAsync(CancellationToken cancellationToken = default) =>
@@ -125,6 +131,7 @@ public sealed class AppPermissionAdministration
             await _permissions
                 .WriteMachineDecisionsAsync(appId, [capability], decision, cancellationToken)
                 .ConfigureAwait(false);
+            await AfterMachineDecisionAsync(appId, capability, decision, requestedBy, cancellationToken).ConfigureAwait(false);
         }
 
         RecordMachineDecision(appId, capability, decision, admin, requestedBy, outcome, verification.FailureReason);
@@ -156,6 +163,7 @@ public sealed class AppPermissionAdministration
         ArgumentException.ThrowIfNullOrWhiteSpace(administratorLogin);
         RequireDeclaredDangerous(appId, capability);
         await _permissions.WriteMachineDecisionsAsync(appId, [capability], decision, cancellationToken).ConfigureAwait(false);
+        await AfterMachineDecisionAsync(appId, capability, decision, requestedBy, cancellationToken).ConfigureAwait(false);
         RecordMachineDecision(appId, capability, decision, administratorLogin, requestedBy, AuditOutcome.Success, failureReason: null);
     }
 
@@ -274,6 +282,29 @@ public sealed class AppPermissionAdministration
                 ["admin"] = admin,
                 ["decision"] = decision is null ? "reset" : AppPermissionsDocument.DenyValue
             });
+        }
+    }
+
+    /// <summary>
+    /// For <c>network.real.access</c> (ADR 0233 §3, §4): an <c>allow</c> approves the ports the
+    /// manifest declares now, any other decision removes them, and the server is told without
+    /// waiting for it.
+    /// </summary>
+    private async Task AfterMachineDecisionAsync(
+        string appId, string capability, AppPermissionDecision? decision, AuthenticatedPrincipal requestedBy, CancellationToken cancellationToken)
+    {
+        if (!string.Equals(capability, AppCapabilities.NetworkRealAccess, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        IReadOnlyCollection<string>? ports = decision == AppPermissionDecision.Allow
+            ? RealNetworkPorts.Normalize(_catalog.Manifests[appId].RealNetworkPorts) ?? []
+            : null;
+        await _permissions.WriteApprovedRealNetworkPortsAsync(appId, ports, cancellationToken).ConfigureAwait(false);
+        if (RealNetworkGrants is ServerConnection.IRealNetworkGrantReconciler reconciler)
+        {
+            _ = reconciler.ReconcileAsync(requestedBy.UserId.ToString(), appId, CancellationToken.None);
         }
     }
 
