@@ -14,7 +14,7 @@ namespace Kazo.Os.Platform.Core.Sessions;
 /// machine, owning the session root cancellation source and provisioning the authenticated
 /// user's home directory on login.
 /// </summary>
-public sealed class LocalSessionService : ISessionService
+public sealed class LocalSessionService : ISessionService, IDisposable
 {
     private readonly ILocalUserRepository _users;
     private readonly FileSystemSeeder _homeSeeder;
@@ -84,6 +84,12 @@ public sealed class LocalSessionService : ISessionService
         _catalog = catalog;
         _profileInitializer = profileInitializer;
         _keyring = keyring;
+        if (_catalog is not null && _grantRepository is not null)
+        {
+            // Issue #386: an app installed during the session receives its declared capabilities
+            // at once, as the apps of the catalog do at login.
+            _catalog.Changed += OnCatalogChanged;
+        }
     }
 
     /// <inheritdoc />
@@ -218,15 +224,7 @@ public sealed class LocalSessionService : ISessionService
 
                 StartIconPackInstall();
 
-                if (_grantRepository is not null && _catalog is not null)
-                {
-                    string userId = user.Id.ToString();
-                    foreach (AppManifest manifest in _catalog.Manifests.Values)
-                    {
-                        CleanProfileCapabilityGrantSeeder.SeedDeclaredCapabilities(
-                            _grantRepository, manifest, userId, _catalog.IsSystemApp(manifest.Id));
-                    }
-                }
+                SeedCatalogCapabilities(user.Id.ToString());
             }
 
             await Task.Yield();
@@ -277,6 +275,53 @@ public sealed class LocalSessionService : ISessionService
             }
 
             throw;
+        }
+    }
+
+    /// <summary>Stops following the catalog, which outlives this session service.</summary>
+    public void Dispose()
+    {
+        if (_catalog is not null)
+        {
+            _catalog.Changed -= OnCatalogChanged;
+        }
+    }
+
+    /// <summary>
+    /// Grants one user the capabilities every app of the catalog declares (ADR 0049 §2): the normal
+    /// ones, and the dangerous ones of system apps only; the dangerous capabilities of other apps stay
+    /// pending administrator approval. Already granted capabilities are left as they are.
+    /// </summary>
+    private void SeedCatalogCapabilities(string userId)
+    {
+        if (_grantRepository is null || _catalog is null)
+        {
+            return;
+        }
+
+        foreach (AppManifest manifest in _catalog.Manifests.Values)
+        {
+            CleanProfileCapabilityGrantSeeder.SeedDeclaredCapabilities(
+                _grantRepository, manifest, userId, _catalog.IsSystemApp(manifest.Id));
+        }
+    }
+
+    /// <summary>
+    /// Apps installed or updated by <c>kazopkg</c> or the Kazo OS Store join the live catalog
+    /// (ADR 0214 §1): the signed-in user gets their declared capabilities now rather than at the next
+    /// login (issue #386), so a freshly installed app can read the files it declares at its first launch.
+    /// </summary>
+    private void OnCatalogChanged(object? sender, EventArgs e)
+    {
+        AuthenticatedPrincipal? principal;
+        lock (_gate)
+        {
+            principal = State == SessionState.Active ? _principal : null;
+        }
+
+        if (principal is not null)
+        {
+            SeedCatalogCapabilities(principal.UserId.ToString());
         }
     }
 
