@@ -15,6 +15,11 @@ qu'un navigateur ne peut pas faire seul :
 - les **flux TCP** (`KazoTcpClient.ConnectAsync`) ;
 - les **datagrammes UDP** (`KazoUdpClient`).
 
+Une app qui joint un serveur **WebSocket** n'a pas besoin du relais :
+`KazoClientWebSocket` ouvre le `WebSocket` du navigateur, sans serveur, avec la
+même capacité `network.real.access` (ADR 0235 §1,
+[`sdk-network.md`](../framework/sdk-network.md#websocket-vers-un-vrai-serveur-adr-0235-1)).
+
 Il vérifie lui-même que l'app a le droit d'utiliser le relais, applique une
 politique et des quotas configurés dans `appsettings.json`, et écrit un
 avertissement au démarrage quand cette politique est affaiblie. Sans serveur,

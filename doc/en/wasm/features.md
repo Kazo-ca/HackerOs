@@ -382,7 +382,7 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
-| TLS opened by the relay | An app reaches a real encrypted server (for example IRC on 6697) with `KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`: the server opens TLS to the target and checks its certificate, no option accepts an invalid certificate. Done in the `real-network/base` series, not in a release yet. | [0235](dev/adr/0235-real-network-for-chat-apps.md) | [#395](https://github.com/Kazo-ca/Os/issues/395) |
+| Real network for chat apps | `KazoClientWebSocket` in the SDK: an app reaches a real WebSocket server through the browser, without a Kazo OS server (done in the `real-network/base` series); TLS opened by the relay with `KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`, the server checking the certificate, no option accepting an invalid one (done in the series); then ports declared by the app. | [0235](dev/adr/0235-real-network-for-chat-apps.md) | [#395](https://github.com/Kazo-ca/Os/issues/395) |
 
 ### Project name
 
