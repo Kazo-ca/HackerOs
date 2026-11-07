@@ -157,6 +157,14 @@ plus). Les deux demandent `network.simulated.write`. Le réseau simulé n'a pas
 de flux bruts : un hôte qu'il connaît, ou cette machine, refuse la connexion.
 Les appels synchrones lèvent `NotSupportedException`.
 
+`KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`
+demande au relais du serveur d'ouvrir TLS vers la cible (ADR 0235 §2) :
+l'app lit et écrit du texte en clair, le certificat est vérifié par le serveur
+contre `TargetHost` (le `host` par défaut). Un certificat refusé lève
+`AuthenticationException`, comme `SslStream` ; `IsEncrypted`, `TlsProtocol`
+(`TLS 1.3`) et `RemoteCertificateSubject` disent ce qui a été négocié. Sans
+serveur, l'hôte n'est pas trouvé. Détails : [relais réseau](../dev/server-network-relay.md#tls-ouvert-par-le-relais-adr-0235-2).
+
 ## Apps migrées
 
 - **Browser** : plus d'injection ; `KazoHttpClient` et un `KazoCookieContainer`

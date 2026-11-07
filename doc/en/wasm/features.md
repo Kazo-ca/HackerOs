@@ -382,6 +382,7 @@ points to its PR.
 
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
+| TLS opened by the relay | An app reaches a real encrypted server (for example IRC on 6697) with `KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`: the server opens TLS to the target and checks its certificate, no option accepts an invalid certificate. Done in the `real-network/base` series, not in a release yet. | [0235](dev/adr/0235-real-network-for-chat-apps.md) | [#395](https://github.com/Kazo-ca/Os/issues/395) |
 
 ### Project name
 

@@ -1,1 +1,15 @@
 #nullable enable
+Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectTcpAsync(string! hostNameOrAddress, int port, Kazo.Os.AppSdk.Net.KazoTcpConnectOptions! options, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoSocket!>!>
+Kazo.Os.AppSdk.Net.IKazoSocket.RemoteCertificateSubject.get -> string?
+Kazo.Os.AppSdk.Net.IKazoSocket.TlsProtocol.get -> string?
+Kazo.Os.AppSdk.Net.KazoNetworkError.TlsFailed = 9 -> Kazo.Os.AppSdk.Net.KazoNetworkError
+Kazo.Os.AppSdk.Net.KazoNetworkStream.IsEncrypted.get -> bool
+Kazo.Os.AppSdk.Net.KazoNetworkStream.RemoteCertificateSubject.get -> string?
+Kazo.Os.AppSdk.Net.KazoNetworkStream.TlsProtocol.get -> string?
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions.KazoTcpConnectOptions() -> void
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions.TargetHost.get -> string?
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions.TargetHost.init -> void
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions.UseTls.get -> bool
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions.UseTls.init -> void
+static Kazo.Os.AppSdk.Net.KazoTcpClient.ConnectAsync(string! hostNameOrAddress, int port, Kazo.Os.AppSdk.Net.KazoTcpConnectOptions! options, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Net.KazoNetworkStream!>!

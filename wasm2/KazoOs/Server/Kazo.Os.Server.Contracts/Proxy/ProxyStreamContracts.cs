@@ -5,7 +5,10 @@ namespace Kazo.Os.Server.Contracts.Proxy;
 //
 // A stream is one WebSocket: GET /api/proxy/tcp (or /udp)?host=…&port=…&appId=…
 //   1. The server validates the request (grant, simulated domain, address range, port, quota)
-//      and connects the TCP (or "connected" UDP) socket BEFORE accepting the WebSocket.
+//      and connects the TCP (or "connected" UDP) socket BEFORE accepting the WebSocket. With
+//      tls=1 (TCP only, ADR 0235 §2) it also completes the TLS handshake with the target, the
+//      certificate checked by the system trust store against targetHost (or host), before
+//      accepting: a failed handshake is refused with TLS_FAILED and the app never sees a byte.
 //   2. On success its first frame is a TEXT frame carrying ProxyStreamOpened (JSON); every later
 //      frame, in both directions, is BINARY: a chunk of the byte stream for TCP, exactly one
 //      datagram for UDP.
@@ -35,6 +38,18 @@ public static class ProxyStreamRoutes
 
     /// <summary>Query parameter naming the app the stream is opened for.</summary>
     public const string AppIdParameter = "appId";
+
+    /// <summary>
+    /// Query parameter asking the server to open TLS to the target (ADR 0235 §2); <c>1</c> turns it
+    /// on, anything else or no parameter leaves the stream in clear text. TCP only.
+    /// </summary>
+    public const string TlsParameter = "tls";
+
+    /// <summary>
+    /// Query parameter naming the TLS server name (SNI and certificate name check) when it differs
+    /// from <see cref="HostParameter"/>, for example when <c>host</c> is an IP literal.
+    /// </summary>
+    public const string TargetHostParameter = "targetHost";
 
     /// <summary>Query parameter carrying the access token when no <c>Authorization</c> header can be set.</summary>
     public const string AccessTokenParameter = "access_token";
@@ -72,12 +87,38 @@ public static class ProxyStreamCloseCodes
 /// <param name="Host">Target hostname or IP literal.</param>
 /// <param name="Port">Target port (1–65535), filtered by <c>Tcp:AllowedPorts</c> or <c>Udp:AllowedPorts</c>.</param>
 /// <param name="AppId">App the stream is opened for; the server checks it holds <c>network.real.access</c>.</param>
-public sealed record ProxyStreamRequest(string Host, int Port, string AppId);
+public sealed record ProxyStreamRequest(string Host, int Port, string AppId)
+{
+    /// <summary>
+    /// Gets whether the server opens TLS to the target before relaying (ADR 0235 §2). The app then
+    /// reads and writes clear text; the encryption runs between the server and the target. TCP only.
+    /// </summary>
+    public bool UseTls { get; init; }
+
+    /// <summary>
+    /// Gets the name sent as SNI and checked against the target's certificate; <see cref="Host"/>
+    /// when <see langword="null"/>. Ignored without <see cref="UseTls"/>.
+    /// </summary>
+    public string? TargetHost { get; init; }
+}
 
 /// <summary>First (text) frame of an opened stream: the address the server connected to.</summary>
 /// <param name="RemoteAddress">The pinned, validated IP address.</param>
 /// <param name="RemotePort">The target port.</param>
-public sealed record ProxyStreamOpened(string RemoteAddress, int RemotePort);
+public sealed record ProxyStreamOpened(string RemoteAddress, int RemotePort)
+{
+    /// <summary>
+    /// Gets the TLS version negotiated with the target (<c>TLS 1.3</c>, <c>TLS 1.2</c>), or
+    /// <see langword="null"/> for a clear-text stream (ADR 0235 §2).
+    /// </summary>
+    public string? TlsProtocol { get; init; }
+
+    /// <summary>
+    /// Gets the subject of the target's certificate (<c>CN=irc.example.net</c>), or
+    /// <see langword="null"/> for a clear-text stream.
+    /// </summary>
+    public string? CertificateSubject { get; init; }
+}
 
 /// <summary>Why a stream ended.</summary>
 /// <param name="CloseCode">One of <see cref="ProxyStreamCloseCodes"/>, or <c>1000</c> for a normal close by the client.</param>

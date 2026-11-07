@@ -78,7 +78,7 @@ public interface IAppNetworkGateway
     /// <summary>
     /// Opens a TCP connection to <paramref name="hostNameOrAddress"/>:<paramref name="port"/>, as
     /// <c>TcpClient.ConnectAsync</c> does (ADR 0102 §2). Apps use it through
-    /// <see cref="KazoTcpClient.ConnectAsync"/>.
+    /// <see cref="KazoTcpClient.ConnectAsync(string, int, CancellationToken)"/>.
     /// </summary>
     /// <remarks>
     /// Needs <c>network.simulated.write</c> (a stream carries arbitrary bytes both ways). The
@@ -95,11 +95,31 @@ public interface IAppNetworkGateway
         throw new NotSupportedException("This network gateway cannot open TCP connections.");
 
     /// <summary>
+    /// Opens a TCP connection with <paramref name="options"/> (ADR 0235 §2). With
+    /// <see cref="KazoTcpConnectOptions.UseTls"/> the server's relay opens TLS to the target and
+    /// checks its certificate; a refused handshake is <see cref="KazoNetworkError.TlsFailed"/>.
+    /// Apps use it through <see cref="KazoTcpClient.ConnectAsync(string, int, KazoTcpConnectOptions, CancellationToken)"/>.
+    /// </summary>
+    /// <remarks>Same capabilities and routes as <see cref="ConnectTcpAsync(string, int, CancellationToken)"/>.</remarks>
+    /// <param name="hostNameOrAddress">Target host name or IP literal.</param>
+    /// <param name="port">Target port, 1–65535.</param>
+    /// <param name="options">TLS and its server name.</param>
+    /// <param name="cancellationToken">Cancels the connect.</param>
+    ValueTask<KazoNetworkResult<IKazoSocket>> ConnectTcpAsync(
+        string hostNameOrAddress, int port, KazoTcpConnectOptions options, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return options.UseTls
+            ? throw new NotSupportedException("This network gateway cannot open TLS connections.")
+            : ConnectTcpAsync(hostNameOrAddress, port, cancellationToken);
+    }
+
+    /// <summary>
     /// Opens a "connected" UDP socket to one destination, as <c>UdpClient.Connect</c> does
     /// (ADR 0102 §3): each send is one datagram, no broadcast or multicast. Apps use it through
     /// <see cref="KazoUdpClient"/>.
     /// </summary>
-    /// <remarks>Same capabilities and routes as <see cref="ConnectTcpAsync"/>.</remarks>
+    /// <remarks>Same capabilities and routes as <see cref="ConnectTcpAsync(string, int, CancellationToken)"/>.</remarks>
     /// <param name="hostNameOrAddress">Target host name or IP literal.</param>
     /// <param name="port">Target port, 1–65535.</param>
     /// <param name="cancellationToken">Cancels the call.</param>
@@ -110,7 +130,7 @@ public interface IAppNetworkGateway
 
 /// <summary>
 /// A connected socket of the OS: a TCP stream or a "connected" UDP socket (ADR 0102), opened by
-/// <see cref="IAppNetworkGateway.ConnectTcpAsync"/> or <see cref="IAppNetworkGateway.ConnectUdpAsync"/>.
+/// <see cref="IAppNetworkGateway.ConnectTcpAsync(string, int, CancellationToken)"/> or <see cref="IAppNetworkGateway.ConnectUdpAsync"/>.
 /// Disposing it closes the connection (a TCP FIN), as <c>close(2)</c>.
 /// </summary>
 public interface IKazoSocket : IAsyncDisposable
@@ -130,6 +150,15 @@ public interface IKazoSocket : IAsyncDisposable
     /// </summary>
     /// <param name="cancellationToken">Cancels the wait (the socket stays open).</param>
     ValueTask<byte[]?> ReceiveAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets the TLS version the relay negotiated with the target (ADR 0235 §2), or
+    /// <see langword="null"/> for a clear-text socket.
+    /// </summary>
+    string? TlsProtocol => null;
+
+    /// <summary>Gets the subject of the target's TLS certificate, or <see langword="null"/> for a clear-text socket.</summary>
+    string? RemoteCertificateSubject => null;
 }
 
 /// <summary>
@@ -235,7 +264,14 @@ public enum KazoNetworkError
     /// A rule of the machine's administrator refused the target (<c>ERR_BLOCKED_BY_ADMINISTRATOR</c>):
     /// for example a port or a private address the relay's operator does not allow (ADR 0210 §6).
     /// </summary>
-    BlockedByAdministrator
+    BlockedByAdministrator,
+
+    /// <summary>
+    /// The TLS handshake with the target failed: invalid, expired or untrusted certificate, or a
+    /// name that does not match (ADR 0235 §2). <see cref="KazoTcpClient"/> throws
+    /// <c>AuthenticationException</c> for it, as <c>SslStream</c> does.
+    /// </summary>
+    TlsFailed
 }
 
 /// <summary>Outcome of one <see cref="IAppNetworkGateway"/> call: a value or a <see cref="KazoNetworkError"/>.</summary>

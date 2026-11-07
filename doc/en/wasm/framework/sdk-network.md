@@ -156,6 +156,14 @@ most). Both require `network.simulated.write`. The simulated network has no
 raw streams: a host it knows, or this machine, refuses the connection.
 Synchronous calls throw `NotSupportedException`.
 
+`KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`
+asks the server's relay to open TLS to the target (ADR 0235 §2): the app
+reads and writes clear text, the certificate is checked by the server against
+`TargetHost` (the `host` by default). A refused certificate throws
+`AuthenticationException`, as `SslStream` does; `IsEncrypted`, `TlsProtocol`
+(`TLS 1.3`) and `RemoteCertificateSubject` say what was negotiated. Without a
+server, the host is not found. Details: [network relay](../dev/server-network-relay.md#tls-opened-by-the-relay-adr-0235-2).
+
 ## Migrated apps
 
 - **Browser**: no more injection; `KazoHttpClient` and one `KazoCookieContainer`

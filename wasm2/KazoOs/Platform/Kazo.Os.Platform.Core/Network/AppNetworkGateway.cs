@@ -282,20 +282,29 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
     /// <inheritdoc />
     public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectTcpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
-        ConnectAsync(ProxyProtocol.Tcp, hostNameOrAddress, port, cancellationToken);
+        ConnectAsync(ProxyProtocol.Tcp, hostNameOrAddress, port, null, cancellationToken);
+
+    /// <inheritdoc />
+    public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectTcpAsync(
+        string hostNameOrAddress, int port, KazoTcpConnectOptions options, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        return ConnectAsync(ProxyProtocol.Tcp, hostNameOrAddress, port, options, cancellationToken);
+    }
 
     /// <inheritdoc />
     public ValueTask<KazoNetworkResult<IKazoSocket>> ConnectUdpAsync(
         string hostNameOrAddress, int port, CancellationToken cancellationToken = default) =>
-        ConnectAsync(ProxyProtocol.Udp, hostNameOrAddress, port, cancellationToken);
+        ConnectAsync(ProxyProtocol.Udp, hostNameOrAddress, port, null, cancellationToken);
 
     /// <summary>
     /// Opens a TCP or connected UDP socket (ADR 0102 §2, §3). The simulated network has no raw
     /// sockets, so a target it knows (or this machine) refuses; an unknown target goes to the
-    /// optional relay, which only exists for an app holding <c>network.real.access</c>.
+    /// optional relay, which only exists for an app holding <c>network.real.access</c>. TLS
+    /// (<paramref name="options"/>, ADR 0235 §2) is opened by the relay, so it needs the server too.
     /// </summary>
     private async ValueTask<KazoNetworkResult<IKazoSocket>> ConnectAsync(
-        ProxyProtocol protocol, string hostNameOrAddress, int port, CancellationToken cancellationToken)
+        ProxyProtocol protocol, string hostNameOrAddress, int port, KazoTcpConnectOptions? options, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(hostNameOrAddress);
         ArgumentOutOfRangeException.ThrowIfLessThan(port, 1);
@@ -327,7 +336,12 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         try
         {
             IProxyStreamChannel channel = await _proxy!.OpenStreamAsync(
-                real.ServerBaseUrl, real.AccessToken, protocol, new ProxyStreamRequest(hostNameOrAddress, port, _appId), cancellationToken)
+                real.ServerBaseUrl, real.AccessToken, protocol, new ProxyStreamRequest(hostNameOrAddress, port, _appId)
+                {
+                    UseTls = options?.UseTls == true,
+                    TargetHost = options?.UseTls == true ? options.TargetHost : null
+                },
+                cancellationToken)
                 .ConfigureAwait(false);
             // The handshake: a SYN out and a SYN-ACK back (a UDP "connect" sends nothing).
             if (!udp)
@@ -361,6 +375,7 @@ public sealed class AppNetworkGateway : IAppNetworkGateway
         ProxyErrorCode.ConnectionRefused or ProxyErrorCode.BlockedPort or ProxyErrorCode.BlockedAddress => KazoNetworkError.ConnectionRefused,
         ProxyErrorCode.HostUnreachable => KazoNetworkError.HostUnreachable,
         ProxyErrorCode.GrantMissing or ProxyErrorCode.RelayDisabled or ProxyErrorCode.SimulatedDomainBlocked => KazoNetworkError.HostNotFound,
+        ProxyErrorCode.TlsFailed => KazoNetworkError.TlsFailed,
         _ => KazoNetworkError.ConnectionFailed
     };
 

@@ -204,14 +204,27 @@ public sealed class HttpProxyClient(
 
         // The browser's WebSocket cannot carry an Authorization header: the token travels as the
         // access_token query parameter, which the server accepts on the two stream routes only.
+        List<string> query =
+        [
+            $"{ProxyStreamRoutes.HostParameter}={Uri.EscapeDataString(request.Host)}",
+            $"{ProxyStreamRoutes.PortParameter}={request.Port}",
+            $"{ProxyStreamRoutes.AppIdParameter}={Uri.EscapeDataString(request.AppId)}",
+        ];
+        if (request.UseTls)
+        {
+            // ADR 0235 §2: the server opens TLS to the target; this WebSocket carries clear text.
+            query.Add($"{ProxyStreamRoutes.TlsParameter}=1");
+            if (!string.IsNullOrWhiteSpace(request.TargetHost))
+            {
+                query.Add($"{ProxyStreamRoutes.TargetHostParameter}={Uri.EscapeDataString(request.TargetHost)}");
+            }
+        }
+
+        query.Add($"{ProxyStreamRoutes.AccessTokenParameter}={Uri.EscapeDataString(accessToken)}");
         UriBuilder builder = new(new Uri(serverBaseUrl, ProxyStreamRoutes.PathOf(protocol)))
         {
             Scheme = serverBaseUrl.Scheme == Uri.UriSchemeHttps ? "wss" : "ws",
-            Query = string.Join('&',
-                $"{ProxyStreamRoutes.HostParameter}={Uri.EscapeDataString(request.Host)}",
-                $"{ProxyStreamRoutes.PortParameter}={request.Port}",
-                $"{ProxyStreamRoutes.AppIdParameter}={Uri.EscapeDataString(request.AppId)}",
-                $"{ProxyStreamRoutes.AccessTokenParameter}={Uri.EscapeDataString(accessToken)}")
+            Query = string.Join('&', query)
         };
 
         WebSocket socket;
