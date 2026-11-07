@@ -2282,6 +2282,8 @@ Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.Equals(Kazo.Os.Simulation
 Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.GrantsSyncPayload(string! AppId, string! UserId, string! Capability, string! Source, System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Sync.GrantConstraintPayload!>! Constraints, bool IsRevoked) -> void
 Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.IsRevoked.get -> bool
 Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.IsRevoked.init -> void
+Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.RealNetworkPorts.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.RealNetworkPorts.init -> void
 Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.Source.get -> string!
 Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.Source.init -> void
 Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload.UserId.get -> string!
@@ -3384,6 +3386,7 @@ virtual Kazo.Os.Simulation.Abstractions.Network.SimulatedPageSection.PrintMember
 ~Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncContractsJsonContext.GrantConstraintPayload.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Simulation.Abstractions.Sync.GrantConstraintPayload>
 ~Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncContractsJsonContext.GrantsSyncPayload.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncPayload>
 ~Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncContractsJsonContext.IReadOnlyListGrantConstraintPayload.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<Kazo.Os.Simulation.Abstractions.Sync.GrantConstraintPayload>>
+~Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncContractsJsonContext.IReadOnlyListString.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<System.Collections.Generic.IReadOnlyList<string>>
 ~Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncContractsJsonContext.Int32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int>
 ~Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncContractsJsonContext.NullableBoolean.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<bool?>
 ~Kazo.Os.Simulation.Abstractions.Sync.GrantsSyncContractsJsonContext.NullableInt32.get -> System.Text.Json.Serialization.Metadata.JsonTypeInfo<int?>

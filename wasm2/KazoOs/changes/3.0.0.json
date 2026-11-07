@@ -1,0 +1,279 @@
+{
+  "version": "3.0.0",
+  "date": "2026-11-05",
+  "entries": [
+    {
+      "id": "06e3f1ce-647a-4ff4-8fa0-58e78d68def4",
+      "category": "new",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Forgot password? Reset the machine from the sign-in screen",
+        "fr": "Mot de passe oublié ? Réinitialiser la machine depuis l'écran de connexion"
+      },
+      "description": {
+        "en": "When no password is remembered, the sign-in screen offers to erase Kazo OS in this browser and start over at the first-run setup, after typing ERASE to confirm. Whoever deploys the OS can turn it off with KazoOs:SignIn:FactoryReset:Enabled in appsettings.json.",
+        "fr": "Quand aucun mot de passe n'est retenu, l'écran de connexion propose d'effacer Kazo OS dans ce navigateur et de recommencer à la première configuration, après avoir tapé EFFACER pour confirmer. Celui qui déploie l'OS peut le désactiver avec KazoOs:SignIn:FactoryReset:Enabled dans appsettings.json."
+      },
+      "links": [
+        "doc/en/wasm/dev/sign-in-factory-reset.md"
+      ]
+    },
+    {
+      "id": "7e3c8768-51b7-4dc3-8ec3-c580e306a88f",
+      "category": "improved",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "A factory reset leaves nothing of Kazo OS in the browser",
+        "fr": "Une réinitialisation ne laisse plus rien de Kazo OS dans le navigateur"
+      },
+      "description": {
+        "en": "Resetting from Settings or from « Forgot password? » now also erases web site databases, installed apps' files, every cache, localStorage, sessionStorage, the origin private file system, cookies and the service worker, not only the OS database.",
+        "fr": "Réinitialiser depuis Paramètres ou « Mot de passe oublié ? » efface maintenant aussi les bases des sites web, les fichiers des apps installées, tous les caches, le localStorage, le sessionStorage, le système de fichiers privé de l'origine, les cookies et le service worker, pas seulement la base de l'OS."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0227-factory-reset-erases-everything.md"
+      ]
+    },
+    {
+      "id": "857613da-e2d3-4d14-9f57-042f3b4bd2a8",
+      "category": "improved",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "Backups end in .kosbak, design tokens are --kos-*, diagnostics are KOS*",
+        "fr": "Les sauvegardes finissent par .kosbak, les jetons de design sont --kos-*, les diagnostics sont KOS*"
+      },
+      "description": {
+        "en": "The last short HOS names become KOS. New backups are .kosbak files; an older .hosbak backup can still be restored. The CSS variables of the design system are now --kos-* (with data-kos-* attributes and kos-* classes): a theme file or theme pack written with --hos-* is still read, and saved themes and settings are updated at the first start. Build diagnostics are now KOSAPP, KOSSDK, KOSWEB, KOSBG and KOSCHG, with the same numbers: update NoWarn and pragma lists.",
+        "fr": "Les derniers noms courts HOS deviennent KOS. Les nouvelles sauvegardes sont des fichiers .kosbak ; une ancienne sauvegarde .hosbak peut encore être restaurée. Les variables CSS du système de design sont maintenant --kos-* (avec les attributs data-kos-* et les classes kos-*) : un fichier de thème ou un pack de thèmes écrit en --hos-* est encore lu, et les thèmes et réglages enregistrés sont mis à jour au premier démarrage. Les diagnostics de build sont maintenant KOSAPP, KOSSDK, KOSWEB, KOSBG et KOSCHG, avec les mêmes numéros : mettez à jour vos listes NoWarn et pragma."
+      },
+      "links": [
+        "doc/en/wasm/framework/sdk-packages.md"
+      ]
+    },
+    {
+      "id": "45cc28a0-4d24-4108-b74c-275d955df807",
+      "category": "improved",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "Commands, files, app ids and settings take the Kazo OS names",
+        "fr": "Les commandes, les fichiers, les identifiants d'apps et les réglages prennent les noms de Kazo OS"
+      },
+      "description": {
+        "en": "hackpkg becomes kazopkg and hackbackup becomes kazobackup (the old names still work and print a warning), app packages and theme packs use .kazoapp and .kazotheme (the old .hackapp and .hacktheme are still read), the OS files move to /etc/kazoos, ~/.config/kazoos and /etc/kazoweb, the store is called Kazo OS Store, ASP.Hack becomes ASP.Kazo and Hack Paint becomes Kazo Paint. The server and the PWA read the KazoOs configuration section and KAZOOS_ variables, and still read HackerOs and HACKEROS_. The dotnet new templates are now kazoos-window, kazoos-solution... App ids become org.kazoos.*, capabilities kazoos.*, and the browser databases, theme ids and caches take the kazoos and kazoweb names.",
+        "fr": "hackpkg devient kazopkg et hackbackup devient kazobackup (les anciens noms marchent encore et écrivent un avertissement), les paquets d'apps et de thèmes utilisent .kazoapp et .kazotheme (les anciens .hackapp et .hacktheme restent lus), les fichiers de l'OS passent dans /etc/kazoos, ~/.config/kazoos et /etc/kazoweb, le magasin s'appelle Kazo OS Store, ASP.Hack devient ASP.Kazo et Hack Paint devient Kazo Paint. Le serveur et la PWA lisent la section de configuration KazoOs et les variables KAZOOS_, et lisent encore HackerOs et HACKEROS_. Les modèles dotnet new s'appellent maintenant kazoos-window, kazoos-solution... Les identifiants d'apps deviennent org.kazoos.*, les capacités kazoos.*, et les bases du navigateur, les identifiants de thèmes et les caches prennent les noms kazoos et kazoweb."
+      },
+      "links": [
+        "doc/en/wasm/framework/sdk-packages.md"
+      ]
+    },
+    {
+      "id": "e68a499a-32f3-458a-af0a-6c6954f1807d",
+      "category": "improved",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "HackerOS is now called Kazo OS",
+        "fr": "HackerOS s'appelle maintenant Kazo OS"
+      },
+      "description": {
+        "en": "The name HackerOS was already used by a Linux distribution. The OS now shows the name Kazo OS everywhere: window title, installed app, sign-in screen, notifications and documentation.",
+        "fr": "Le nom HackerOS était déjà utilisé par une distribution Linux. L'OS affiche maintenant le nom Kazo OS partout : titre de la fenêtre, app installée, écran de connexion, notifications et documentation."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0228-rename-to-kazoos.md"
+      ]
+    },
+    {
+      "id": "1258bf03-e722-42c3-a04c-b1b367f2c9a0",
+      "category": "improved",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Kazo OS now lives at os.kazo.ca",
+        "fr": "Kazo OS habite maintenant os.kazo.ca"
+      },
+      "description": {
+        "en": "The site is published at https://os.kazo.ca/ and the original version at https://os.kazo.ca/legacy/. Links in the project point to the new address.",
+        "fr": "Le site est publié sur https://os.kazo.ca/ et la version d'origine sur https://os.kazo.ca/legacy/. Les liens du projet pointent vers la nouvelle adresse."
+      },
+      "links": [
+        "doc/en/wasm/dev/github-pages-deployment.md"
+      ]
+    },
+    {
+      "id": "11ddb697-cb60-4663-b8a1-6c17694d89dd",
+      "category": "improved",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Your accounts, files and settings follow the move to Kazo OS",
+        "fr": "Vos comptes, fichiers et réglages suivent le passage à Kazo OS"
+      },
+      "description": {
+        "en": "At the first start of Kazo OS 3.0.0 in a browser used by an earlier version, the stored data moves to the new names before the OS starts: databases, settings, configuration files and app ids. Your documents are not changed. A backup made before 3.0.0 is migrated the same way when it is restored.",
+        "fr": "Au premier démarrage de Kazo OS 3.0.0 dans un navigateur utilisé par une version antérieure, les données enregistrées passent aux nouveaux noms avant le démarrage de l'OS : bases, réglages, fichiers de configuration et ids d'apps. Vos documents ne sont pas modifiés. Une sauvegarde faite avant 3.0.0 est migrée de la même façon à sa restauration."
+      },
+      "links": [
+        "doc/en/wasm/dev/rename-migration.md"
+      ]
+    },
+    {
+      "id": "121bb8fb-fb5f-475d-bfb1-fe3df5dcf98b",
+      "category": "improved",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "hackos.kazo.ca now leads to os.kazo.ca",
+        "fr": "hackos.kazo.ca mène maintenant à os.kazo.ca"
+      },
+      "description": {
+        "en": "Every address on hackos.kazo.ca is redirected to the same address on os.kazo.ca. An app installed from hackos.kazo.ca clears its cache on its next opening and goes to os.kazo.ca, where it can be installed again.",
+        "fr": "Chaque adresse de hackos.kazo.ca est redirigée vers la même adresse sur os.kazo.ca. Une application installée depuis hackos.kazo.ca vide son cache à sa prochaine ouverture et part vers os.kazo.ca, où on peut l'installer de nouveau."
+      },
+      "links": [
+        "doc/en/wasm/dev/cloudflare-redirect.md"
+      ]
+    },
+    {
+      "id": "34a00290-1cc0-4c8e-bcac-3aef2d244f49",
+      "category": "fixed",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "An installed app finds its scripts after a Ctrl+F5 or an install made in another tab",
+        "fr": "Une app installée trouve ses scripts après un Ctrl+F5 ou une installation faite dans un autre onglet"
+      },
+      "description": {
+        "en": "The service worker now takes over a page loaded with Ctrl+F5 when it runs the same release, and an open tab no longer removes from the shared cache the files of an app another tab has just installed.",
+        "fr": "Le service worker prend maintenant en charge une page chargée avec Ctrl+F5 si elle a la même version, et un onglet ouvert ne retire plus du cache partagé les fichiers d'une app qu'un autre onglet vient d'installer."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0225-serve-installed-app-files-to-every-page.md"
+      ]
+    },
+    {
+      "id": "b19cd2b7-c0dc-446e-84c9-1b54ccd12110",
+      "category": "fixed",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Kazo OS starts after a server error right after a deployment",
+        "fr": "Kazo OS démarre après une erreur du serveur juste après un déploiement"
+      },
+      "description": {
+        "en": "When the site briefly refused a system file (for example right after a new version is published), the boot stopped on « Kazo OS could not start ». It now retries by itself after 5, 15 then 30 seconds.",
+        "fr": "Quand le site refusait un moment un fichier système (par exemple juste après la publication d'une nouvelle version), le démarrage s'arrêtait sur « Kazo OS could not start ». Il réessaie maintenant tout seul après 5, 15 puis 30 secondes."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0224-retry-the-boot-after-a-server-error.md"
+      ]
+    },
+    {
+      "id": "d5c0c8e3-e662-4103-93f1-e88122000b9d",
+      "category": "fixed",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "Restarting to update works with several Kazo OS tabs open",
+        "fr": "Redémarrer pour mettre à jour fonctionne avec plusieurs onglets Kazo OS ouverts"
+      },
+      "description": {
+        "en": "When another Kazo OS tab, screen or window was open, or after Ctrl+F5, « Restart to update » could still reopen an older version. It now activates the downloaded version first.",
+        "fr": "Quand un autre onglet, écran ou fenêtre Kazo OS était ouvert, ou après un Ctrl+F5, « Redémarrer pour mettre à jour » pouvait encore rouvrir une version plus ancienne. Il active maintenant d'abord la version téléchargée."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0223-restart-onto-the-new-version.md"
+      ]
+    },
+    {
+      "id": "34942825-8384-48ed-94c9-3c3c54d2dba5",
+      "category": "fixed",
+      "audience": [
+        "user"
+      ],
+      "title": {
+        "en": "The Kazo OS Store lists the official catalog's apps on an older installation",
+        "fr": "Le Kazo OS Store affiche les apps du catalogue officiel sur une installation plus ancienne"
+      },
+      "description": {
+        "en": "An app-sources.config written before the [catalogs] section existed named no catalog, so the Kazo OS Store stayed empty. Such a file now gets the official catalog, verified; an empty [catalogs] section is still respected.",
+        "fr": "Un app-sources.config écrit avant l'existence de la section [catalogs] ne nommait aucun catalogue : le Kazo OS Store restait vide. Un tel fichier reçoit maintenant le catalogue officiel, vérifié ; une section [catalogs] vide reste respectée."
+      },
+      "links": [
+        "doc/en/wasm/dev/app-installation.md"
+      ]
+    },
+    {
+      "id": "6bbd216e-04f8-497a-8c7c-6e190b9074aa",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "SDK 3.0: the Kazo.Os.* packages and the Kazo* types",
+        "fr": "SDK 3.0 : les paquets Kazo.Os.* et les types Kazo*"
+      },
+      "description": {
+        "en": "Every package moves from HackerOs.* to Kazo.Os.* (Kazo.Os.AppSdk, Kazo.Os.Templates...) and every SDK type from Hack* to Kazo* (HackFile becomes KazoFile, HackerIcon becomes KazoIcon, and the HackIcon record becomes KazoSurfaceIcon). The version is 3.0.0: an app built on SDK 2.x is refused and must be rebuilt against the new packages.",
+        "fr": "Tous les paquets passent de HackerOs.* à Kazo.Os.* (Kazo.Os.AppSdk, Kazo.Os.Templates...) et tous les types du SDK de Hack* à Kazo* (HackFile devient KazoFile, HackerIcon devient KazoIcon, et l'enregistrement HackIcon devient KazoSurfaceIcon). La version est 3.0.0 : une app construite sur le SDK 2.x est refusée et doit être reconstruite avec les nouveaux paquets."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0228-rename-to-kazoos.md"
+      ]
+    },
+    {
+      "id": "7e71c06a-1539-4f13-8ffd-769f3c1f6870",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "The Kazo OS Store workflow of the kazoos-solution template opens its pull request again",
+        "fr": "Le workflow Kazo OS Store du modèle kazoos-solution ouvre de nouveau sa pull request"
+      },
+      "description": {
+        "en": "The workflow no longer passes --remote to gh repo fork, which current gh versions refuse, and retries the clone of the fork while GitHub creates it.",
+        "fr": "Le workflow ne passe plus --remote à gh repo fork, que les versions actuelles de gh refusent, et retente le clone du fork pendant que GitHub le crée."
+      },
+      "links": [
+        "doc/en/wasm/framework/app-repository.md"
+      ]
+    },
+    {
+      "id": "68313f83-edbc-4227-a448-803418d72255",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "The kazoos-solution template names its app project for the Kazo OS Store",
+        "fr": "Le modèle kazoos-solution indique son projet d'app au Kazo OS Store"
+      },
+      "description": {
+        "en": "store/store.json of a new app repository has a project field, so the catalog builds the app's project instead of the whole solution, whose tests project has no KazoOsPack target.",
+        "fr": "store/store.json d'un nouveau dépôt d'app a un champ project : le catalogue compile le projet de l'app et non toute la solution, dont le projet de tests n'a pas de cible KazoOsPack."
+      },
+      "links": [
+        "doc/en/wasm/framework/app-repository.md"
+      ]
+    }
+  ]
+}

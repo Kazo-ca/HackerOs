@@ -72,7 +72,7 @@ internal static class WindowArrangement
         Arrange(runtime, display, static (area, index, count, window) =>
         {
             WindowBounds cell = TileCell(area, index, count);
-            return window.Constraints.IsResizable
+            return window.Frame.UserCanResize(window.Constraints)
                 ? cell
                 : new WindowBounds(cell.X, cell.Y, window.Bounds.Width, window.Bounds.Height);
         });
@@ -123,7 +123,7 @@ internal static class WindowArrangement
             WindowBounds target = place(area, index, windows.Count, window);
             // A move takes a snapped window off its tile (ADR 0177) before it gets its new size.
             runtime.Apply(new MoveWindowCommand(id, target.X, target.Y));
-            if (window.Constraints.IsResizable && (target.Width != window.Bounds.Width || target.Height != window.Bounds.Height))
+            if (window.Frame.UserCanResize(window.Constraints) && (target.Width != window.Bounds.Width || target.Height != window.Bounds.Height))
             {
                 runtime.Apply(new ResizeWindowCommand(id, target));
                 runtime.Apply(new CompleteWindowResizeCommand(id));

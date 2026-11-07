@@ -1,0 +1,286 @@
+{
+  "version": "3.1.0",
+  "date": "2026-11-07",
+  "entries": [
+    {
+      "id": "26f9ee83-7fc0-4f4a-8c51-f9773f0e5042",
+      "category": "new",
+      "audience": [
+        "developer",
+        "user"
+      ],
+      "title": {
+        "en": "Apps declare the real-network ports they need; the server relay blocks dangerous ports",
+        "fr": "Les apps déclarent les vrais ports réseau dont elles ont besoin ; le relais du serveur bloque les ports dangereux"
+      },
+      "description": {
+        "en": "An app lists its real-network ports in its definition (RealNetworkPorts = [\"tcp/6697\"], written realNetworkPorts in manifest.json, checked by the generator and kazopkg). The approval window of network.real.access shows them, and the server relay opens a declared port whose grant carries it on top of AllowedPorts. The new KazoOs:Proxy Tcp and Udp BlockedPorts lists (mail 25/465/587, file sharing and RPC, amplification services) always win; Settings shows them with each app's ports, and the server warns at startup when a list is empty.",
+        "fr": "Une app liste ses vrais ports réseau dans sa définition (RealNetworkPorts = [\"tcp/6697\"], écrit realNetworkPorts dans manifest.json, vérifié par le générateur et kazopkg). La fenêtre d'approbation de network.real.access les affiche, et le relais du serveur ouvre un port déclaré que porte l'accord de l'app, en plus d'AllowedPorts. Les nouvelles listes BlockedPorts de KazoOs:Proxy (Tcp et Udp : courriel 25/465/587, partage de fichiers et RPC, services d'amplification) gagnent toujours ; Paramètres les affiche avec les ports de chaque app, et le serveur avertit au démarrage quand une liste est vide."
+      },
+      "links": [
+        "doc/en/wasm/dev/server-network-relay.md",
+        "doc/en/wasm/dev/adr/0235-real-network-for-chat-apps.md"
+      ]
+    },
+    {
+      "id": "4f18749b-7eb2-4f26-b014-5d87eca1a64d",
+      "category": "new",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "Apps open TLS connections through the server's relay",
+        "fr": "Les apps ouvrent des connexions TLS par le relais du serveur"
+      },
+      "description": {
+        "en": "KazoTcpClient.ConnectAsync takes KazoTcpConnectOptions { UseTls = true }: the server's relay opens TLS to the target, checks its certificate against the system trust store and TargetHost, and the app reads and writes clear text. A refused certificate throws AuthenticationException (relay code TLS_FAILED); KazoNetworkStream tells the negotiated TLS version and the certificate subject. There is no option to accept an invalid certificate.",
+        "fr": "KazoTcpClient.ConnectAsync accepte KazoTcpConnectOptions { UseTls = true } : le relais du serveur ouvre TLS vers la cible, vérifie son certificat par le magasin du système et TargetHost, et l'app lit et écrit du texte en clair. Un certificat refusé lève AuthenticationException (code du relais TLS_FAILED) ; KazoNetworkStream donne la version TLS négociée et le sujet du certificat. Aucune option n'accepte un certificat invalide."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0235-real-network-for-chat-apps.md",
+        "doc/en/wasm/dev/server-network-relay.md"
+      ]
+    },
+    {
+      "id": "363d74b1-e348-4a4f-891a-dbdf04ac9ee0",
+      "category": "new",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "Apps open the files of your network drives",
+        "fr": "Les apps ouvrent les fichiers de vos lecteurs réseau"
+      },
+      "description": {
+        "en": "The network drives you mount count as your personal files: an app allowed to read your files (filesystem.user-home.read) now reads them too, with no dangerous capability, and filesystem.user-home.write writes them. Another user's drive and /mnt itself stay system files, and the drive's permissions still apply.",
+        "fr": "Les lecteurs réseau que vous montez comptent comme vos fichiers personnels : une app qui peut lire vos fichiers (filesystem.user-home.read) les lit aussi, sans capacité dangereuse, et filesystem.user-home.write y écrit. Le lecteur d'un autre utilisateur et /mnt lui-même restent des fichiers du système, et les permissions du lecteur s'appliquent toujours."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0231-network-drives-count-as-personal-files.md"
+      ]
+    },
+    {
+      "id": "41e239ea-8d46-4610-a399-8014028a67bf",
+      "category": "new",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "Child windows and dialogs for apps",
+        "fr": "Fenêtres enfants et dialogues pour les apps"
+      },
+      "description": {
+        "en": "A window app can open its own windows with ShowWindowAsync and its own modal dialogs with ShowDialogAsync, like Form.Show and Form.ShowDialog in WinForms. The window's component derives from KazoWindowBase and closes with CloseAsync(result); it belongs to the same app and closes with its owner.",
+        "fr": "Une app fenêtrée peut ouvrir ses propres fenêtres avec ShowWindowAsync et ses propres dialogues modaux avec ShowDialogAsync, comme Form.Show et Form.ShowDialog en WinForms. Le composant de la fenêtre hérite de KazoWindowBase et se ferme avec CloseAsync(result) ; il appartient à la même app et se ferme avec sa propriétaire."
+      },
+      "links": [
+        "doc/en/wasm/framework/window-model.md"
+      ]
+    },
+    {
+      "id": "4c4bfa53-c56f-4dd6-b830-dd7228726f4e",
+      "category": "new",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "Frameless windows float on the desktop",
+        "fr": "Les fenêtres sans cadre flottent sur le bureau"
+      },
+      "description": {
+        "en": "A window with the None style is transparent: a click where its app draws nothing reaches the desktop or the window below, so an app with its own skin can float on the desktop (issue #378).",
+        "fr": "Une fenêtre de style None est transparente : un clic là où son app ne dessine rien atteint le bureau ou la fenêtre dessous, et une app avec son propre habillage peut flotter sur le bureau (issue #378)."
+      },
+      "links": [
+        "doc/en/wasm/framework/window-model.md"
+      ]
+    },
+    {
+      "id": "aad579a3-8c3a-4631-8151-d32436599a96",
+      "category": "new",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "Window styles inspired by WinForms, and apps that minimize their own window",
+        "fr": "Styles de fenêtre inspirés de WinForms, et apps qui réduisent leur propre fenêtre"
+      },
+      "description": {
+        "en": "A window app can choose the Normal, Tool or None style and turn off its icon, its Maximize and Minimize buttons or its taskbar button, in its manifest or at run time. It can also minimize, maximize, restore, move and resize its own window (issue #384). The OS dialogs now use the Tool style, with Close only and no taskbar button.",
+        "fr": "Une app fenêtrée peut choisir le style Normal, Tool ou None et retirer son icône, ses boutons Agrandir et Réduire ou son bouton dans la barre des tâches, dans son manifeste ou pendant l'exécution. Elle peut aussi réduire, agrandir, restaurer, déplacer et redimensionner sa propre fenêtre (issue #384). Les dialogues de l'OS passent au style Tool, avec seulement Fermer et sans bouton dans la barre des tâches."
+      },
+      "links": [
+        "doc/en/wasm/framework/window-model.md",
+        "doc/en/wasm/dev/adr/0234-window-styles-inspired-by-winforms.md"
+      ]
+    },
+    {
+      "id": "4e4c99f7-b4d3-4dbc-a851-4f1c6e47e44e",
+      "category": "improved",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "New illustrated app icons, shown everywhere",
+        "fr": "Nouvelles icônes d'apps illustrées, affichées partout"
+      },
+      "description": {
+        "en": "The system apps have new colour icons that show what each app does. The Start menu, the desktop shortcuts and the explorer now draw each app's own icon, installed apps included, instead of one icon per category; an icon pack still replaces them. Apps can read the icon address with KazoAppInfo.IconUrl.",
+        "fr": "Les apps système ont de nouvelles icônes en couleur qui montrent ce que fait chaque app. Le menu Démarrer, les raccourcis du bureau et l'explorateur dessinent maintenant l'icône propre de chaque app, y compris les apps installées, au lieu d'une icône par catégorie ; un pack d'icônes les remplace toujours. Les apps lisent l'adresse de l'icône avec KazoAppInfo.IconUrl."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0232-illustrated-app-icons-everywhere.md"
+      ]
+    },
+    {
+      "id": "c5650705-cdc9-4d0b-bffd-45469478a272",
+      "category": "fixed",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "A newly installed app can read your files right away",
+        "fr": "Une app qui vient d'être installée lit vos fichiers tout de suite"
+      },
+      "description": {
+        "en": "An app installed with kazopkg or the Kazo OS Store only received its declared capabilities at the next sign-in, so its first launch was refused access to your files. The signed-in user now gets them as soon as the app is installed or updated; dangerous capabilities still need an administrator's approval.",
+        "fr": "Une app installée par kazopkg ou le Kazo OS Store ne recevait ses capacités déclarées qu'à la connexion suivante : à son premier lancement, l'accès à vos fichiers était refusé. L'utilisateur connecté les reçoit maintenant dès l'installation ou la mise à jour de l'app ; les capacités dangereuses demandent toujours l'approbation d'un administrateur."
+      },
+      "links": [
+        "doc/en/wasm/framework/capabilities.md"
+      ]
+    },
+    {
+      "id": "44e12846-4647-4874-87c3-1e6c14c9f5e8",
+      "category": "fixed",
+      "audience": [
+        "user",
+        "developer"
+      ],
+      "title": {
+        "en": "File dialogs open on your home folder and never take the OS down",
+        "fr": "Les boîtes de fichiers s'ouvrent sur votre dossier personnel et ne font plus tomber l'OS"
+      },
+      "description": {
+        "en": "An Open, Save or Select folder dialog asked without a start folder opened on /home/ followed by the user's identifier, which does not exist, and the OS crashed. It now opens on your home folder (/home/<login>); a missing or unreadable start folder falls back to your home folder, then to /.",
+        "fr": "Une boîte Ouvrir, Enregistrer ou Choisir un dossier demandée sans dossier de départ s'ouvrait sur /home/ suivi de l'identifiant de l'utilisateur, qui n'existe pas, et l'OS tombait. Elle s'ouvre maintenant sur votre dossier personnel (/home/<nom>) ; un dossier de départ absent ou illisible se replie sur votre dossier personnel, puis sur /."
+      },
+      "links": [
+        "doc/en/wasm/framework/sdk-reference.md"
+      ]
+    },
+    {
+      "id": "bd18a42d-2290-4446-b804-30c42a867fa3",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "App repositories can tag a release from GitHub",
+        "fr": "Les dépôts d'app peuvent poser le tag d'une version depuis GitHub"
+      },
+      "description": {
+        "en": "The kazoos-solution template has a Tag a release workflow: it tags a commit of main with the app's version and starts the two publishing workflows, so a person or an agent can release without pushing a tag from a computer.",
+        "fr": "Le modèle kazoos-solution a un workflow Tag a release : il pose sur un commit de main le tag de la version de l'app et lance les deux workflows de publication, pour publier sans pousser de tag depuis un ordinateur, que ce soit une personne ou un agent."
+      },
+      "links": [
+        "doc/en/wasm/framework/app-repository.md"
+      ]
+    },
+    {
+      "id": "c2d2417e-532f-4111-8324-af03b027be60",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "Apps are signed only in the Kazo OS Store repository",
+        "fr": "Les apps sont signées seulement dans le dépôt du Kazo OS Store"
+      },
+      "description": {
+        "en": "KazoOsPack no longer signs packages: the KazoOsKeyGen target, the KazoOsSigningKeyFile property, the generator's keygen and sign commands and the HACKEROS_APP_SIGNING_KEY variable are gone. The kazoos-solution template still publishes the kazoos-packages branch, unsigned; the secret can be deleted from app repositories.",
+        "fr": "KazoOsPack ne signe plus les paquets : la cible KazoOsKeyGen, la propriété KazoOsSigningKeyFile, les commandes keygen et sign du générateur et la variable HACKEROS_APP_SIGNING_KEY disparaissent. Le modèle kazoos-solution publie toujours la branche kazoos-packages, sans signature ; le secret peut être supprimé des dépôts d'apps."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0219-app-authors-signing-tool.md"
+      ]
+    },
+    {
+      "id": "2f563b59-fec8-4e51-9459-eb01d24184ba",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "KazoClientWebSocket: apps reach real WebSocket servers without the server",
+        "fr": "KazoClientWebSocket : les apps joignent de vrais serveurs WebSocket sans le serveur"
+      },
+      "description": {
+        "en": "The SDK gains KazoClientWebSocket, shaped like ClientWebSocket (sub-protocols, ConnectAsync, SendAsync, ReceiveAsync, CloseAsync). The OS opens the browser's WebSocket for the app, so it works with no Kazo OS server. It needs the network.real.access capability; an address of the simulated network is refused, and every frame is counted in /proc/net/dev.",
+        "fr": "Le SDK gagne KazoClientWebSocket, calqué sur ClientWebSocket (sous-protocoles, ConnectAsync, SendAsync, ReceiveAsync, CloseAsync). L'OS ouvre le WebSocket du navigateur pour l'app : il marche sans serveur Kazo OS. Il demande la capacité network.real.access ; une adresse du réseau simulé est refusée, et chaque trame est comptée dans /proc/net/dev."
+      },
+      "links": [
+        "doc/en/wasm/framework/sdk-network.md"
+      ]
+    },
+    {
+      "id": "74267f10-5970-40b6-8de5-89b266cca835",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "The catalog signing secret is now KAZO_STORE_SIGNING_KEY",
+        "fr": "Le secret de signature du catalogue s'appelle maintenant KAZO_STORE_SIGNING_KEY"
+      },
+      "description": {
+        "en": "The Kazo OS Store catalog signs its packages with the KAZO_STORE_SIGNING_KEY secret (same key as the former HACK_STORE_SIGNING_KEY). The docs and the AppPackageDefaults comment use the new name.",
+        "fr": "Le catalogue du Kazo OS Store signe ses paquets avec le secret KAZO_STORE_SIGNING_KEY (même clé que l'ancien HACK_STORE_SIGNING_KEY). La doc et le commentaire d'AppPackageDefaults utilisent le nouveau nom."
+      },
+      "links": [
+        "doc/en/wasm/dev/app-installation.md"
+      ]
+    },
+    {
+      "id": "ede13c6a-df04-4691-8b16-c321d233af07",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "The kazoos-solution template has its launch profile again",
+        "fr": "Le modèle kazoos-solution retrouve son profil de lancement"
+      },
+      "description": {
+        "en": "The rename to Kazo OS had dropped Properties/launchSettings.json from the host project of the kazoos-solution template. It is back, so dotnet run and Visual Studio start the host on http://localhost:5280 with the browser debugger.",
+        "fr": "Le renommage en Kazo OS avait retiré Properties/launchSettings.json du projet hôte du modèle kazoos-solution. Il est de retour : dotnet run et Visual Studio démarrent l'hôte sur http://localhost:5280 avec le débogueur du navigateur."
+      },
+      "links": [
+        "doc/en/wasm/framework/app-repository.md"
+      ]
+    },
+    {
+      "id": "47d8bccd-4a31-4abe-b65d-4e4176ea66fc",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "The store workflow of the kazoos-solution template finds an existing fork",
+        "fr": "Le workflow du store du modèle kazoos-solution retrouve un fork existant"
+      },
+      "description": {
+        "en": "publish-to-kazoos-store.yml guessed the fork as <author>/Os-AppMarketPlace. A fork made before the catalog was renamed keeps its old name, so the clone failed. The workflow now asks GitHub for the author's fork of the catalog.",
+        "fr": "publish-to-kazoos-store.yml devinait le fork sous le nom <auteur>/Os-AppMarketPlace. Un fork créé avant le renommage du catalogue garde son ancien nom, donc le clonage échouait. Le workflow demande maintenant à GitHub le fork du catalogue de l'auteur."
+      },
+      "links": [
+        "doc/en/wasm/framework/app-repository.md"
+      ]
+    }
+  ]
+}

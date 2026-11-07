@@ -308,6 +308,52 @@ public sealed class LocalSessionServiceTests
         Assert.True(homeRead.Granted);
     }
 
+    [Fact]
+    public async Task An_app_installed_during_the_session_gets_its_declared_capabilities_at_once()
+    {
+        // Issue #386: an app added to the live catalog after login had no capability until the next login.
+        Fixture fixture = new();
+        CapabilityGrantRepository grants = new();
+        AppManifest TestApp(string id, params string[] capabilities) => new()
+        {
+            Id = id,
+            Name = id,
+            Version = "1.0.0",
+            PublisherId = "org.kazoos",
+            Description = "Test app",
+            Kind = AppKind.Window,
+            EntryPoint = new AppEntryPointManifest("Tests", "Tests.Window"),
+            SdkCompatibility = new AppSdkCompatibilityManifest(KazoOsSdk.Version),
+            Presentation = new PresentationManifest("utilities", AppLaunchVisibility.Visible, []),
+            Resources = AppResourceProfileManifest.None,
+            Capabilities = capabilities,
+        };
+        AppManifest existing = TestApp("org.kazoos.existing", AppCapabilities.DialogFileOpen);
+        AppManifest installed = TestApp(
+            "org.kazoos.installed", AppCapabilities.FileSystemUserHomeRead, AppCapabilities.ProcessManage);
+        Assert.True(AppCapabilities.IsDangerous(AppCapabilities.ProcessManage));
+        AppCatalog live = AppCatalog.Build([existing]).Catalog!.CreateLiveCopy();
+
+        using LocalSessionService service = new(
+            fixture.Users,
+            new FileSystemSeeder(fixture.FileSystem, new FixedTimeProvider(DateTimeOffset.UtcNow)),
+            fixture.EventBus,
+            fixture.AuditLog,
+            InstallationId.FromGuid(Guid.NewGuid()),
+            DeviceId.FromGuid(Guid.NewGuid()),
+            grantRepository: grants,
+            catalog: live);
+        AuthenticatedPrincipal principal = await service.LoginAsync(fixture.AliceLoginName, "hunter2");
+        string userId = principal.UserId.ToString();
+        Assert.False(grants.Evaluate(installed.Id, userId, AppCapabilities.FileSystemUserHomeRead, AppAuthority.User, AppAuthority.User).Granted);
+
+        live.ReplaceContents(AppCatalog.Build([existing, installed]).Catalog!);
+
+        Assert.True(grants.Evaluate(installed.Id, userId, AppCapabilities.FileSystemUserHomeRead, AppAuthority.User, AppAuthority.User).Granted);
+        // A dangerous capability of a non-system app still waits for an administrator (ADR 0049).
+        Assert.False(grants.Evaluate(installed.Id, userId, AppCapabilities.ProcessManage, AppAuthority.User, AppAuthority.User).Granted);
+    }
+
     private sealed class Fixture
     {
         private int _entryId = 1;

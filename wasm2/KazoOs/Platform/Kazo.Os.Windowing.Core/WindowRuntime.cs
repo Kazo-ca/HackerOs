@@ -63,6 +63,31 @@ public sealed class WindowRuntime
         && window.OwnerId == id
         && window.VisualState != WindowVisualState.Minimized);
 
+    /// <summary>
+    /// Gets the window that should take focus when the user activates <paramref name="id"/>: the
+    /// window itself, or the last owner-modal window that blocks it (a dialog opened from a dialog
+    /// comes last). A modal window has no taskbar button of its own (ADR 0234 §6), so clicking its
+    /// owner's button brings the modal window forward, as on Windows.
+    /// </summary>
+    /// <param name="id">The window the user activates.</param>
+    public WindowId ActivationTarget(WindowId id)
+    {
+        WindowId current = id;
+        HashSet<WindowId> seen = [current];
+        while (_windows.Values
+            .Where(window => window.Modality == WindowModality.OwnerModal
+                && window.OwnerId == current
+                && window.VisualState != WindowVisualState.Minimized)
+            .OrderByDescending(static window => window.ZOrder)
+            .FirstOrDefault() is { } modal
+            && seen.Add(modal.Id))
+        {
+            current = modal.Id;
+        }
+
+        return current;
+    }
+
     /// <summary>Applies one command atomically and returns ordered facts describing the change.</summary>
     public IReadOnlyList<WindowEvent> Apply(WindowCommand command)
     {
@@ -87,6 +112,7 @@ public sealed class WindowRuntime
             SetWindowTitleCommand title => ChangeTitle(title.WindowId, title.Title),
             SetWindowRespondingCommand responding => ChangeResponding(responding.WindowId, responding.IsResponding),
             SetWindowIconCommand icon => ChangeIcon(icon.WindowId, icon.IconAssetPath),
+            SetWindowFrameCommand frame => ChangeFrame(frame.WindowId, frame.Frame, frame.Constraints),
             null => throw new ArgumentNullException(nameof(command)),
             _ => throw new ArgumentOutOfRangeException(nameof(command), command, "Unknown window command."),
         };
@@ -551,6 +577,33 @@ public sealed class WindowRuntime
         return [new WindowIconChangedEvent(id, current.IconAssetPath, icon)];
     }
 
+    /// <summary>
+    /// Applies a new frame and, optionally, new constraints (ADR 0234 §4). A maximized window whose
+    /// new frame or constraints no longer allow maximizing goes back to its restore geometry, as a
+    /// WinForms form whose <c>MaximizeBox</c> turns off keeps its state but loses the button: here the
+    /// window must stay reachable by the user, so it is restored.
+    /// </summary>
+    private IReadOnlyList<WindowEvent> ChangeFrame(WindowId id, WindowFrame frame, WindowConstraints? constraints)
+    {
+        ArgumentNullException.ThrowIfNull(frame);
+        WindowRuntimeState current = Get(id);
+        WindowConstraints nextConstraints = constraints ?? current.Constraints;
+        if (current.Frame == frame && current.Constraints == nextConstraints)
+        {
+            return [];
+        }
+
+        List<WindowEvent> events = [];
+        _windows[id] = Copy(current, constraints: nextConstraints) with { Frame = frame };
+        events.Add(new WindowFrameChangedEvent(id, current.Frame, frame, nextConstraints));
+        if (current.VisualState == WindowVisualState.Maximized && !nextConstraints.IsResizable)
+        {
+            events.AddRange(ChangeVisualState(id, WindowVisualState.Normal));
+        }
+
+        return events;
+    }
+
     private IReadOnlyList<WindowEvent> ChangeResponding(WindowId id, bool isResponding)
     {
         WindowRuntimeState current = Get(id);
@@ -628,7 +681,8 @@ public sealed class WindowRuntime
         DisplayId? displayId = null,
         bool? isSnapped = null,
         string? iconAssetPath = null,
-        bool replaceIconAssetPath = false) =>
+        bool replaceIconAssetPath = false,
+        WindowConstraints? constraints = null) =>
         new(
             state.Id,
             state.AppId,
@@ -639,7 +693,7 @@ public sealed class WindowRuntime
             replaceRestoreBounds ? restoreBounds : state.RestoreBounds,
             zOrder ?? state.ZOrder,
             visualState ?? state.VisualState,
-            state.Constraints,
+            constraints ?? state.Constraints,
             state.Modality,
             state.OwnerId,
             isFocused ?? state.IsFocused,
@@ -650,5 +704,6 @@ public sealed class WindowRuntime
             IsResponding = state.IsResponding,
             DisplayId = displayId ?? state.DisplayId,
             IsSnapped = isSnapped ?? state.IsSnapped,
+            Frame = state.Frame,
         };
 }

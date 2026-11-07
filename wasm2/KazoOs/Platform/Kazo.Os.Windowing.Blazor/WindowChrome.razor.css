@@ -19,6 +19,16 @@
         color var(--kos-transition-fast, 120ms ease);
 }
 
+/* ADR 0234 §1: a Tool window has a shorter title bar, like a WinForms tool window. */
+.window-chrome.is-tool {
+    min-height: var(--kos-tool-titlebar-height, 1.75rem);
+    padding: var(--kos-tool-titlebar-padding, 0.1rem 0.25rem 0.1rem 0.6rem);
+}
+
+.window-chrome.is-tool .window-identity h2 {
+    font-size: var(--kos-tool-titlebar-font-size, 0.8rem);
+}
+
 .window-chrome.is-focused {
     background: var(--kos-titlebar-focused-background, var(--kos-titlebar-background, #111e1e));
     color: var(--kos-titlebar-focused-text, var(--kos-titlebar-text, #e7f7f1));

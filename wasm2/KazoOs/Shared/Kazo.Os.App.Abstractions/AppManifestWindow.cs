@@ -3,6 +3,29 @@ using System.Text.Json.Serialization;
 namespace Kazo.Os.App.Abstractions;
 
 /// <summary>
+/// The frame a window app's window gets (ADR 0234 §1), as <c>FormBorderStyle</c> of a WinForms form.
+/// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter<WindowStyle>))]
+public enum WindowStyle
+{
+    /// <summary>Title bar, border and resize handles; the buttons follow the <see cref="WindowOptions"/> switches.</summary>
+    [JsonStringEnumMemberName("normal")]
+    Normal,
+
+    /// <summary>A shorter title bar with the Close button only, not resizable by the user, like the OS dialogs.</summary>
+    [JsonStringEnumMemberName("tool")]
+    Tool,
+
+    /// <summary>
+    /// No title bar and no border: only the client area shows, on a transparent surface whose empty
+    /// areas let clicks through. The app draws its own buttons and marks its drag areas with
+    /// <c>data-kazo-window-drag</c>.
+    /// </summary>
+    [JsonStringEnumMemberName("none")]
+    None,
+}
+
+/// <summary>
 /// Window sizes a <see cref="AppKind.Window"/> app declares (ADR 0095 §2), written as the optional
 /// <c>window</c> object of <c>manifest.json</c>. Sizes are the outer size of the window in CSS pixels,
 /// title bar included, like the geometry a window manager stores.
@@ -98,6 +121,104 @@ public sealed record WindowOptions
     /// </remarks>
     [JsonIgnore]
     public bool RememberGeometry { get; init; } = true;
+
+    /// <summary>
+    /// Gets the frame of the window (ADR 0234 §1). Defaults to <see cref="WindowStyle.Normal"/>.
+    /// <see cref="WindowStyle.Tool"/> turns <see cref="Resizable"/>, <see cref="MaximizeBox"/> and
+    /// <see cref="MinimizeBox"/> off for the user. Added in SDK 3.1.
+    /// </summary>
+    [JsonIgnore]
+    public WindowStyle Style { get; init; } = WindowStyle.Normal;
+
+    /// <summary>Gets whether the title bar shows the app icon (ADR 0234 §2). Defaults to <see langword="true"/>. Added in SDK 3.1.</summary>
+    [JsonIgnore]
+    public bool ShowIcon { get; init; } = true;
+
+    /// <summary>
+    /// Gets whether the title bar shows the Maximize button (ADR 0234 §2). Defaults to
+    /// <see langword="true"/>; a window that is not <see cref="Resizable"/> has none anyway. Off, the
+    /// user can no longer maximize the window by double click, snapping or keyboard either. Added in SDK 3.1.
+    /// </summary>
+    [JsonIgnore]
+    public bool MaximizeBox { get; init; } = true;
+
+    /// <summary>
+    /// Gets whether the title bar shows the Minimize button (ADR 0234 §2). Defaults to
+    /// <see langword="true"/>. Off, the user can no longer minimize the window from its menu or the
+    /// keyboard either; the app itself still can. Added in SDK 3.1.
+    /// </summary>
+    [JsonIgnore]
+    public bool MinimizeBox { get; init; } = true;
+
+    /// <summary>
+    /// Gets whether the window has a taskbar button (ADR 0234 §2). Defaults to <see langword="true"/>.
+    /// Off, the window stays in Alt+Tab and the window switcher but the user cannot minimize it.
+    /// Added in SDK 3.1.
+    /// </summary>
+    [JsonIgnore]
+    public bool ShowInTaskbar { get; init; } = true;
+
+    /// <summary>
+    /// Gets whether the window blocks the window that opened it until it closes (ADR 0234 §3).
+    /// Defaults to <see langword="false"/>. It applies to a child window opened by an app; an app's
+    /// main window has no owner, so the OS ignores it there. Added in SDK 3.1.
+    /// </summary>
+    [JsonIgnore]
+    public bool Modal { get; init; }
+
+    /// <summary>JSON projection of <see cref="Style"/>, written only when it is not <see cref="WindowStyle.Normal"/>.</summary>
+    [JsonInclude]
+    [JsonPropertyName("style")]
+    internal WindowStyle? StyleJson
+    {
+        get => Style == WindowStyle.Normal ? null : Style;
+        init => Style = value ?? WindowStyle.Normal;
+    }
+
+    /// <summary>JSON projection of <see cref="ShowIcon"/>, written only when it is <see langword="false"/>.</summary>
+    [JsonInclude]
+    [JsonPropertyName("showIcon")]
+    internal bool? ShowIconJson
+    {
+        get => ShowIcon ? null : false;
+        init => ShowIcon = value ?? true;
+    }
+
+    /// <summary>JSON projection of <see cref="MaximizeBox"/>, written only when it is <see langword="false"/>.</summary>
+    [JsonInclude]
+    [JsonPropertyName("maximizeBox")]
+    internal bool? MaximizeBoxJson
+    {
+        get => MaximizeBox ? null : false;
+        init => MaximizeBox = value ?? true;
+    }
+
+    /// <summary>JSON projection of <see cref="MinimizeBox"/>, written only when it is <see langword="false"/>.</summary>
+    [JsonInclude]
+    [JsonPropertyName("minimizeBox")]
+    internal bool? MinimizeBoxJson
+    {
+        get => MinimizeBox ? null : false;
+        init => MinimizeBox = value ?? true;
+    }
+
+    /// <summary>JSON projection of <see cref="ShowInTaskbar"/>, written only when it is <see langword="false"/>.</summary>
+    [JsonInclude]
+    [JsonPropertyName("showInTaskbar")]
+    internal bool? ShowInTaskbarJson
+    {
+        get => ShowInTaskbar ? null : false;
+        init => ShowInTaskbar = value ?? true;
+    }
+
+    /// <summary>JSON projection of <see cref="Modal"/>, written only when it is <see langword="true"/>.</summary>
+    [JsonInclude]
+    [JsonPropertyName("modal")]
+    internal bool? ModalJson
+    {
+        get => Modal ? true : null;
+        init => Modal = value ?? false;
+    }
 
     /// <summary>
     /// JSON projection of <see cref="RememberGeometry"/>: <c>window.rememberGeometry</c> is written

@@ -88,6 +88,15 @@ This section lists what is released in the `main` branch and online.
   edges, with plain animations to open, close, minimize into the taskbar,
   maximize and snap, turned off by "Reduce motion".
   ([`window-model.md`](framework/window-model.md), [`window-animations.md`](dev/window-animations.md))
+- **Window styles inspired by WinForms** (version 3.1.0): an app picks the
+  `Normal`, `Tool` (close only, the style of the OS dialogs) or `None` style
+  (client area only, transparent: a click where the app draws nothing reaches
+  the desktop), and the `ShowIcon`, `Resizable`, `MaximizeBox`, `MinimizeBox`,
+  `ShowInTaskbar` and `Modal` options, in its manifest or at run time. It opens
+  its own windows and modal dialogs (`ShowWindowAsync`, `ShowDialogAsync`) and
+  minimizes, maximizes, moves or resizes its window.
+  ([ADR 0234](dev/adr/0234-window-styles-inspired-by-winforms.md),
+  [`window-model.md`](framework/window-model.md))
 - **Taskbar and Start menu** with pinned applications and open windows. A
   right click on the taskbar gives the window menu, "New window", the task
   manager, "Show the desktop" and cascaded or tiled windows.
@@ -374,7 +383,6 @@ points to its PR.
 | Feature | Description | ADR | Issue |
 | --- | --- | --- | --- |
 | Switch user | Open another session without closing the first one. Stays greyed out in the Power menu by Benoit's choice: one session at a time, Sign out to change account. | [0195](dev/adr/0195-start-menu-power-button.md), [0201](dev/adr/0201-switch-user-stays-greyed.md) | [#290](https://github.com/Kazo-ca/Os/issues/290) |
-| Frameless app windows | A window option without the OS title bar or border, with a transparent background, so that an app like Webamp makes its own windows float on the desktop. | To write | [#378](https://github.com/Kazo-ca/Os/issues/378) |
 | File address served on demand | An app gets an address to read a large file (audio, video) without copying it in memory, with partial reads to seek in a track. | To write | [#379](https://github.com/Kazo-ca/Os/issues/379) |
 | Drag files onto an app | Public SDK contract to receive files dragged from the File Explorer or the desktop. | To write | [#380](https://github.com/Kazo-ca/Os/issues/380) |
 

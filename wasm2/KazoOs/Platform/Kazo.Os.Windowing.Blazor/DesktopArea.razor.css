@@ -39,7 +39,8 @@
     pointer-events: none;
 }
 
-.window-layer.pass-through ::deep .window-host {
+/* A None window (ADR 0234 §5) keeps letting the pointer through where its app draws nothing. */
+.window-layer.pass-through ::deep .window-host:not(.is-frameless) {
     pointer-events: auto;
 }
 

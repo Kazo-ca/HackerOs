@@ -305,7 +305,13 @@
         "maxWidth": { "type": "integer", "minimum": 1 },
         "maxHeight": { "type": "integer", "minimum": 1 },
         "resizable": { "type": "boolean" },
-        "rememberGeometry": { "description": "Whether the OS remembers the window size and maximized state, not its position (ADR 0116, ADR 0122). Omitted: true.", "type": "boolean" }
+        "rememberGeometry": { "description": "Whether the OS remembers the window size and maximized state, not its position (ADR 0116, ADR 0122). Omitted: true.", "type": "boolean" },
+        "style": { "description": "Window frame (ADR 0234 §1): normal, tool (close only, not resizable by the user) or none (client area only, transparent). Omitted: normal.", "enum": ["normal", "tool", "none"] },
+        "showIcon": { "description": "Whether the title bar shows the app icon (ADR 0234 §2). Omitted: true.", "type": "boolean" },
+        "maximizeBox": { "description": "Whether the title bar shows Maximize (ADR 0234 §2). Omitted: true.", "type": "boolean" },
+        "minimizeBox": { "description": "Whether the title bar shows Minimize (ADR 0234 §2). Omitted: true.", "type": "boolean" },
+        "showInTaskbar": { "description": "Whether the window has a taskbar button; without one the user cannot minimize it (ADR 0234 §2). Omitted: true.", "type": "boolean" },
+        "modal": { "description": "Whether a child window blocks the window that opened it (ADR 0234 §3); ignored on the main window. Omitted: false.", "type": "boolean" }
       }
     },
     "execution": { "enum": ["mainThread", "pool", "dedicated", "web"] },

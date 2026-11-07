@@ -223,7 +223,12 @@ public sealed class FileDialogWindowAdapter : IDisposable
             owner.Id,
             isFocused: false,
             content: content,
-            onRequestClose: onRequestClose);
+            onRequestClose: onRequestClose)
+        {
+            // ADR 0234 §6: the OS dialogs are tool windows (Close only) with no taskbar button of
+            // their own; their owner's button brings them forward.
+            Frame = WindowFrame.Dialog,
+        };
         _windows.Apply(new CreateWindowCommand(state));
         _projected[requestId] = dialogId;
     }

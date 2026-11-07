@@ -32,7 +32,10 @@ public sealed class TaskbarWindowSourceAdapter : ITaskbarWindowSource, IDisposab
     }
 
     /// <inheritdoc />
-    public IReadOnlyList<TaskbarWindowItem> Windows => [.. _runtime.Windows.Where(window => _lists?.Invoke(window) ?? true).Select(ToItem)];
+    /// <remarks>A window whose frame turns <c>ShowInTaskbar</c> off (ADR 0234 §2) has no button.</remarks>
+    public IReadOnlyList<TaskbarWindowItem> Windows => [.. _runtime.Windows
+        .Where(window => window.Frame.ShowInTaskbar && (_lists?.Invoke(window) ?? true))
+        .Select(ToItem)];
 
     /// <summary>Tells the taskbar to read the list again, after what <c>lists</c> keeps changed.</summary>
     internal void Refresh() => Changed?.Invoke();
@@ -76,7 +79,7 @@ public sealed class TaskbarCommandDispatcherAdapter(
     WindowCloseGuardRegistry closeGuards) : ITaskbarCommandDispatcher
 {
     /// <inheritdoc />
-    public void Activate(WindowId id) => runtime.Apply(new FocusWindowCommand(id));
+    public void Activate(WindowId id) => runtime.Apply(new FocusWindowCommand(runtime.ActivationTarget(id)));
 
     /// <inheritdoc />
     public void Minimize(WindowId id) => runtime.Apply(new MinimizeWindowCommand(id));
