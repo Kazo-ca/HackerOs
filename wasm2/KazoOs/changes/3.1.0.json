@@ -3,6 +3,45 @@
   "date": "2026-11-07",
   "entries": [
     {
+      "id": "26f9ee83-7fc0-4f4a-8c51-f9773f0e5042",
+      "category": "new",
+      "audience": [
+        "developer",
+        "user"
+      ],
+      "title": {
+        "en": "Apps declare the real-network ports they need; the server relay blocks dangerous ports",
+        "fr": "Les apps déclarent les vrais ports réseau dont elles ont besoin ; le relais du serveur bloque les ports dangereux"
+      },
+      "description": {
+        "en": "An app lists its real-network ports in its definition (RealNetworkPorts = [\"tcp/6697\"], written realNetworkPorts in manifest.json, checked by the generator and kazopkg). The approval window of network.real.access shows them, and the server relay opens a declared port whose grant carries it on top of AllowedPorts. The new KazoOs:Proxy Tcp and Udp BlockedPorts lists (mail 25/465/587, file sharing and RPC, amplification services) always win; Settings shows them with each app's ports, and the server warns at startup when a list is empty.",
+        "fr": "Une app liste ses vrais ports réseau dans sa définition (RealNetworkPorts = [\"tcp/6697\"], écrit realNetworkPorts dans manifest.json, vérifié par le générateur et kazopkg). La fenêtre d'approbation de network.real.access les affiche, et le relais du serveur ouvre un port déclaré que porte l'accord de l'app, en plus d'AllowedPorts. Les nouvelles listes BlockedPorts de KazoOs:Proxy (Tcp et Udp : courriel 25/465/587, partage de fichiers et RPC, services d'amplification) gagnent toujours ; Paramètres les affiche avec les ports de chaque app, et le serveur avertit au démarrage quand une liste est vide."
+      },
+      "links": [
+        "doc/en/wasm/dev/server-network-relay.md",
+        "doc/en/wasm/dev/adr/0235-real-network-for-chat-apps.md"
+      ]
+    },
+    {
+      "id": "4f18749b-7eb2-4f26-b014-5d87eca1a64d",
+      "category": "new",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "Apps open TLS connections through the server's relay",
+        "fr": "Les apps ouvrent des connexions TLS par le relais du serveur"
+      },
+      "description": {
+        "en": "KazoTcpClient.ConnectAsync takes KazoTcpConnectOptions { UseTls = true }: the server's relay opens TLS to the target, checks its certificate against the system trust store and TargetHost, and the app reads and writes clear text. A refused certificate throws AuthenticationException (relay code TLS_FAILED); KazoNetworkStream tells the negotiated TLS version and the certificate subject. There is no option to accept an invalid certificate.",
+        "fr": "KazoTcpClient.ConnectAsync accepte KazoTcpConnectOptions { UseTls = true } : le relais du serveur ouvre TLS vers la cible, vérifie son certificat par le magasin du système et TargetHost, et l'app lit et écrit du texte en clair. Un certificat refusé lève AuthenticationException (code du relais TLS_FAILED) ; KazoNetworkStream donne la version TLS négociée et le sujet du certificat. Aucune option n'accepte un certificat invalide."
+      },
+      "links": [
+        "doc/en/wasm/dev/adr/0235-real-network-for-chat-apps.md",
+        "doc/en/wasm/dev/server-network-relay.md"
+      ]
+    },
+    {
       "id": "363d74b1-e348-4a4f-891a-dbdf04ac9ee0",
       "category": "new",
       "audience": [
@@ -169,6 +208,42 @@
       },
       "links": [
         "doc/en/wasm/dev/adr/0219-app-authors-signing-tool.md"
+      ]
+    },
+    {
+      "id": "2f563b59-fec8-4e51-9459-eb01d24184ba",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "KazoClientWebSocket: apps reach real WebSocket servers without the server",
+        "fr": "KazoClientWebSocket : les apps joignent de vrais serveurs WebSocket sans le serveur"
+      },
+      "description": {
+        "en": "The SDK gains KazoClientWebSocket, shaped like ClientWebSocket (sub-protocols, ConnectAsync, SendAsync, ReceiveAsync, CloseAsync). The OS opens the browser's WebSocket for the app, so it works with no Kazo OS server. It needs the network.real.access capability; an address of the simulated network is refused, and every frame is counted in /proc/net/dev.",
+        "fr": "Le SDK gagne KazoClientWebSocket, calqué sur ClientWebSocket (sous-protocoles, ConnectAsync, SendAsync, ReceiveAsync, CloseAsync). L'OS ouvre le WebSocket du navigateur pour l'app : il marche sans serveur Kazo OS. Il demande la capacité network.real.access ; une adresse du réseau simulé est refusée, et chaque trame est comptée dans /proc/net/dev."
+      },
+      "links": [
+        "doc/en/wasm/framework/sdk-network.md"
+      ]
+    },
+    {
+      "id": "74267f10-5970-40b6-8de5-89b266cca835",
+      "category": "developer",
+      "audience": [
+        "developer"
+      ],
+      "title": {
+        "en": "The catalog signing secret is now KAZO_STORE_SIGNING_KEY",
+        "fr": "Le secret de signature du catalogue s'appelle maintenant KAZO_STORE_SIGNING_KEY"
+      },
+      "description": {
+        "en": "The Kazo OS Store catalog signs its packages with the KAZO_STORE_SIGNING_KEY secret (same key as the former HACK_STORE_SIGNING_KEY). The docs and the AppPackageDefaults comment use the new name.",
+        "fr": "Le catalogue du Kazo OS Store signe ses paquets avec le secret KAZO_STORE_SIGNING_KEY (même clé que l'ancien HACK_STORE_SIGNING_KEY). La doc et le commentaire d'AppPackageDefaults utilisent le nouveau nom."
+      },
+      "links": [
+        "doc/en/wasm/dev/app-installation.md"
       ]
     },
     {

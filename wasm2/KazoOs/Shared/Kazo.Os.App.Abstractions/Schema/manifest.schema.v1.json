@@ -95,6 +95,13 @@
       "type": "array",
       "items": { "type": "string", "minLength": 1 }
     },
+    "realNetworkPorts": {
+      "description": "Real-network ports the app needs through the server's relay (ADR 0235): 'tcp/6697' or 'udp/5353'. Requires the network.real.access capability. Omitted: none beyond the relay's AllowedPorts.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^(?:[tT][cC][pP]|[uU][dD][pP])/[1-9][0-9]{0,4}$" }
+    },
     "declaredTopicPermissions": {
       "type": "array",
       "items": {

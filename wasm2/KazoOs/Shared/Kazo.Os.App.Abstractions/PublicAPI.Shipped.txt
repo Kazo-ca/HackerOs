@@ -229,6 +229,8 @@ Kazo.Os.App.Abstractions.AppManifest.Presentation.get -> Kazo.Os.App.Abstraction
 Kazo.Os.App.Abstractions.AppManifest.Presentation.init -> void
 Kazo.Os.App.Abstractions.AppManifest.PublisherId.get -> string!
 Kazo.Os.App.Abstractions.AppManifest.PublisherId.init -> void
+Kazo.Os.App.Abstractions.AppManifest.RealNetworkPorts.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Kazo.Os.App.Abstractions.AppManifest.RealNetworkPorts.init -> void
 Kazo.Os.App.Abstractions.AppManifest.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
 Kazo.Os.App.Abstractions.AppManifest.Resources.init -> void
 Kazo.Os.App.Abstractions.AppManifest.SchemaVersion.get -> int
@@ -852,6 +854,16 @@ Kazo.Os.App.Abstractions.PresentationManifest.IconAssetPaths.init -> void
 Kazo.Os.App.Abstractions.PresentationManifest.LaunchVisibility.get -> Kazo.Os.App.Abstractions.AppLaunchVisibility
 Kazo.Os.App.Abstractions.PresentationManifest.LaunchVisibility.init -> void
 Kazo.Os.App.Abstractions.PresentationManifest.PresentationManifest(string! Category, Kazo.Os.App.Abstractions.AppLaunchVisibility LaunchVisibility, System.Collections.Generic.IReadOnlyList<string!>! IconAssetPaths) -> void
+Kazo.Os.App.Abstractions.RealNetworkPort
+Kazo.Os.App.Abstractions.RealNetworkPort.Deconstruct(out string! Protocol, out int Port) -> void
+Kazo.Os.App.Abstractions.RealNetworkPort.Equals(Kazo.Os.App.Abstractions.RealNetworkPort other) -> bool
+Kazo.Os.App.Abstractions.RealNetworkPort.Port.get -> int
+Kazo.Os.App.Abstractions.RealNetworkPort.Port.init -> void
+Kazo.Os.App.Abstractions.RealNetworkPort.Protocol.get -> string!
+Kazo.Os.App.Abstractions.RealNetworkPort.Protocol.init -> void
+Kazo.Os.App.Abstractions.RealNetworkPort.RealNetworkPort() -> void
+Kazo.Os.App.Abstractions.RealNetworkPort.RealNetworkPort(string! Protocol, int Port) -> void
+Kazo.Os.App.Abstractions.RealNetworkPorts
 Kazo.Os.App.Abstractions.RevealFileIntent
 Kazo.Os.App.Abstractions.RevealFileIntent.<Clone>$() -> Kazo.Os.App.Abstractions.RevealFileIntent!
 Kazo.Os.App.Abstractions.RevealFileIntent.Deconstruct(out Kazo.Os.App.Abstractions.VirtualPath Path) -> void
@@ -1075,6 +1087,8 @@ const Kazo.Os.App.Abstractions.AppIntentIds.SchemeHandlerMediaTypePrefix = "x-sc
 const Kazo.Os.App.Abstractions.AppIntentIds.ShowAppSettings = "org.kazoos.intent.show-app-settings.v1" -> string!
 const Kazo.Os.App.Abstractions.AppPlatformId.MaximumLength = 32 -> int
 const Kazo.Os.App.Abstractions.BuiltInApplicationsJsonSerializer.ResourceName = "Kazo.Os.BuiltInApplications.json" -> string!
+const Kazo.Os.App.Abstractions.RealNetworkPorts.Tcp = "tcp" -> string!
+const Kazo.Os.App.Abstractions.RealNetworkPorts.Udp = "udp" -> string!
 const Kazo.Os.App.Abstractions.TopicPermissions.PublishPrefix = "topic-publish:" -> string!
 const Kazo.Os.App.Abstractions.TopicPermissions.SubscribePrefix = "topic-subscribe:" -> string!
 const Kazo.Os.App.Abstractions.VirtualPath.MaximumPathUtf8ByteLength = 4096 -> int
@@ -1265,6 +1279,8 @@ override Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.ToString()
 override Kazo.Os.App.Abstractions.PresentationManifest.Equals(object? obj) -> bool
 override Kazo.Os.App.Abstractions.PresentationManifest.GetHashCode() -> int
 override Kazo.Os.App.Abstractions.PresentationManifest.ToString() -> string!
+override Kazo.Os.App.Abstractions.RealNetworkPort.GetHashCode() -> int
+override Kazo.Os.App.Abstractions.RealNetworkPort.ToString() -> string!
 override Kazo.Os.App.Abstractions.RevealFileIntent.Equals(object? obj) -> bool
 override Kazo.Os.App.Abstractions.RevealFileIntent.GetHashCode() -> int
 override Kazo.Os.App.Abstractions.RevealFileIntent.ToString() -> string!
@@ -1468,6 +1484,11 @@ static Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.operator !=(
 static Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate.operator ==(Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate? left, Kazo.Os.App.Abstractions.Policy.VirtualPathResourceCandidate? right) -> bool
 static Kazo.Os.App.Abstractions.PresentationManifest.operator !=(Kazo.Os.App.Abstractions.PresentationManifest? left, Kazo.Os.App.Abstractions.PresentationManifest? right) -> bool
 static Kazo.Os.App.Abstractions.PresentationManifest.operator ==(Kazo.Os.App.Abstractions.PresentationManifest? left, Kazo.Os.App.Abstractions.PresentationManifest? right) -> bool
+static Kazo.Os.App.Abstractions.RealNetworkPort.operator !=(Kazo.Os.App.Abstractions.RealNetworkPort left, Kazo.Os.App.Abstractions.RealNetworkPort right) -> bool
+static Kazo.Os.App.Abstractions.RealNetworkPort.operator ==(Kazo.Os.App.Abstractions.RealNetworkPort left, Kazo.Os.App.Abstractions.RealNetworkPort right) -> bool
+static Kazo.Os.App.Abstractions.RealNetworkPorts.Normalize(System.Collections.Generic.IEnumerable<string!>? values) -> System.Collections.Generic.IReadOnlyList<string!>?
+static Kazo.Os.App.Abstractions.RealNetworkPorts.ParseValid(System.Collections.Generic.IEnumerable<string!>? values) -> System.Collections.Generic.IReadOnlyList<Kazo.Os.App.Abstractions.RealNetworkPort>!
+static Kazo.Os.App.Abstractions.RealNetworkPorts.TryParse(string? value, out Kazo.Os.App.Abstractions.RealNetworkPort port, out string? error) -> bool
 static Kazo.Os.App.Abstractions.RevealFileIntent.operator !=(Kazo.Os.App.Abstractions.RevealFileIntent? left, Kazo.Os.App.Abstractions.RevealFileIntent? right) -> bool
 static Kazo.Os.App.Abstractions.RevealFileIntent.operator ==(Kazo.Os.App.Abstractions.RevealFileIntent? left, Kazo.Os.App.Abstractions.RevealFileIntent? right) -> bool
 static Kazo.Os.App.Abstractions.SemanticVersion.Parse(string! value) -> Kazo.Os.App.Abstractions.SemanticVersion
@@ -1526,6 +1547,7 @@ virtual Kazo.Os.App.Abstractions.AppDefinition.Localizations.get -> System.Colle
 virtual Kazo.Os.App.Abstractions.AppDefinition.MobileEntryPoint.get -> System.Type?
 virtual Kazo.Os.App.Abstractions.AppDefinition.OomScoreAdjust.get -> int?
 virtual Kazo.Os.App.Abstractions.AppDefinition.PublisherId.get -> string!
+virtual Kazo.Os.App.Abstractions.AppDefinition.RealNetworkPorts.get -> System.Collections.Generic.IReadOnlyList<string!>!
 virtual Kazo.Os.App.Abstractions.AppDefinition.Resources.get -> Kazo.Os.App.Abstractions.AppResourceProfileManifest!
 virtual Kazo.Os.App.Abstractions.AppDefinition.SdkCompatibility.get -> Kazo.Os.App.Abstractions.AppSdkCompatibilityManifest?
 virtual Kazo.Os.App.Abstractions.AppDefinition.ServiceStartup.get -> Kazo.Os.App.Abstractions.AppServiceStartup?
@@ -1601,6 +1623,7 @@ virtual Kazo.Os.App.Abstractions.Policy.CapabilityResourceCandidate.PrintMembers
 ~override Kazo.Os.App.Abstractions.Policy.CapabilityGrantId.Equals(object obj) -> bool
 ~override Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.Equals(object obj) -> bool
 ~override Kazo.Os.App.Abstractions.Policy.CapabilityPolicyEvaluation.ToString() -> string
+~override Kazo.Os.App.Abstractions.RealNetworkPort.Equals(object obj) -> bool
 ~override Kazo.Os.App.Abstractions.SemanticVersion.Equals(object obj) -> bool
 ~override Kazo.Os.App.Abstractions.VirtualPath.Equals(object obj) -> bool
 ~override Kazo.Os.App.Abstractions.WebBinding.Equals(object obj) -> bool

@@ -139,6 +139,13 @@ Les libellés suivent la langue de la session (ADR 0104) : ceux cités ici sont
 ceux d'une session française ; en anglais, la langue par défaut, la fenêtre
 dit « Administrator authorization required », **Deny** et **Allow**.
 
+Sous `network.real.access`, la fenêtre et le mode texte du terminal listent
+les vrais ports que l'app déclare dans son manifeste (`realNetworkPorts`,
+ADR 0235 §3) : « Vrais serveurs sur les ports : TCP 6667, TCP 6697 »
+(`RealNetworkPortText`). Rien ne s'affiche si l'app n'en déclare pas. Le
+relais du serveur ouvre ces ports quand l'accord les porte, sauf ceux de
+`BlockedPorts` ([relais réseau](server-network-relay.md)).
+
 `DangerousCapabilityApprovalBroker` montre une demande à la fois. Sans fenêtre
 attachée, une demande finit en `Unavailable` (donc `capability.deferred`) ; si
 la coque disparaît (déconnexion), les demandes en cours sont fermées sans

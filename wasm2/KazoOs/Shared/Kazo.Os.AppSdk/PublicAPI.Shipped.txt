@@ -252,6 +252,15 @@ Kazo.Os.AppSdk.Administration.KazoScreensState.RestorableScreens.get -> System.C
 Kazo.Os.AppSdk.Administration.KazoScreensState.RestorableScreens.init -> void
 Kazo.Os.AppSdk.Administration.KazoScreensState.Screens.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Administration.KazoScreenInfo!>!
 Kazo.Os.AppSdk.Administration.KazoScreensState.Screens.init -> void
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.<Clone>$() -> Kazo.Os.AppSdk.Administration.KazoServerAppPorts!
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.AppId.get -> string!
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.AppId.init -> void
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.Deconstruct(out string! AppId, out System.Collections.Generic.IReadOnlyList<string!>! Ports) -> void
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.Equals(Kazo.Os.AppSdk.Administration.KazoServerAppPorts? other) -> bool
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.KazoServerAppPorts(string! AppId, System.Collections.Generic.IReadOnlyList<string!>! Ports) -> void
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.Ports.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Kazo.Os.AppSdk.Administration.KazoServerAppPorts.Ports.init -> void
 Kazo.Os.AppSdk.Administration.KazoServerConnection
 Kazo.Os.AppSdk.Administration.KazoServerConnectionException
 Kazo.Os.AppSdk.Administration.KazoServerConnectionException.KazoServerConnectionException(string! message, System.Exception? innerException = null) -> void
@@ -287,6 +296,8 @@ Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.AllowAllPorts.get -> bool
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.AllowAllPorts.init -> void
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.AllowPrivateNetworks.get -> bool
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.AllowPrivateNetworks.init -> void
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.AppPorts.get -> System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Administration.KazoServerAppPorts!>!
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.AppPorts.init -> void
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.Deconstruct(out bool Enabled, out System.Collections.Generic.IReadOnlyList<int>! HttpPorts, out System.Collections.Generic.IReadOnlyList<int>! TcpPorts, out System.Collections.Generic.IReadOnlyList<int>! UdpPorts, out bool AllowAllPorts, out bool AllowPrivateNetworks, out bool QuotasEnabled, out long MaxRequestBytes, out long MaxResponseBytes, out int MaxConcurrentRequests, out int MaxStreams, out int OpenStreams, out System.TimeSpan StreamIdleTimeout, out System.Collections.Generic.IReadOnlyList<string!>! GrantedApps, out System.Collections.Generic.IReadOnlyList<string!>! Warnings) -> void
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.Enabled.get -> bool
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.Enabled.init -> void
@@ -310,8 +321,12 @@ Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.QuotasEnabled.get -> bool
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.QuotasEnabled.init -> void
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.StreamIdleTimeout.get -> System.TimeSpan
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.StreamIdleTimeout.init -> void
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.TcpBlockedPorts.get -> System.Collections.Generic.IReadOnlyList<int>!
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.TcpBlockedPorts.init -> void
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.TcpPorts.get -> System.Collections.Generic.IReadOnlyList<int>!
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.TcpPorts.init -> void
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.UdpBlockedPorts.get -> System.Collections.Generic.IReadOnlyList<int>!
+Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.UdpBlockedPorts.init -> void
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.UdpPorts.get -> System.Collections.Generic.IReadOnlyList<int>!
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.UdpPorts.init -> void
 Kazo.Os.AppSdk.Administration.KazoServerRelayPolicy.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
@@ -1728,8 +1743,10 @@ Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteScope
 Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteScope.System = 0 -> Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteScope
 Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteScope.User = 1 -> Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteScope
 Kazo.Os.AppSdk.Net.IAppNetworkGateway
+Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectTcpAsync(string! hostNameOrAddress, int port, Kazo.Os.AppSdk.Net.KazoTcpConnectOptions! options, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoSocket!>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectTcpAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoSocket!>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectUdpAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoSocket!>!>
+Kazo.Os.AppSdk.Net.IAppNetworkGateway.ConnectWebSocketAsync(System.Uri! uri, System.Collections.Generic.IReadOnlyList<string!>! subProtocols, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<System.Net.WebSockets.WebSocket!>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.DetectOperatingSystemAsync(string! hostNameOrAddress, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.KazoOsFingerprint?>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.GetTcpListenersAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Net.KazoTcpListenerInfo!>!>
 Kazo.Os.AppSdk.Net.IAppNetworkGateway.ListenHttpAsync(System.Collections.Generic.IReadOnlyList<string!>! prefixes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<Kazo.Os.AppSdk.Net.KazoNetworkResult<Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket!>!>
@@ -1744,10 +1761,19 @@ Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket.Prefixes.get -> System.Collections.Ge
 Kazo.Os.AppSdk.Net.IKazoHttpListenerSocket.Respond(long exchangeId, Kazo.Os.AppSdk.Net.KazoHttpListenerReply! reply) -> void
 Kazo.Os.AppSdk.Net.IKazoSocket
 Kazo.Os.AppSdk.Net.IKazoSocket.ReceiveAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<byte[]?>
+Kazo.Os.AppSdk.Net.IKazoSocket.RemoteCertificateSubject.get -> string?
 Kazo.Os.AppSdk.Net.IKazoSocket.RemoteEndPoint.get -> System.Net.IPEndPoint!
 Kazo.Os.AppSdk.Net.IKazoSocket.SendAsync(System.ReadOnlyMemory<byte> data, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+Kazo.Os.AppSdk.Net.IKazoSocket.TlsProtocol.get -> string?
 Kazo.Os.AppSdk.Net.KazoByteArrayContent
 Kazo.Os.AppSdk.Net.KazoByteArrayContent.KazoByteArrayContent(byte[]! content, string! contentType = "application/octet-stream") -> void
+Kazo.Os.AppSdk.Net.KazoClientWebSocket
+Kazo.Os.AppSdk.Net.KazoClientWebSocket.ConnectAsync(System.Uri! uri, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+Kazo.Os.AppSdk.Net.KazoClientWebSocket.KazoClientWebSocket() -> void
+Kazo.Os.AppSdk.Net.KazoClientWebSocket.Options.get -> Kazo.Os.AppSdk.Net.KazoClientWebSocketOptions!
+Kazo.Os.AppSdk.Net.KazoClientWebSocketOptions
+Kazo.Os.AppSdk.Net.KazoClientWebSocketOptions.AddSubProtocol(string! subProtocol) -> void
+Kazo.Os.AppSdk.Net.KazoClientWebSocketOptions.SubProtocols.get -> System.Collections.Generic.IReadOnlyList<string!>!
 Kazo.Os.AppSdk.Net.KazoCookie
 Kazo.Os.AppSdk.Net.KazoCookie.<Clone>$() -> Kazo.Os.AppSdk.Net.KazoCookie!
 Kazo.Os.AppSdk.Net.KazoCookie.Deconstruct(out string! Domain, out string! Name, out string! Value) -> void
@@ -2002,6 +2028,7 @@ Kazo.Os.AppSdk.Net.KazoNetworkError.HostNotFound = 1 -> Kazo.Os.AppSdk.Net.KazoN
 Kazo.Os.AppSdk.Net.KazoNetworkError.HostUnreachable = 2 -> Kazo.Os.AppSdk.Net.KazoNetworkError
 Kazo.Os.AppSdk.Net.KazoNetworkError.None = 0 -> Kazo.Os.AppSdk.Net.KazoNetworkError
 Kazo.Os.AppSdk.Net.KazoNetworkError.TimedOut = 7 -> Kazo.Os.AppSdk.Net.KazoNetworkError
+Kazo.Os.AppSdk.Net.KazoNetworkError.TlsFailed = 9 -> Kazo.Os.AppSdk.Net.KazoNetworkError
 Kazo.Os.AppSdk.Net.KazoNetworkError.TooManyRedirects = 4 -> Kazo.Os.AppSdk.Net.KazoNetworkError
 Kazo.Os.AppSdk.Net.KazoNetworkErrorCodes
 Kazo.Os.AppSdk.Net.KazoNetworkResult<T>
@@ -2013,7 +2040,10 @@ Kazo.Os.AppSdk.Net.KazoNetworkResult<T>.Succeeded.get -> bool
 Kazo.Os.AppSdk.Net.KazoNetworkResult<T>.Value.get -> T?
 Kazo.Os.AppSdk.Net.KazoNetworkStream
 Kazo.Os.AppSdk.Net.KazoNetworkStream.DataAvailable.get -> bool
+Kazo.Os.AppSdk.Net.KazoNetworkStream.IsEncrypted.get -> bool
+Kazo.Os.AppSdk.Net.KazoNetworkStream.RemoteCertificateSubject.get -> string?
 Kazo.Os.AppSdk.Net.KazoNetworkStream.RemoteEndPoint.get -> System.Net.IPEndPoint!
+Kazo.Os.AppSdk.Net.KazoNetworkStream.TlsProtocol.get -> string?
 Kazo.Os.AppSdk.Net.KazoOsFingerprint
 Kazo.Os.AppSdk.Net.KazoOsFingerprint.<Clone>$() -> Kazo.Os.AppSdk.Net.KazoOsFingerprint!
 Kazo.Os.AppSdk.Net.KazoOsFingerprint.Accuracy.get -> int
@@ -2062,6 +2092,12 @@ Kazo.Os.AppSdk.Net.KazoStringContent
 Kazo.Os.AppSdk.Net.KazoStringContent.KazoStringContent(string! content, System.Text.Encoding? encoding = null, string? mediaType = null) -> void
 Kazo.Os.AppSdk.Net.KazoStringContent.KazoStringContent(string! content, string! mediaType) -> void
 Kazo.Os.AppSdk.Net.KazoTcpClient
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions.KazoTcpConnectOptions() -> void
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions.TargetHost.get -> string?
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions.TargetHost.init -> void
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions.UseTls.get -> bool
+Kazo.Os.AppSdk.Net.KazoTcpConnectOptions.UseTls.init -> void
 Kazo.Os.AppSdk.Net.KazoTcpListenerInfo
 Kazo.Os.AppSdk.Net.KazoTcpListenerInfo.<Clone>$() -> Kazo.Os.AppSdk.Net.KazoTcpListenerInfo!
 Kazo.Os.AppSdk.Net.KazoTcpListenerInfo.Address.get -> System.Net.IPAddress!
@@ -2770,6 +2806,9 @@ override Kazo.Os.AppSdk.Administration.KazoScreenInfo.ToString() -> string!
 override Kazo.Os.AppSdk.Administration.KazoScreensState.Equals(object? obj) -> bool
 override Kazo.Os.AppSdk.Administration.KazoScreensState.GetHashCode() -> int
 override Kazo.Os.AppSdk.Administration.KazoScreensState.ToString() -> string!
+override Kazo.Os.AppSdk.Administration.KazoServerAppPorts.Equals(object? obj) -> bool
+override Kazo.Os.AppSdk.Administration.KazoServerAppPorts.GetHashCode() -> int
+override Kazo.Os.AppSdk.Administration.KazoServerAppPorts.ToString() -> string!
 override Kazo.Os.AppSdk.Administration.KazoServerConnectionState.Equals(object? obj) -> bool
 override Kazo.Os.AppSdk.Administration.KazoServerConnectionState.GetHashCode() -> int
 override Kazo.Os.AppSdk.Administration.KazoServerConnectionState.ToString() -> string!
@@ -2984,6 +3023,18 @@ override Kazo.Os.AppSdk.Net.Hosting.KazoWebSite.ToString() -> string!
 override Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteDeclaration.Equals(object? obj) -> bool
 override Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteDeclaration.GetHashCode() -> int
 override Kazo.Os.AppSdk.Net.Hosting.KazoWebSiteDeclaration.ToString() -> string!
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.Abort() -> void
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus closeStatus, string? statusDescription, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.CloseOutputAsync(System.Net.WebSockets.WebSocketCloseStatus closeStatus, string? statusDescription, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.CloseStatus.get -> System.Net.WebSockets.WebSocketCloseStatus?
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.CloseStatusDescription.get -> string?
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.Dispose() -> void
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.ReceiveAsync(System.ArraySegment<byte> buffer, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Net.WebSockets.WebSocketReceiveResult!>!
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.ReceiveAsync(System.Memory<byte> buffer, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<System.Net.WebSockets.ValueWebSocketReceiveResult>
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.SendAsync(System.ArraySegment<byte> buffer, System.Net.WebSockets.WebSocketMessageType messageType, bool endOfMessage, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task!
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.SendAsync(System.ReadOnlyMemory<byte> buffer, System.Net.WebSockets.WebSocketMessageType messageType, bool endOfMessage, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.State.get -> System.Net.WebSockets.WebSocketState
+override Kazo.Os.AppSdk.Net.KazoClientWebSocket.SubProtocol.get -> string?
 override Kazo.Os.AppSdk.Net.KazoCookie.Equals(object? obj) -> bool
 override Kazo.Os.AppSdk.Net.KazoCookie.GetHashCode() -> int
 override Kazo.Os.AppSdk.Net.KazoCookie.ToString() -> string!
@@ -3184,6 +3235,8 @@ static Kazo.Os.AppSdk.Administration.KazoScreens.WatchAsync(Kazo.Os.AppSdk.IAppE
 static Kazo.Os.AppSdk.Administration.KazoScreens.WatchAsync(System.Func<System.Threading.Tasks.ValueTask>! onChanged, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IAsyncDisposable!>!
 static Kazo.Os.AppSdk.Administration.KazoScreensState.operator !=(Kazo.Os.AppSdk.Administration.KazoScreensState? left, Kazo.Os.AppSdk.Administration.KazoScreensState? right) -> bool
 static Kazo.Os.AppSdk.Administration.KazoScreensState.operator ==(Kazo.Os.AppSdk.Administration.KazoScreensState? left, Kazo.Os.AppSdk.Administration.KazoScreensState? right) -> bool
+static Kazo.Os.AppSdk.Administration.KazoServerAppPorts.operator !=(Kazo.Os.AppSdk.Administration.KazoServerAppPorts? left, Kazo.Os.AppSdk.Administration.KazoServerAppPorts? right) -> bool
+static Kazo.Os.AppSdk.Administration.KazoServerAppPorts.operator ==(Kazo.Os.AppSdk.Administration.KazoServerAppPorts? left, Kazo.Os.AppSdk.Administration.KazoServerAppPorts? right) -> bool
 static Kazo.Os.AppSdk.Administration.KazoServerConnection.ConnectAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, System.Uri! serverUrl, string! login, string! password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Administration.KazoServerConnectionState!>!
 static Kazo.Os.AppSdk.Administration.KazoServerConnection.ConnectAsync(System.Uri! serverUrl, string! login, string! password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Administration.KazoServerConnectionState!>!
 static Kazo.Os.AppSdk.Administration.KazoServerConnection.CreateAccountAsync(Kazo.Os.AppSdk.IAppExecutionContext! context, System.Uri! serverUrl, string! login, string! password, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Administration.KazoServerConnectionState!>!
@@ -3659,6 +3712,7 @@ static Kazo.Os.AppSdk.Net.KazoPingReply.operator !=(Kazo.Os.AppSdk.Net.KazoPingR
 static Kazo.Os.AppSdk.Net.KazoPingReply.operator ==(Kazo.Os.AppSdk.Net.KazoPingReply? left, Kazo.Os.AppSdk.Net.KazoPingReply? right) -> bool
 static Kazo.Os.AppSdk.Net.KazoPortProbeResult.operator !=(Kazo.Os.AppSdk.Net.KazoPortProbeResult? left, Kazo.Os.AppSdk.Net.KazoPortProbeResult? right) -> bool
 static Kazo.Os.AppSdk.Net.KazoPortProbeResult.operator ==(Kazo.Os.AppSdk.Net.KazoPortProbeResult? left, Kazo.Os.AppSdk.Net.KazoPortProbeResult? right) -> bool
+static Kazo.Os.AppSdk.Net.KazoTcpClient.ConnectAsync(string! hostNameOrAddress, int port, Kazo.Os.AppSdk.Net.KazoTcpConnectOptions! options, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Net.KazoNetworkStream!>!
 static Kazo.Os.AppSdk.Net.KazoTcpClient.ConnectAsync(string! hostNameOrAddress, int port, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Net.KazoNetworkStream!>!
 static Kazo.Os.AppSdk.Net.KazoTcpClient.DetectOperatingSystemAsync(string! hostNameOrAddress, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Kazo.Os.AppSdk.Net.KazoOsFingerprint?>!
 static Kazo.Os.AppSdk.Net.KazoTcpClient.ProbeAsync(string! hostNameOrAddress, int firstPort, int lastPort, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Kazo.Os.AppSdk.Net.KazoPortProbeResult!>!>!

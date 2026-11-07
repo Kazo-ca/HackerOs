@@ -114,7 +114,7 @@ public sealed class ProxyServiceTests : IDisposable
     [Fact]
     public async Task GetPolicy_ReturnsExpectedDefaults()
     {
-        var policy = await _proxy.GetPolicyAsync(DeviceId, CancellationToken.None);
+        var policy = await _proxy.GetPolicyAsync(AccountId, DeviceId, CancellationToken.None);
 
         Assert.Equal(DeviceId, policy.DeviceId);
         Assert.Equal(8, policy.MaxConcurrentRequests);

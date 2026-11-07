@@ -170,6 +170,14 @@
     color: #c9d5db;
 }
 
+/* ADR 0235 section 3: the declared real-network ports, in the console face of the window. */
+.dca-capability-ports {
+    grid-column: 1 / -1;
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    font-size: 0.78rem;
+    color: #ffb4a8;
+}
+
 .dca-credentials {
     display: flex;
     flex-direction: column;

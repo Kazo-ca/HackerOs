@@ -49,6 +49,11 @@
                             <span class="dca-capability-title">@capability.Title</span>
                             <code class="dca-capability-id">@capability.Capability</code>
                             <span class="dca-capability-risk">@capability.RiskDescription</span>
+                            @if (Kazo.Os.Platform.Core.Policy.RealNetworkPortText.For(request.Manifest, capability.Capability) is { } ports)
+                            {
+                                @* ADR 0235 section 3: the real ports the relay will open for this app. *@
+                                <span class="dca-capability-ports">@L["Approval.RealNetworkPorts", ports]</span>
+                            }
                         </li>
                     }
                 </ul>

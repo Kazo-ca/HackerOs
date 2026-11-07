@@ -34,12 +34,56 @@ public sealed record KazoOsFingerprint(string Name, string Version, int Accuracy
 /// <remarks>
 /// For a host outside the simulated network, an app holding <c>network.real.access</c> can probe
 /// <b>one</b> port through the optional server (ADR 0035); a range against a real host is never
-/// relayed and reports the host as not found. <see cref="ConnectAsync"/> reaches such a host
+/// relayed and reports the host as not found. <see cref="ConnectAsync(string, int, CancellationToken)"/> reaches such a host
 /// through the server's relay, on the ports its operator allows; the simulated network carries no
 /// raw byte streams, so a simulated host refuses the connection.
 /// </remarks>
 public static class KazoTcpClient
 {
+    /// <summary>
+    /// Connects to <paramref name="hostNameOrAddress"/>:<paramref name="port"/> with
+    /// <paramref name="options"/> (ADR 0235 §2). With <see cref="KazoTcpConnectOptions.UseTls"/>,
+    /// the server's relay opens TLS to the target, as <c>SslStream.AuthenticateAsClientAsync</c>
+    /// would, and the returned stream carries clear text: the browser has no <c>SslStream</c>, so
+    /// the encryption runs between the server and the target, and the trip from the browser to the
+    /// server is protected by the server's own <c>https</c>.
+    /// </summary>
+    /// <remarks>
+    /// TLS needs the optional server: without it the host is not found, as for any real host. The
+    /// certificate is checked by the server's system trust store against
+    /// <see cref="KazoTcpConnectOptions.TargetHost"/>; there is no way to accept an invalid one.
+    /// <see cref="KazoNetworkStream.TlsProtocol"/> and <see cref="KazoNetworkStream.RemoteCertificateSubject"/>
+    /// say what was negotiated.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException"><paramref name="options"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="port"/> is not within 1–65535.</exception>
+    /// <exception cref="System.Security.Authentication.AuthenticationException">
+    /// The TLS handshake failed: invalid, expired or untrusted certificate, or a name mismatch.
+    /// </exception>
+    /// <exception cref="System.Net.Sockets.SocketException">
+    /// The host is unknown (no route to the real network), refused the connection, or is unreachable.
+    /// </exception>
+    /// <exception cref="UnauthorizedAccessException">The app lacks <c>network.simulated.write</c>.</exception>
+    public static async Task<KazoNetworkStream> ConnectAsync(
+        string hostNameOrAddress, int port, KazoTcpConnectOptions options, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(hostNameOrAddress);
+        ArgumentOutOfRangeException.ThrowIfLessThan(port, 1);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(port, 65535);
+        ArgumentNullException.ThrowIfNull(options);
+
+        KazoNetworkResult<IKazoSocket> result = await KazoNetworkErrorTranslator
+            .CallAsync(gateway => gateway.ConnectTcpAsync(hostNameOrAddress, port, options, cancellationToken))
+            .ConfigureAwait(false);
+        if (result.Error == KazoNetworkError.TlsFailed)
+        {
+            throw new System.Security.Authentication.AuthenticationException(
+                result.Message ?? $"The TLS handshake with {options.TargetHost ?? hostNameOrAddress} failed.");
+        }
+
+        return new KazoNetworkStream(KazoNetworkErrorTranslator.UnwrapSocket(result));
+    }
+
     /// <summary>Probes the ports <paramref name="firstPort"/> to <paramref name="lastPort"/> of a host.</summary>
     /// <returns>
     /// The ports that showed something, in port order; every port of the range that is not listed

@@ -15,9 +15,9 @@ jour à la fin de chaque série ou quand une convention change.
 - **Version** : Kazo OS et le SDK passent en **3.1.0** (`build/Versions.props`),
   préparée le 2026-11-07 par le chantier `os-3-1/7-release-3-1-0` de la série
   `os-3-1/base` ; elle est publiée (tag `v3.1.0`, GitHub Release, nuget.org)
-  quand `os-3-1/base` arrive dans `main`. Elle replie 247 lignes d'API dans
-  `Shipped` (styles de fenêtre WinForms, fenêtres enfants, ADR 0231 à 0234) et
-  regroupe 11 entrées dans `changes/3.1.0.json`. La 3.0.0 (2026-11-05, publiée,
+  quand `os-3-1/base` arrive dans `main`. Elle replie 366 lignes d'API dans
+  `Shipped` (styles de fenêtre WinForms, fenêtres enfants, vrai réseau des apps
+  de discussion, ADR 0231 à 0235) et regroupe 15 entrées dans `changes/3.1.0.json`. La 3.0.0 (2026-11-05, publiée,
   renommage en Kazo OS) n'avait pas regroupé ses 15 entrées : elles sont rangées
   après coup dans `changes/3.0.0.json`. La 2.2.2 (2026-11-01) compile la clé publique du catalogue officiel dans l'OS
   (`AppPackageDefaults.OfficialCatalogSigningKey`, PR #349) : tout paquet du Kazo
@@ -132,7 +132,7 @@ jour à la fin de chaque série ou quand une convention change.
   (`[signing-keys]`, `KazoOsAppSigningKeys`), journal `.transaction`,
   `kazopkg rollback`/`repair`, `AppDataGuard`. Cinq questions posées à Benoit,
   réponse A à chacune. La clé du catalogue officiel a été créée par Benoit le
-  2026-11-01 (`keygen`, secret `HACK_STORE_SIGNING_KEY` du catalogue) ; sa clé
+  2026-11-01 (`keygen`, secret `KAZO_STORE_SIGNING_KEY` du catalogue) ; sa clé
   publique est dans `AppPackageDefaults.OfficialCatalogSigningKey` ; outil pour les auteurs :
   issue `TODO` #321.
 - **Bulles de notification** (ADR 0197, chantier 1 de #242, série

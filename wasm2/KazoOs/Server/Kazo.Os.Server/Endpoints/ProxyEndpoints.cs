@@ -104,8 +104,9 @@ public static class ProxyEndpoints
     private static async Task<IResult> GetPolicyAsync(
         IProxyService proxy, ClaimsPrincipal user, CancellationToken ct)
     {
+        var accountId = GetAccountId(user);
         var deviceId = GetDeviceId(user);
-        var policy = await proxy.GetPolicyAsync(deviceId, ct);
+        var policy = await proxy.GetPolicyAsync(accountId, deviceId, ct);
         return Results.Json(policy, ProxyContractsJsonContext.Default.ProxyPolicyResponse);
     }
 

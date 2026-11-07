@@ -404,6 +404,7 @@ dans `main`, le lien mène à sa PR.
 
 | Fonctionnalité | Description | ADR | Issue |
 | --- | --- | --- | --- |
+| Vrai réseau pour les apps de discussion | `KazoClientWebSocket` dans le SDK : une app joint un vrai serveur WebSocket par le navigateur, sans serveur Kazo OS (fait dans la série `real-network/base`) ; TLS ouvert par le relais avec `KazoTcpClient.ConnectAsync(host, port, new KazoTcpConnectOptions { UseTls = true }, ct)`, le serveur vérifiant le certificat, aucune option n'acceptant un certificat invalide (fait dans la série) ; puis ports déclarés par l'app. | [0235](dev/adr/0235-real-network-for-chat-apps.md) | [#395](https://github.com/Kazo-ca/Os/issues/395) |
 
 ### Nom du projet
 
@@ -421,7 +422,7 @@ par `kazopkg` puis par le Kazo OS Store.
 | --- | --- | --- | --- |
 | Chess | Échecs, basés sur chess.js ; première application prévue du catalogue. | [Os-App-Chess](https://github.com/Kazo-ca/Os-App-Chess) | [#2](https://github.com/Kazo-ca/Os-App-Chess/issues/2), [#3](https://github.com/Kazo-ca/Os-App-Chess/issues/3) |
 | Webamp | Lecteur de musique dans le style de Winamp, associé aux fichiers audio, aux listes `.m3u`/`.pls` et aux skins `.wsz` ; ouvre aussi les fichiers des lecteurs réseau (ADR 0231). Plan en discussion. | [Os-App-Webamp](https://github.com/Kazo-ca/Os-App-Webamp) | [#1](https://github.com/Kazo-ca/Os-App-Webamp/issues/1), [#381](https://github.com/Kazo-ca/Os/issues/381) |
-| IRC | Client de discussion IRC natif (C# et Blazor) pour les vrais réseaux IRC, ordinateur et mobile : WebSocket sans serveur, et TCP avec TLS par le relais quand le serveur est connecté ([ADR 0235](dev/adr/0235-real-network-for-chat-apps.md)). Plan en discussion. | [Os-App-IRC](https://github.com/Kazo-ca/Os-App-IRC) | [#395](https://github.com/Kazo-ca/Os/issues/395), [#393](https://github.com/Kazo-ca/Os/issues/393), [#394](https://github.com/Kazo-ca/Os/issues/394) |
+| IRC | Client de discussion IRC natif (C# et Blazor) pour les vrais réseaux IRC, ordinateur et mobile : WebSocket sans serveur, et TCP avec TLS par le relais quand le serveur est connecté ([ADR 0235](dev/adr/0235-real-network-for-chat-apps.md)). Plan validé ; série `real-network/base` en cours (ports déclarés par l'app et `BlockedPorts` : chantier 3). | [Os-App-IRC](https://github.com/Kazo-ca/Os-App-IRC) | [#395](https://github.com/Kazo-ca/Os/issues/395), [#393](https://github.com/Kazo-ca/Os/issues/393), [#394](https://github.com/Kazo-ca/Os/issues/394) |
 | EmulatorJS | Émulateur de consoles rétro. | [Os-App-EmulatorJS](https://github.com/Kazo-ca/Os-App-EmulatorJS) | À venir |
 | BoxedWine | Exécuter d'anciens programmes Windows dans l'OS. | [Os-App-BoxedWine](https://github.com/Kazo-ca/Os-App-BoxedWine) | À venir |
 

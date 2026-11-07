@@ -39,6 +39,27 @@
             <dd>@Quotas(_policy)</dd>
             <dt>@L["Relay.GrantedApps"]</dt>
             <dd>@string.Join(", ", _policy.GrantedApps)</dd>
+            @* ADR 0235 section 3: ports no app can open, then the ports each approved app declared. *@
+            <dt>@L["Relay.TcpBlockedPorts"]</dt>
+            <dd>@BlockedPorts(_policy.TcpBlockedPorts)</dd>
+            <dt>@L["Relay.UdpBlockedPorts"]</dt>
+            <dd>@BlockedPorts(_policy.UdpBlockedPorts)</dd>
+            <dt>@L["Relay.AppPorts"]</dt>
+            <dd>
+                @if (_policy.AppPorts.Count == 0)
+                {
+                    @L["Relay.NoAppPorts"]
+                }
+                else
+                {
+                    <ul class="relay-app-ports">
+                        @foreach (KazoServerAppPorts app in _policy.AppPorts)
+                        {
+                            <li @key="app.AppId"><code>@app.AppId</code> <span class="relay-app-port-list">@string.Join(", ", app.Ports)</span></li>
+                        }
+                    </ul>
+                }
+            </dd>
         </dl>
         @foreach (string warning in _policy.Warnings)
         {

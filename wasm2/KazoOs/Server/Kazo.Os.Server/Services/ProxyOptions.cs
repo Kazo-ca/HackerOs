@@ -41,6 +41,28 @@ public sealed class ProxyOptions
     /// account's synchronized grants also counts.
     /// </summary>
     public string[]? GrantedApps { get; set; }
+
+    /// <summary>
+    /// Turns an explicit empty <c>BlockedPorts</c> (<c>"BlockedPorts": []</c>) into an empty list.
+    /// The JSON provider stores an empty array as a key with a <see langword="null"/> value, which the
+    /// binder leaves unbound, so without this an operator could not empty the list: the key is found
+    /// among the section's children instead.
+    /// </summary>
+    /// <param name="options">The bound options, changed in place (the options pattern binds into one instance).</param>
+    /// <param name="section">The <c>KazoOs:Proxy</c> section.</param>
+    public static void KeepExplicitEmptyLists(ProxyOptions options, Microsoft.Extensions.Configuration.IConfiguration section)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(section);
+        foreach ((string name, ProxyPortOptions ports) in new[] { ("Tcp", options.Tcp), ("Udp", options.Udp) })
+        {
+            if (ports.BlockedPorts is null
+                && section.GetSection(name).GetChildren().Any(static child => child.Key == nameof(ProxyPortOptions.BlockedPorts)))
+            {
+                ports.BlockedPorts = [];
+            }
+        }
+    }
 }
 
 /// <summary>Port filter of one relayed protocol.</summary>
@@ -48,6 +70,15 @@ public sealed class ProxyPortOptions
 {
     /// <summary>Allowed target ports; <see langword="null"/> or empty keeps the protocol's default.</summary>
     public int[]? AllowedPorts { get; set; }
+
+    /// <summary>
+    /// Ports the relay never opens, whatever <see cref="AllowedPorts"/>, the ports an app declares
+    /// (ADR 0235 §3) or <see cref="ProxyOptions.AllowAllPorts"/> say. <see langword="null"/> keeps
+    /// the protocol's default list; an explicit empty list (<c>[]</c>, see
+    /// <see cref="ProxyOptions.KeepExplicitEmptyLists"/>) blocks nothing and is warned about at startup.
+    /// Not read for <see cref="ProxyOptions.Http"/>: HTTP requests use the TCP list.
+    /// </summary>
+    public int[]? BlockedPorts { get; set; }
 }
 
 /// <summary>Quotas of the relay (ADR 0102 §5). Unset values keep their defaults.</summary>
@@ -93,6 +124,8 @@ public sealed class ProxyQuotaOptions
 /// <param name="MaxRedirectHops">Redirects followed; enforced even with quotas off, a redirect loop never ends otherwise.</param>
 /// <param name="StreamIdleTimeoutSeconds">Idle timeout of a stream (configured value).</param>
 /// <param name="GrantedApps">App ids granted <c>network.real.access</c> by the server itself.</param>
+/// <param name="TcpBlockedPorts">TCP ports never opened, HTTP requests included (ADR 0235 §3).</param>
+/// <param name="UdpBlockedPorts">UDP ports never opened (ADR 0235 §3).</param>
 public sealed record ProxyRelayPolicy(
     bool Enabled,
     IReadOnlyList<int> HttpPorts,
@@ -107,7 +140,9 @@ public sealed record ProxyRelayPolicy(
     int MaxStreamsPerDevice,
     int MaxRedirectHops,
     int StreamIdleTimeoutSeconds,
-    IReadOnlyList<string> GrantedApps)
+    IReadOnlyList<string> GrantedApps,
+    IReadOnlyList<int> TcpBlockedPorts,
+    IReadOnlyList<int> UdpBlockedPorts)
 {
     /// <summary>Default HTTP ports.</summary>
     public static readonly IReadOnlyList<int> DefaultHttpPorts = [80, 443];
@@ -117,6 +152,20 @@ public sealed record ProxyRelayPolicy(
 
     /// <summary>Default UDP ports: DNS and NTP.</summary>
     public static readonly IReadOnlyList<int> DefaultUdpPorts = [53, 123];
+
+    /// <summary>
+    /// Default TCP ports the relay never opens (ADR 0235 §3), even for an app that declares them:
+    /// mail (25, 465, 587: the server's address would send spam) and the Windows and Unix file and
+    /// RPC services (111, 135, 137-139, 445, 2049) that worms and scans aim at.
+    /// </summary>
+    public static readonly IReadOnlyList<int> DefaultTcpBlockedPorts = [25, 111, 135, 137, 138, 139, 445, 465, 587, 2049];
+
+    /// <summary>
+    /// Default UDP ports the relay never opens (ADR 0235 §3): services known for reflection and
+    /// amplification attacks (chargen 19, rpcbind 111, NetBIOS 137-138, CLDAP 389, SSDP 1900,
+    /// memcached 11211).
+    /// </summary>
+    public static readonly IReadOnlyList<int> DefaultUdpBlockedPorts = [19, 111, 137, 138, 389, 1900, 11211];
 
     /// <summary>
     /// The system apps that declare <c>network.real.access</c> (curl, wget, ping, cat, nmap and the
@@ -175,14 +224,30 @@ public sealed record ProxyRelayPolicy(
             (int)Positive(quotas.StreamIdleTimeoutSeconds, 300),
             options.GrantedApps is { Length: > 0 } apps
                 ? [.. apps.Where(static app => !string.IsNullOrWhiteSpace(app)).Select(static app => app.Trim()).Distinct(StringComparer.Ordinal)]
-                : DefaultGrantedApps);
+                : DefaultGrantedApps,
+            BlockedPorts(options.Tcp?.BlockedPorts, DefaultTcpBlockedPorts),
+            BlockedPorts(options.Udp?.BlockedPorts, DefaultUdpBlockedPorts));
     }
 
-    /// <summary>Whether <paramref name="port"/> passes the filter of <paramref name="allowed"/>.</summary>
-    /// <param name="allowed">The protocol's list.</param>
+    /// <summary>
+    /// Whether <paramref name="port"/> passes the filter (ADR 0235 §3): never when it is in
+    /// <paramref name="blocked"/>; otherwise when every port is allowed, it is in
+    /// <paramref name="allowed"/>, or the app declared it and the declaration was approved
+    /// (<paramref name="approvedForApp"/>).
+    /// </summary>
+    /// <param name="allowed">The protocol's allow-list.</param>
+    /// <param name="blocked">The protocol's block-list; it always wins.</param>
     /// <param name="port">Target port.</param>
-    public bool IsPortAllowed(IReadOnlyList<int> allowed, int port) =>
-        port is >= 1 and <= 65535 && (AllowAllPorts || allowed.Contains(port));
+    /// <param name="approvedForApp">Whether the app's grant approves this port for this protocol.</param>
+    public bool IsPortAllowed(IReadOnlyList<int> allowed, IReadOnlyList<int> blocked, int port, bool approvedForApp = false) =>
+        port is >= 1 and <= 65535
+        && !blocked.Contains(port)
+        && (AllowAllPorts || allowed.Contains(port) || approvedForApp);
+
+    /// <summary>The block-list of a stream protocol (<c>tcp</c> or <c>udp</c>).</summary>
+    /// <param name="protocol">A <c>RealNetworkPorts</c> protocol name.</param>
+    public IReadOnlyList<int> BlockedPortsOf(string protocol) =>
+        protocol == Kazo.Os.App.Abstractions.RealNetworkPorts.Udp ? UdpBlockedPorts : TcpBlockedPorts;
 
     /// <summary>
     /// The settings that weaken the defaults, one sentence each: logged as warnings at startup and
@@ -211,6 +276,16 @@ public sealed record ProxyRelayPolicy(
             warnings.Add("KazoOs:Proxy:Quotas:Enabled is off: no size, concurrency, stream or idle limit applies.");
         }
 
+        if (TcpBlockedPorts.Count == 0)
+        {
+            warnings.Add("KazoOs:Proxy:Tcp:BlockedPorts is empty: the relay may open every TCP port an app declares or the allow-list names, mail (25) included.");
+        }
+
+        if (UdpBlockedPorts.Count == 0)
+        {
+            warnings.Add("KazoOs:Proxy:Udp:BlockedPorts is empty: the relay may open every UDP port an app declares or the allow-list names, amplification services included.");
+        }
+
         return warnings;
     }
 
@@ -218,6 +293,11 @@ public sealed record ProxyRelayPolicy(
         configured is { Length: > 0 }
             ? [.. configured.Where(static port => port is >= 1 and <= 65535).Distinct().Order()]
             : fallback;
+
+    private static IReadOnlyList<int> BlockedPorts(int[]? configured, IReadOnlyList<int> fallback) =>
+        configured is null
+            ? fallback
+            : [.. configured.Where(static port => port is >= 1 and <= 65535).Distinct().Order()];
 
     private static long Positive(long? value, long fallback) => value is > 0 ? value.Value : fallback;
 }
