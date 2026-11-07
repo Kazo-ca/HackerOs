@@ -375,7 +375,22 @@ booléens règlent ce que voit l'utilisateur, pas ce que l'app peut faire : une 
 - Dialogues de l'OS (MessageBox, ouvrir, enregistrer, dossier, saisie, choix d'app, « ne répond
   pas ») : `WindowFrame.Dialog`, style `Tool` sans bouton dans la barre des tâches (§6 de l'ADR).
   Sur mobile, ils restent en plein écran.
-- `WindowHost` ajoute `is-tool` ou `is-frameless` ; la transparence de `None` vient au chantier 6.
+- `WindowHost` ajoute `is-tool` ou `is-frameless`.
+
+### Transparence de `None` (ADR 0234 §5, #378)
+
+- La surface d'une fenêtre `None` n'a ni fond, ni bordure, ni ombre. La surface et la zone cliente
+  reçoivent `pointer-events: none` : un clic là où l'app ne dessine rien atteint le bureau ou la
+  fenêtre dessous, comme une fenêtre en couches de Windows.
+- Ce que l'app dessine reprend la souris : les enfants directs de la zone cliente et tout élément
+  marqué `data-kazo-window-hit` (utile dans un conteneur que l'app rend lui-même transparent avec
+  `pointer-events: none`). Une app qui remplit sa zone cliente d'un seul bloc opaque ne laisse donc
+  rien passer : elle dessine sa forme avec des éléments séparés.
+- Sur un bureau interactif (icônes), `DesktopArea` ne rend plus la souris à une fenêtre `None`
+  (`.window-host:not(.is-frameless)`).
+- Test : `WindowFramelessTransparencyTests` (UI.E2E) charge les vrais styles et le vrai module de
+  pointeur dans Chromium : clic à travers vers une icône, zones dessinées, élément marqué, surface
+  sans fond, zone `data-kazo-window-drag` qui déplace la fenêtre sauf sur un champ.
 
 ## 7. Fenêtres enfants et dialogues d'une app (ADR 0234 §3)
 
@@ -522,3 +537,8 @@ propre passerelle et son `IKazoWindow`. Elle n'a pas de taille retenue (ADR 0116
 - [x] Fenêtres enfants dans `AppWindowGatewayFactory` : cascade, modale, fermeture avec la propriétaire.
 - [x] Tests et documentation.
 
+### Chantier `os-3-1/6-transparent-none` (ADR 0234 §5, #378)
+
+- [x] Surface `None` sans fond ni ombre, clics à travers, `data-kazo-window-hit`.
+- [x] Bureau interactif : la fenêtre `None` laisse passer la souris.
+- [x] Test E2E et documentation.

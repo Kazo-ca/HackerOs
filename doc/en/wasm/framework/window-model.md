@@ -373,7 +373,22 @@ still minimize its window.
 - OS dialogs (MessageBox, open, save, folder, text input, app chooser, "not responding"):
   `WindowFrame.Dialog`, `Tool` style with no taskbar button (ADR §6). On mobile they stay full
   screen.
-- `WindowHost` adds `is-tool` or `is-frameless`; `None` transparency comes with work item 6.
+- `WindowHost` adds `is-tool` or `is-frameless`.
+
+### `None` transparency (ADR 0234 §5, #378)
+
+- The surface of a `None` window has no background, border or shadow. The surface and the client
+  area get `pointer-events: none`: a click where the app draws nothing reaches the desktop or the
+  window below, like a Windows layered window.
+- What the app draws takes the mouse back: the client area's direct children and any element
+  marked `data-kazo-window-hit` (useful inside a container the app itself makes transparent with
+  `pointer-events: none`). An app that fills its client area with one opaque block lets nothing
+  through: it draws its shape with separate elements.
+- Over an interactive desktop (icons), `DesktopArea` no longer gives the mouse back to a `None`
+  window (`.window-host:not(.is-frameless)`).
+- Test: `WindowFramelessTransparencyTests` (UI.E2E) loads the real styles and the real pointer
+  module in Chromium: click through to an icon, drawn areas, marked element, surface without
+  background, `data-kazo-window-drag` area that moves the window except on a field.
 
 ## 7. An app's child windows and dialogs (ADR 0234 §3)
 
@@ -518,3 +533,8 @@ Architecture: `IAppChildWindowGateway.OpenWindowAsync`, implemented by the gatew
 - [x] Child windows in `AppWindowGatewayFactory`: cascade, modal, closing with the owner.
 - [x] Tests and documentation.
 
+### Work item `os-3-1/6-transparent-none` (ADR 0234 §5, #378)
+
+- [x] `None` surface without background or shadow, clicks through, `data-kazo-window-hit`.
+- [x] Interactive desktop: the `None` window lets the mouse through.
+- [x] E2E test and documentation.
