@@ -396,6 +396,9 @@
   <data name="Prompt.Dangerous.Approved" xml:space="preserve">
     <value>Capacités autorisées par un administrateur.</value>
   </data>
+  <data name="Prompt.Dangerous.RealNetworkPorts" xml:space="preserve">
+    <value>Vrais serveurs sur les ports : {0}</value>
+  </data>
   <data name="Prompt.Dangerous.AuditNotice" xml:space="preserve">
     <value>Cette décision sera inscrite dans /var/log/auth.log.</value>
   </data>
@@ -437,6 +440,12 @@ Annuler : décider au prochain lancement.</value>
   </data>
   <data name="Prompt.Sudo.Title" xml:space="preserve">
     <value>Autorisation administrateur requise</value>
+  </data>
+  <data name="Relay.Warning.TcpBlockedPortsEmpty" xml:space="preserve">
+    <value>KazoOs:Proxy:Tcp:BlockedPorts est vide : le relais peut ouvrir tout port TCP qu'une app déclare ou que la liste autorisée nomme, courriel (25) compris.</value>
+  </data>
+  <data name="Relay.Warning.UdpBlockedPortsEmpty" xml:space="preserve">
+    <value>KazoOs:Proxy:Udp:BlockedPorts est vide : le relais peut ouvrir tout port UDP qu'une app déclare ou que la liste autorisée nomme, services d'amplification compris.</value>
   </data>
   <data name="Relay.Warning.AllowAllPorts" xml:space="preserve">
     <value>KazoOs:Proxy:AllowAllPorts est activé : le relais atteint tous les ports TCP et UDP.</value>

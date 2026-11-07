@@ -231,7 +231,7 @@ public sealed class ProxyRelayTests : IDisposable
 
         Assert.Equal(ProxyErrorCode.RelayDisabled, ex.ErrorCode);
         Assert.Equal(ProxyErrorCode.RelayDisabled, streamEx.ErrorCode);
-        Assert.Empty((await proxy.GetPolicyAsync(device, CancellationToken.None)).AllowedProtocols);
+        Assert.Empty((await proxy.GetPolicyAsync(_accountId, device, CancellationToken.None)).AllowedProtocols);
     }
 
     [Fact]
@@ -416,7 +416,7 @@ public sealed class ProxyRelayTests : IDisposable
         IProxyStreamChannel first = await proxy.OpenStreamAsync(_accountId, device, ProxyProtocol.Tcp, request, CancellationToken.None);
         var ex = await Assert.ThrowsAsync<ProxyRequestException>(() =>
             proxy.OpenStreamAsync(_accountId, device, ProxyProtocol.Tcp, request, CancellationToken.None));
-        Assert.Equal(1, (await proxy.GetPolicyAsync(device, CancellationToken.None)).CurrentStreams);
+        Assert.Equal(1, (await proxy.GetPolicyAsync(_accountId, device, CancellationToken.None)).CurrentStreams);
         await first.DisposeAsync();
         await using IProxyStreamChannel second = await proxy.OpenStreamAsync(_accountId, device, ProxyProtocol.Tcp, request, CancellationToken.None);
 
@@ -441,7 +441,7 @@ public sealed class ProxyRelayTests : IDisposable
             _accountId, device, ProxyProtocol.Tcp, new ProxyStreamRequest("echo.lan.example", 7, TestApp), CancellationToken.None));
 
         Assert.Equal(ProxyErrorCode.ConnectionRefused, ex.ErrorCode);
-        Assert.Equal(0, (await proxy.GetPolicyAsync(device, CancellationToken.None)).CurrentStreams);
+        Assert.Equal(0, (await proxy.GetPolicyAsync(_accountId, device, CancellationToken.None)).CurrentStreams);
     }
 
     // ── §3 UDP ──────────────────────────────────────────────────────────────

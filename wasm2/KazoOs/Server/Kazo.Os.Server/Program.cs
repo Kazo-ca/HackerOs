@@ -102,7 +102,10 @@ builder.Services.AddLocalServer(builder.Configuration, builder.Environment.Conte
 // KazoOs:Proxy is read once at startup; ProxyRelayPolicy fills the defaults the binder cannot
 // (it appends to lists initialized in code), and ProxyPolicyStartupReporter logs a warning per
 // setting that weakens them.
-builder.Services.AddOptions<ProxyOptions>().Bind(builder.Configuration.GetSection(ProxyOptions.SectionName));
+builder.Services.AddOptions<ProxyOptions>()
+    .Bind(builder.Configuration.GetSection(ProxyOptions.SectionName))
+    // ADR 0235 §3: "BlockedPorts": [] must empty the list, which the binder alone cannot express.
+    .PostConfigure(options => ProxyOptions.KeepExplicitEmptyLists(options, builder.Configuration.GetSection(ProxyOptions.SectionName)));
 builder.Services.AddSingleton(provider =>
     ProxyRelayPolicy.From(provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<ProxyOptions>>().Value));
 builder.Services.AddHostedService<ProxyPolicyStartupReporter>();
