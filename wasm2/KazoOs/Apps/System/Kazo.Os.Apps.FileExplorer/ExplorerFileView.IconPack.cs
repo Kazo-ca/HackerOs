@@ -24,13 +24,19 @@ public sealed partial class ExplorerFileView
     /// <summary>The icons of the files: the pack's provider, or <see langword="null"/> for the built-in icons.</summary>
     private IShellIconProvider? IconProvider => _iconProvider;
 
-    /// <summary>The icon of an app shortcut: the pack's app or category image, else the shared Lucide icon (ADR 0160 §6).</summary>
+    /// <summary>
+    /// The icon of an app shortcut (ADR 0232 §2): the pack's image of the app, else the app's own icon,
+    /// else the pack's image of its category, else the shared Lucide icon (ADR 0160 §6).
+    /// </summary>
     /// <param name="appId">The app id.</param>
-    /// <param name="category">Its category, when the app is installed.</param>
-    private ShellIconDescriptor AppShortcutIcon(string appId, string? category) =>
-        _iconPack?.FindApp(appId, category) is { } url
+    /// <param name="app">The app, when it is installed.</param>
+    private ShellIconDescriptor AppShortcutIcon(string appId, KazoAppInfo? app)
+    {
+        string? url = _iconPack?.FindApp(appId) ?? app?.IconUrl ?? _iconPack?.FindCategory(app?.Category);
+        return url is not null
             ? ShellIconDescriptor.Png(url)
-            : ShellIconDescriptor.Vector(IconLibrary.Lucide, KazoAppIcons.LucideName(appId, category));
+            : ShellIconDescriptor.Vector(IconLibrary.Lucide, KazoAppIcons.LucideName(appId, app?.Category));
+    }
 
     /// <summary>Opens <c>icons.config</c>, loads its pack and follows its changes. Never fails the control.</summary>
     private async Task StartIconPackAsync()

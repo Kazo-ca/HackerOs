@@ -257,6 +257,10 @@ Cette section liste ce qui est publié dans la branche `main` et en ligne.
 
 ### Personnalisation
 
+- **Icônes d'apps illustrées** : les apps système ont des icônes en couleur
+  qui montrent ce que fait chaque app, et le menu Démarrer, le bureau et
+  l'explorateur affichent l'icône propre de chaque app, y compris installée.
+  ([ADR 0232](dev/adr/0232-illustrated-app-icons-everywhere.md))
 - **Thèmes** de l'OS, et éditeur pour créer les siens.
   ([`theme-files.md`](framework/theme-files.md))
 - **Fonds d'écran en image** : une image PNG, JPEG ou WebP (4 livrées avec

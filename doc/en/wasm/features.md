@@ -250,6 +250,10 @@ This section lists what is released in the `main` branch and online.
 
 ### Personalization
 
+- **Illustrated app icons**: the system apps have colour icons that show what
+  each app does, and the Start menu, the desktop and the explorer show each
+  app's own icon, installed apps included.
+  ([ADR 0232](dev/adr/0232-illustrated-app-icons-everywhere.md))
 - **OS themes**, and an editor to create your own.
   ([`theme-files.md`](framework/theme-files.md))
 - **Image wallpapers**: a PNG, JPEG or WebP image (4 shipped with the OS,

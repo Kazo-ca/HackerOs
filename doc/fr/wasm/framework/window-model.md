@@ -231,7 +231,8 @@ de l'asset. Sans déclaration, un symbole de fenêtre sert de repli.
 Tous les thèmes de bureau affichent l'icône de titre sauf macOS, qui masque
 l'icône et son bouton contextuel avec `--kos-window-icon-display: none`.
 Le dock macOS garde les icônes d'apps. Le menu demeure accessible au clavier.
-Le choix Lucide du lanceur et des raccourcis reste indépendant des images du chrome.
+Depuis l'[ADR 0232](../dev/adr/0232-illustrated-app-icons-everywhere.md), le lanceur et les raccourcis
+dessinent la même image (pack d'app, image déclarée, pack de catégorie, puis Lucide).
 Voir l'[ADR 0164](../dev/adr/0164-app-icons-and-window-icon-context-menu.md).
 
 Chantier `v3.1/3-window-title` de la [série v3.1](../dev/plans/v3-1-series-plan.md).
