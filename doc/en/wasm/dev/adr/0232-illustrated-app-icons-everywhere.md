@@ -140,8 +140,8 @@ d'accord avec tes propositions" (I agree with your proposals).
 ## Tasks
 
 - [x] ADR (series `icons/base`, work item `icons/1-adr`).
-- [ ] Redraw the system apps' `icons/app.svg` (work item `icons/2-system-apps`).
-- [ ] `KazoAppAssets.RelativeUrl` and `KazoAppInfo.IconUrl` in the SDK.
-- [ ] Start menu, mobile home and shortcuts: order of point 2.
-- [ ] Tests, docs (`window-model.md`, `desktop-api.md`, `sdk-reference.md`),
+- [x] Redraw the system apps' `icons/app.svg` (work item `icons/2-system-apps`).
+- [x] `KazoAppAssets.RelativeUrl` and `KazoAppInfo.IconUrl` in the SDK.
+- [x] Start menu, mobile home and shortcuts: order of point 2.
+- [x] Tests, docs (`window-model.md`, `desktop-api.md`, `sdk-reference.md`),
       `features.md`, change entry.

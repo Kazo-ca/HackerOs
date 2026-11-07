@@ -231,7 +231,8 @@ fingerprint. Without a declaration, a window symbol serves as a fallback.
 All desktop themes display the title icon except macOS, which hides
 the icon and its context button with `--kos-window-icon-display: none`.
 The macOS dock keeps the app icons. The menu remains accessible from the keyboard.
-The Lucide choice of the launcher and shortcuts remains independent of the chrome images.
+Since [ADR 0232](../dev/adr/0232-illustrated-app-icons-everywhere.md), the launcher and the shortcuts
+draw the same image (app pack, declared image, category pack, then Lucide).
 See [ADR 0164](../dev/adr/0164-app-icons-and-window-icon-context-menu.md).
 
 Work item `v3.1/3-window-title` of the [v3.1 series](../dev/plans/v3-1-series-plan.md).
